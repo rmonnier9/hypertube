@@ -1,9 +1,9 @@
-"use strict";
+'use strict';
 
-import * as async from "async";
-import * as request from "request";
-import * as graph from "fbgraph";
-import {Response, Request, NextFunction} from "express";
+import * as async from 'async';
+import * as request from 'request';
+import * as graph from 'fbgraph';
+import { Response, Request, NextFunction } from 'express';
 
 
 /**
@@ -11,8 +11,8 @@ import {Response, Request, NextFunction} from "express";
  * List of API examples.
  */
 export let getApi = (req: Request, res: Response) => {
-  res.render("api/index", {
-    title: "API Examples"
+  res.render('api/index', {
+    title: 'API Examples',
   });
 };
 
@@ -21,13 +21,13 @@ export let getApi = (req: Request, res: Response) => {
  * Facebook API example.
  */
 export let getFacebook = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.user.tokens.find((token: any) => token.kind === "facebook");
+  const token = req.user.tokens.find((token: any) => token.kind === 'facebook');
   graph.setAccessToken(token.accessToken);
   graph.get(`${req.user.facebook}?fields=id,name,email,first_name,last_name,gender,link,locale,timezone`, (err: Error, results: graph.FacebookUser) => {
     if (err) { return next(err); }
-    res.render("api/facebook", {
-      title: "Facebook API",
-      profile: results
+    res.render('api/facebook', {
+      title: 'Facebook API',
+      profile: results,
     });
   });
 };

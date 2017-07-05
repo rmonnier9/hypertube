@@ -18,7 +18,7 @@
     "watch-ts": "tsc -w",
     "build-sass": "node-sass src/public/css/main.scss dist/public/css/main.css",
     "watch-sass": "node-sass -w src/public/css/main.scss dist/public/css/main.css",
-    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "tslint": "tslint -c tslint.json -p tsconfig.json --force",
     "copy-static-assets": "node copyStaticAssets.js"
   },
   "jest": {
@@ -89,6 +89,7 @@
     "supertest": "^2.0.1",
     "ts-jest": "^19.0.8",
     "tslint": "^5.0.0",
+    "tslint-config-airbnb": "^5.2.1",
     "typescript": "^2.2.2"
   }
 }

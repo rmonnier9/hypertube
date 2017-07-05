@@ -2,9 +2,9 @@ import * as async from "async";
 import * as crypto from "crypto";
 import * as nodemailer from "nodemailer";
 import * as passport from "passport";
-import {default as User, UserModel, AuthToken} from "../models/User";
-import {Request, Response, NextFunction} from "express";
-import {LocalStrategyInfo} from "passport-local";
+import { default as User, UserModel, AuthToken } from "../models/User";
+import { Request, Response, NextFunction } from "express";
+import { LocalStrategyInfo } from "passport-local";
 import { WriteError } from "mongodb";
 const request = require("express-validator");
 
@@ -18,7 +18,7 @@ export let getLogin = (req: Request, res: Response) => {
     return res.redirect("/");
   }
   res.render("account/login", {
-    title: "Login"
+    title: "Login",
   });
 };
 
