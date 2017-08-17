@@ -6,33 +6,24 @@ import * as userController from './controllers/user';
 import * as apiController from './controllers/api';
 import * as contactController from './controllers/contact';
 import * as passport from 'passport';
+import { Express } from 'express';
 
 /**
  * API keys and Passport configuration.
  */
 import * as passportConfig from './config/passport';
-/**
- * Primary app routes.
- */
 
-const routes = (app) => {
+const routes = (app: Express) => {
 
-  /**
-   * API examples routes.
-   */
-  app.get('/api', apiController.getApi)
-  .get('/api/facebook',
-       passportConfig.isAuthenticated,
-       passportConfig.isAuthorized,
-       apiController.getFacebook)
   /**
    * OAuth authentication routes. (Sign in)
    */
-  .get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }))
+  app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }))
   .get('/auth/facebook/callback',
-       passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
-         res.redirect(req.session.returnTo || '/');
-       })
+       passport.authenticate('facebook', (err, user, info) => {
+
+       },
+  ))
   .get('/', homeController.index)
   .get('/login', userController.getLogin)
   .post('/login', userController.postLogin)
@@ -46,12 +37,17 @@ const routes = (app) => {
   .get('/contact', contactController.getContact)
   .post('/contact', contactController.postContact)
   // Logged part  ====================
-  .use('/api', passportConfig.isAuthenticated)
+  .use(passport.authenticate('bearer', { session: false }))
   .get('/account', userController.getAccount)
   .post('/account/profile', userController.postUpdateProfile)
   .post('/account/password', userController.postUpdatePassword)
   .post('/account/delete', userController.postDeleteAccount)
-  .get('/account/unlink/:provider', userController.getOauthUnlink);
+  .get('/account/unlink/:provider', userController.getOauthUnlink)
+  /**
+ * API examples routes.
+ */
+  .get('/api', apiController.getApi)
+  .get('/api/facebook', passportConfig.isAuthorized, apiController.getFacebook)
 };
 
 export default routes;
