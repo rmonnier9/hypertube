@@ -28,16 +28,24 @@ passport.deserializeUser((id, done) => {
  */
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
   User.findOne({ email: email.toLowerCase() }, (err, user) => {
-    if (err) { return done(err); }
+    if (err) {
+      console.log('pasport.js err', err);
+      return done(err);
+    }
     if (!user) {
-      return done(null, false, { msg: `Email ${email} not found.` });
+      console.log('pasport.js !user');
+      return done(null, false, [{ param: 'email', msg: `Email ${email} not found.`, value: email }]);
     }
     user.comparePassword(password, (err, isMatch) => {
-      if (err) { return done(err); }
+      if (err) {
+        console.log('pasport.js W password err', err);
+        return done(err);
+      }
       if (isMatch) {
         return done(null, user);
       }
-      return done(null, false, { msg: 'Invalid email or password.' });
+      console.log('pasport.js W password err undef');
+      return done(null, false, [{ param: 'password', msg: 'Invalid password.' }]);
     });
   });
 }));
