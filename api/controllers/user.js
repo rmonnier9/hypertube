@@ -81,6 +81,16 @@ exports.getAccount = (req, res) => {
 };
 
 /**
+ * GET /islogged
+ */
+exports.getIslogged = (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.send({ error: '' });
+  }
+  res.send({ error: 'You are not logged.' });
+};
+
+/**
  * POST /me
  * Update profile information.
  */
@@ -164,7 +174,7 @@ exports.deleteDeleteAccount = (req, res, next) => {
  * GET /logout
  * Log out.
  */
-exports.logout = (req, res) => {
+exports.signout = (req, res) => {
   req.logout();
   res.send({ error: '' });
 };

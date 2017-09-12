@@ -122,7 +122,7 @@ exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/login');
+  res.send({ error: 'You are not logged or endpoint doesn\'t exist' });
 };
 
 /**

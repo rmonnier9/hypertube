@@ -50,7 +50,7 @@ mongoose.connection.on('error', (err) => {
  * Express configuration.
  */
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
-app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
+app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8000);
 app.use(expressStatusMonitor());
 app.use(compression());
 app.use(logger('dev'));
@@ -69,13 +69,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
-    next();
-  } else {
-    lusca.csrf()(req, res, next);
-  }
-});
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
@@ -83,28 +76,31 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 /**
  * Primary app routes.
  */
-app.post('/signin', userController.postSignin);
-app.post('/signup', userController.postSignup);
-app.post('/forgot', userController.postForgot);
-app.post('/reset/:token', userController.postReset);
+app.post('/api/signin', userController.postSignin);
+app.post('/api/signup', userController.postSignup);
+app.post('/api/forgot', userController.postForgot);
+app.post('/api/reset/:token', userController.postReset);
+
+app.get('/api/islogged', userController.getIslogged);
+
 // Logged part  ====================
 app.use(passportConfig.isAuthenticated);
 
-app.get('/logout', userController.logout);
-app.get('/me');
-app.post('/me');
-app.delete('/me');
-app.get('/profile/:login');
+app.get('/api/signout', userController.signout);
+app.get('/api/me', userController.getAccount);
+app.post('/api/me');
+app.delete('/api/me');
+app.get('/api/profile/:login');
 
-app.get('/search');
-app.get('/movie/:id');
-app.post('/movie/:id');
+app.get('/api/search');
+app.get('/api/movie/:id');
+app.post('/api/movie/:id');
 
 /**
  * OAuth authentication routes. (Sign in)
  */
-app.get('/auth/google', passport.authenticate('google', { scope: 'profile email' }));
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+app.get('/api/auth/google', passport.authenticate('google', { scope: 'profile email' }));
+app.get('/api/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
 

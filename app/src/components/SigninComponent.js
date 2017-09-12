@@ -35,6 +35,7 @@ const SigninComponent = props => (
         </div>
         <div>
           <Link to="/signup">Sign up ?</Link>
+          <a target="_new" href="/api/auth/google">Link</a>
         </div>
       </div>
     </form>
