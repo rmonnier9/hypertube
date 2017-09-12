@@ -6,6 +6,7 @@
   "dependencies": {
     "axios": "^0.16.1",
     "browser-cookies": "^1.1.0",
+    "material-ui": "^0.19.1",
     "prop-types": "^15.5.9",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",

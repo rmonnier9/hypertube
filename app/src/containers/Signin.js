@@ -3,7 +3,8 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { loginUser } from '../actions/authAction';
-import SigninComponent from '../components/SigninComponent';
+import SigninComponent from '../components/SigninComponent2';
+
 
 export default connect(
   ({ auth: { isAuthenticated, message } }) => ({

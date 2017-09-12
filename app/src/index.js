@@ -4,6 +4,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { createLogger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import rootReducer from './reducers';
 import HyperRouter from './HyperRouter.js';
@@ -19,10 +20,13 @@ const store = createStore(
   ),
 );
 
+
 ReactDOM.render(
-  <Provider store={store}>
-    <HyperRouter />
-  </Provider>,
+  <MuiThemeProvider>
+    <Provider store={store}>
+      <HyperRouter />
+    </Provider>
+  </MuiThemeProvider>,
   document.getElementById('root'),
 );
 registerServiceWorker();
