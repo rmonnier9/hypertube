@@ -35,12 +35,6 @@ import userController from './controllers/user';
 import passportConfig from './config/passport';
 
 /**
- * Picture upload handler
- */
-
-import pictureController from './controllers/picture';
-
-/**
  * Create Express server.
  */
 const app = express();
