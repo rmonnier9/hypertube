@@ -18,6 +18,10 @@ import expressValidator from 'express-validator';
 import expressStatusMonitor from 'express-status-monitor';
 import multer from 'multer';
 
+/**
+ * multer configuration
+ */
+
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
 /**
@@ -29,6 +33,12 @@ import userController from './controllers/user';
  * API keys and Passport configuration.
  */
 import passportConfig from './config/passport';
+
+/**
+ * Picture upload handler
+ */
+
+import pictureController from './controllers/picture';
 
 /**
  * Create Express server.
@@ -77,7 +87,8 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
  * Primary app routes.
  */
 app.post('/api/signin', userController.postSignin);
-app.post('/api/signup', userController.postSignup);
+app.post('/api/signup/info', userController.postSignup);
+app.post('/api/signup/upload', upload.single('imageUploaded'), userController.postSignupPicture);
 app.post('/api/forgot', userController.postForgot);
 app.post('/api/reset/:token', userController.postReset);
 

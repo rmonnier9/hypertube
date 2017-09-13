@@ -1,3 +1,6 @@
+import sharp from 'sharp';
+import path from 'path';
+
 const bluebird = require('bluebird');
 const crypto = bluebird.promisifyAll(require('crypto'));
 const nodemailer = require('nodemailer');
@@ -26,7 +29,7 @@ exports.postSignin = (req, res, next) => {
     }
     req.logIn(user, (err) => {
       if (err) { return next(err); }
-      return res.send({ error: '' })
+      return res.send({ error: '' });
     });
   })(req, res, next);
 };
@@ -35,11 +38,49 @@ exports.postSignin = (req, res, next) => {
  * POST /signup
  * Create a new local account.
  */
+
+exports.postSignupPicture = (req, res, next) => {
+  const { filename } = req.file;
+  const { email } = req.headers;
+
+  const oldPath = path.resolve(__dirname, `../uploads/${filename}`);
+  const newPath = path.resolve(__dirname, `../uploads/resized/${filename}`);
+
+  sharp(oldPath)
+    .resize(240, 240, {
+      kernel: sharp.kernel.lanczos2,
+      interpolator: sharp.interpolator.nohalo,
+    })
+    .toFile(newPath);
+
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return res.send({ errorPic: 'Account with that email address does not exist.' });
+      }
+      // verif if the user has already a pic, which, is unlikely => security purpose, to dig
+      if (user.profile.picture) {
+        return res.send({ errorPic: 'You can\'t upload a new picture here, go to your profile' });
+      }
+      user.profile.picture = filename;
+      user.save((err, user) => {
+        if (err) { return next(err); }
+        req.logIn(user, (err) => {
+          if (err) return next(err);
+          return res.send({ errorPic: '' });
+        });
+      });
+    });
+};
+
+
 exports.postSignup = (req, res, next) => {
   req.assert('email', 'Email is not valid').isEmail();
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
-  req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+  req.assert('firstName', 'First name can\'t be more more than 20 letters long').len({ max: 20 });
+  req.assert('lastName', 'Last name name can\'t be more more than 20 letters long').len({ max: 20 });
+  req.sanitize('creds.email').normalizeEmail({ gmail_remove_dots: false });
 
   const error = req.validationErrors();
 
@@ -49,21 +90,23 @@ exports.postSignup = (req, res, next) => {
 
   const user = new User({
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    profile: {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+    }
   });
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err); }
     if (existingUser) {
-      return res.send({ error: 'Account with that email address already exists.' });
+      return res.send({ error: [{ param: 'email', msg: 'Account with that email address already exists.' }] });
     }
     user.save((err) => {
       if (err) { return next(err); }
       req.logIn(user, (err) => {
-        if (err) {
-          return next(err);
-        }
-        res.send({ error: '' });
+        if (err) return next(err);
+        return res.send({ error: '' });
       });
     });
   });

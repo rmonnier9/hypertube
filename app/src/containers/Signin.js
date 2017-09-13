@@ -17,13 +17,14 @@ class Signin extends Component {
   state = {
     email: '',
     password: '',
+    error: [],
   }
 
-  handleChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+  handleChange = ({ target: { name, value } }) => this.setState({ [name]: value, error: [] });
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const { email, password } = this.state;
+    const { email, password, firstName, lastName } = this.state;
     const creds = {
       email: email.trim(),
       password: password.trim(),
@@ -31,17 +32,22 @@ class Signin extends Component {
     this.props.dispatch(loginUser(creds));
   }
 
-  render() {
-    const { isAuthenticated, message } = this.props;
-    const { from } = this.props.location.state || { from: { pathname: '/' } };
+  componentWillReceiveProps(nextProps) {
+    const { message } = nextProps;
+    this.setState({ error: message });
+  }
 
+  render() {
+    const { isAuthenticated } = this.props;
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
+    const { error } = this.state;
     return (
       isAuthenticated ?
         <Redirect to={from} /> :
         <SigninComponent
           handleSubmit={this.handleSubmit}
           handleChange={this.handleChange}
-          message={message}
+          error={error}
         />
     );
   }

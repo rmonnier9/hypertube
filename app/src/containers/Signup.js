@@ -1,43 +1,84 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import SignupComponent from '../components/SignupComponent';
+import SignupComponent from '../components/SignupComponent2';
 
 import { loginUser } from '../actions/authAction';
 
 class Signup extends Component {
+
   state = {
     email: '',
     password: '',
-    confirmpassword: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    error: [],
+    errorPic: '',
+    status: 'initial',
+    file: {},
   }
 
-  handleChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+  handleChange = ({ target: { name, value } }) => this.setState({ [name]: value, error: [] });
+
+  imageUpload = (file) => { this.setState({ file }); }
+
+  handleNextStep = (e) => {
+    e.preventDefault();
+    this.setState({ status: 'open' });
+  }
+
+  sendPicture = (file) => {
+    const form = new FormData();
+    form.append('imageUploaded', file);
+    const headers = { 'Content-Type': 'multipart/form-data', email: this.state.email };
+    const config = {
+      url: '/api/signup/upload',
+      method: 'POST',
+      data: form,
+      headers,
+    };
+    return axios(config);
+  }
+
+  sendInfo = (data) => {
+    this.setState({ status: 'loading' });
+    const config = {
+      url: '/api/signup/info',
+      method: 'POST',
+      data,
+    };
+    return axios(config);
+  }
+
   handleSubmit = (event) => {
     event.preventDefault();
-    const {
-      email,
-      password,
-      confirmPassword,
-    } = this.state;
+    const { email, password, confirmPassword, firstName, lastName, file } = this.state;
     const data = {
-      email,
-      password,
-      confirmPassword,
+      email: email.trim(),
+      password: password.trim(),
+      confirmPassword: confirmPassword.trim(),
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
     };
-    const url = '/api/signup/';
-    axios({ url, method: 'POST', data })
-    .then(({ data: { error } }) => {
-      if (!error) {
-        this.props.dispatch(loginUser({
-          email: email.trim(),
-          password: password.trim(),
-        }));
-        this.props.history.push('/');
-      } else {
-        this.setState({ error });
-      }
-    });
+    this.sendInfo(data)
+      .then(({ data: { error } }) => {
+        if (error) this.setState({ status: 'closed', error });
+        else {
+          this.sendPicture(file)
+            .then(({ data: { errorPic } }) => {
+              if (errorPic) this.setState({ status: 'open', errorPic });
+              else {
+                this.setState({ status: 'closed' });
+                this.props.dispatch(loginUser({
+                  email,
+                  password,
+                }));
+                this.props.history.push('/');
+              }
+            });
+        }
+      });
   }
 
   render() {
@@ -45,6 +86,12 @@ class Signup extends Component {
       <SignupComponent
         handleSubmit={this.handleSubmit}
         handleChange={this.handleChange}
+        error={this.state.error}
+        status={this.state.status}
+        file={this.state.file}
+        handleUpload={this.imageUpload}
+        handleNextStep={this.handleNextStep}
+        errorPic={this.state.errorPic}
       />
     );
   }

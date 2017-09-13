@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import SigninBackground from '../Images/Signin_background5.jpg';
-
+import Dialog from './Dialog';
 
 const styles = {
   container: {
@@ -43,7 +43,7 @@ const styles = {
   },
 };
 
-const SigninComponent = (props) => {
+const SignupComponent = (props) => {
   const error = {};
   props.error.forEach((field) => {
     error[field.param] = field.msg;
@@ -54,15 +54,16 @@ const SigninComponent = (props) => {
       <div style={styles.container}>
         <form
           style={styles.centered}
-          onSubmit={props.handleSubmit}
+          onSubmit={props.handleNextStep}
           onChange={props.handleChange}
         >
-          <h2 className="form-login-heading">Log in to your account</h2>
+          <h2 style={styles.centered} >Sign up</h2>
           <TextField
             hintText="Your email"
             name="email"
             errorText={error.email}
             floatingLabelText="Email"
+            required
           /><br />
           <TextField
             hintText="Your password"
@@ -70,22 +71,51 @@ const SigninComponent = (props) => {
             name="password"
             errorText={error.password}
             floatingLabelText="Password"
+            required
           /><br />
-          <RaisedButton style={styles.button} type="submit" name="submit" label="Send" />
+          <TextField
+            hintText="Your password"
+            type="password"
+            name="confirmPassword"
+            errorText={error.confirmPassword}
+            floatingLabelText="Confirm password"
+            required
+          /><br />
+          <TextField
+            hintText="Your first name"
+            name="firstName"
+            errorText={error.firstName}
+            floatingLabelText="First name"
+            required
+          /><br />
+          <TextField
+            hintText="Your last name"
+            name="lastName"
+            errorText={error.lastName}
+            floatingLabelText="Last name"
+            required
+          /><br />
+          <RaisedButton style={styles.button} type="submit" name="submit" label="Next" />
           <br />
-          <Link to="/signup">Sign up ?</Link>
-          <br />
-          <a target="_new" href="/api/auth/google">GoogleAuth (in progress)</a>
+          <Link to="/signin">Already member ?</Link>
+          <Dialog
+            preview={props.preview}
+            handleUpload={props.handleUpload}
+            handleSubmit={props.handleSubmit}
+            error={props.errorPic}
+            status={props.status}
+            file={props.file}
+          />
         </form>
       </div>
     </div>
   );
 };
 
-SigninComponent.PropTypes = {
-  message: PropTypes.array.required,
+SignupComponent.PropTypes = {
   handleSubmit: PropTypes.func.required,
   handleChange: PropTypes.func.required,
+  message: PropTypes.array.required,
 };
 
-export default SigninComponent;
+export default SignupComponent;
