@@ -13,13 +13,15 @@ import Header from './containers/Header';
 import MyProfile from './containers/MyProfile';
 import Signin from './containers/Signin';
 import Signup from './containers/Signup';
+import Gallery from './components/GalleryComponent';
 
 const MatchaRouter = ({ isAuthenticated }) => (
   <Router>
     <div>
       <Header />
       <Switch>
-        <PrivateRoute exact path="/" isAuthenticated={isAuthenticated} component={MyProfile} />
+        <PrivateRoute exact path="/" isAuthenticated={isAuthenticated} component={Gallery} />
+        <PrivateRoute exact path="/myprofile" isAuthenticated={isAuthenticated} component={MyProfile} />
         <Route path="/signin" component={Signin} />
         <Route path="/signup" component={Signup} />
         <Route component={NotFound} />
