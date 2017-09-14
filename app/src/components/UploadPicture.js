@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 
-const style = {
+const styles = {
   dropzone: {
     margin: '20px',
     borderStyle: 'solid',
     borderWidth: 'medium',
     width: '200px',
     height: '200px',
-    display: 'inherit',
-    alignItems: 'inherit',
-    justifyContent: 'inherit',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   container: {
     display: 'flex',
@@ -21,6 +22,9 @@ const style = {
     width: '200px',
     height: '200px',
   },
+  icons: {
+    fontSize: '48px',
+  },
 };
 
 class UploadPicture extends Component {
@@ -30,20 +34,24 @@ class UploadPicture extends Component {
   }
 
   render() {
-    console.log('prop', this.props);
     const preview = this.props.file.preview
-     ? <img style={style.preview} src={this.props.file.preview} alt="" />
+     ? <img style={styles.preview} src={this.props.file.preview} alt="" />
      : null;
     return (
-      <div style={style.container}>
+      <div style={styles.container}>
         {preview}
         <Dropzone
           multiple={false}
           accept="image/jpeg, image/png"
           onDrop={this.handleDrop}
-          style={style.dropzone}
+          style={styles.dropzone}
         >
-          <span>Upload a profile picture</span>
+          <div>
+            <i className="material-icons" style={styles.icons}>camera_enhance</i>
+          </div>
+          <div>
+            <p>Upload a profile picture</p>
+          </div>
         </Dropzone>
       </div>
     );
