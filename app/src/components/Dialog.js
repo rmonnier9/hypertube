@@ -9,19 +9,13 @@ import UploadPicture from './UploadPicture';
  */
 export default class CustomDialog extends Component {
 
-  constructor(props) {
-    super(props);
-    const { status } = props;
-    this.state = {
-      open: status !== 'initial',
-    };
+  state = {
+    open: false,
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('next', nextProps);
     const { status } = nextProps;
-    if (status === 'open') this.setState({ open: true });
-    else if (status === 'closed' || status === 'initial') this.setState({ open: false });
+    this.setState({ open: status === 'open' });
   }
 
   handleClose = () => { this.setState({ open: false }); };

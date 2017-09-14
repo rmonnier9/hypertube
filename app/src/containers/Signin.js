@@ -24,7 +24,7 @@ class Signin extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const { email, password, firstName, lastName } = this.state;
+    const { email, password } = this.state;
     const creds = {
       email: email.trim(),
       password: password.trim(),

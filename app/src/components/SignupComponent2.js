@@ -115,7 +115,7 @@ const SignupComponent = (props) => {
 SignupComponent.PropTypes = {
   handleSubmit: PropTypes.func.required,
   handleChange: PropTypes.func.required,
-  message: PropTypes.array.required,
+  error: PropTypes.array.required,
 };
 
 export default SignupComponent;

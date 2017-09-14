@@ -83,7 +83,7 @@ const SigninComponent = (props) => {
 };
 
 SigninComponent.PropTypes = {
-  message: PropTypes.array.required,
+  error: PropTypes.array.required,
   handleSubmit: PropTypes.func.required,
   handleChange: PropTypes.func.required,
 };

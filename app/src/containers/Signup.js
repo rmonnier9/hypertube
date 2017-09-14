@@ -15,7 +15,7 @@ class Signup extends Component {
     lastName: '',
     error: [],
     errorPic: '',
-    status: 'initial',
+    status: 'closed',
     file: {},
   }
 
@@ -42,7 +42,6 @@ class Signup extends Component {
   }
 
   sendInfo = (data) => {
-    this.setState({ status: 'loading' });
     const config = {
       url: '/api/signup/info',
       method: 'POST',

@@ -43,7 +43,7 @@ const SigninComponent = props => (
 );
 
 SigninComponent.PropTypes = {
-  message: PropTypes.string.required,
+  erro: PropTypes.string.required,
   handleSubmit: PropTypes.func.required,
   handleChange: PropTypes.func.required,
 };
