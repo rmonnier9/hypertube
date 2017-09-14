@@ -33,7 +33,7 @@ const MongoStore = require('connect-mongo')(session);
 /**
  * multer configuration
  */
-const upload = multer({ dest: path.join(__dirname, 'uploads/tmp') });
+const upload = multer({ dest: path.join(__dirname, 'public/uploads/tmp') });
 
 /**
  * Create Express server.
