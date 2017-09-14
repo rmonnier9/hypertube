@@ -1,5 +1,6 @@
 import sharp from 'sharp';
 import path from 'path';
+import fs from 'fs';
 
 const bluebird = require('bluebird');
 const crypto = bluebird.promisifyAll(require('crypto'));
@@ -39,20 +40,20 @@ exports.postSignin = (req, res, next) => {
  * Create a new local account.
  */
 
-exports.postSignupPicture = (req, res, next) => {
+exports.postSignupPicture = async (req, res, next) => {
   const { filename } = req.file;
   const { email } = req.headers;
 
-  const oldPath = path.resolve(__dirname, `../uploads/${filename}`);
-  const newPath = path.resolve(__dirname, `../uploads/resized/${filename}`);
+  const oldPath = path.resolve(__dirname, `../uploads/tmp/${filename}`);
+  const newPath = path.resolve(__dirname, `../uploads/${filename}`);
 
-  sharp(oldPath)
+  await sharp(oldPath)
     .resize(240, 240, {
       kernel: sharp.kernel.lanczos2,
       interpolator: sharp.interpolator.nohalo,
     })
     .toFile(newPath);
-
+  fs.unlinkSync(oldPath);
   User.findOne({ email })
     .then((user) => {
       if (!user) {

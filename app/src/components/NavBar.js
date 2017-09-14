@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const SignOutMenu = props => (
   <button
@@ -12,9 +13,11 @@ export default class NavBar extends React.Component {
   render() {
     return (
       <div>
-          <SignOutMenu
-            handleSignOut={this.props.handleSignOut}
-          />
+        <button><Link to="/myprofile">To profile</Link></button>
+        <button><Link to="/">To Gallery</Link></button>
+        <SignOutMenu
+          handleSignOut={this.props.handleSignOut}
+        />
       </div>
     );
   }

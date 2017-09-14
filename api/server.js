@@ -33,7 +33,7 @@ const MongoStore = require('connect-mongo')(session);
 /**
  * multer configuration
  */
-const upload = multer({ dest: path.join(__dirname, 'uploads') });
+const upload = multer({ dest: path.join(__dirname, 'uploads/tmp') });
 
 /**
  * Create Express server.
@@ -59,7 +59,7 @@ app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8000);
 app.use(expressStatusMonitor()); // report realtime server metrics for Express-based node servers ?
 app.use(compression()); // reduce page loads time to the order of 15-20%
 app.use(logger('dev')); // morgan
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator()); // validate form inputs. cf req.assert in controllers files
