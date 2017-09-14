@@ -44,8 +44,8 @@ exports.postSignupPicture = async (req, res, next) => {
   const { filename } = req.file;
   const { email } = req.headers;
 
-  const oldPath = path.resolve(__dirname, `../uploads/tmp/${filename}`);
-  const newPath = path.resolve(__dirname, `../uploads/${filename}`);
+  const oldPath = path.resolve(__dirname, `../public/uploads/tmp/${filename}`);
+  const newPath = path.resolve(__dirname, `../public/uploads/${filename}`);
 
   await sharp(oldPath)
     .resize(240, 240, {
