@@ -31,7 +31,7 @@ exports.postSignin = (req, res, next) => {
       if (err) { return next(err); }
       return res.send({ error: '' });
     });
-  })(req, res, next);
+  })(req, res, next); // <= ??
 };
 
 /**

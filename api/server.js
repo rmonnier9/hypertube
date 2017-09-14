@@ -9,30 +9,31 @@ import logger from 'morgan';
 import chalk from 'chalk';
 import errorHandler from 'errorhandler';
 import lusca from 'lusca';
-import dotenv from 'dotenv/config';
-const MongoStore = require('connect-mongo')(session);
 import path from 'path';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import expressValidator from 'express-validator';
 import expressStatusMonitor from 'express-status-monitor';
 import multer from 'multer';
+import dotenv from 'dotenv/config';
+
+/**
+* Controllers (route handlers).
+*/
+import userController from './controllers/user';
+
+/**
+* API keys and Passport configuration.
+*/
+import passportConfig from './config/passport';
+
+// stores sessions in the "sessions" collection by default. See if user is loggedin (passport).
+const MongoStore = require('connect-mongo')(session);
 
 /**
  * multer configuration
  */
-
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
-
-/**
- * Controllers (route handlers).
- */
-import userController from './controllers/user';
-
-/**
- * API keys and Passport configuration.
- */
-import passportConfig from './config/passport';
 
 /**
  * Create Express server.
@@ -42,7 +43,7 @@ const app = express();
 /**
  * Connect to MongoDB.
  */
-mongoose.Promise = global.Promise;
+mongoose.Promise = global.Promise; // Use native promises (vs bluebird...) (?)
 mongoose.connect(process.env.MONGODB_URI);
 mongoose.connection.on('error', (err) => {
   console.error(err);
@@ -55,15 +56,17 @@ mongoose.connection.on('error', (err) => {
  */
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8000);
-app.use(expressStatusMonitor());
-app.use(compression());
-app.use(logger('dev'));
+app.use(expressStatusMonitor()); // report realtime server metrics for Express-based node servers ?
+app.use(compression()); // reduce page loads time to the order of 15-20%
+app.use(logger('dev')); // morgan
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(expressValidator());
+app.use(expressValidator()); // validate form inputs. cf req.assert in controllers files
+// express-session: sends a session ID over cookies to the client
 app.use(session({
-  resave: true,
-  saveUninitialized: true,
+  resave: true, // automatically write to the session store
+  saveUninitialized: true, // saved new sessions
   secret: process.env.SESSION_SECRET,
   store: new MongoStore({
     url: process.env.MONGODB_URI,
@@ -73,9 +76,8 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(lusca.xframe('SAMEORIGIN'));
+app.use(lusca.xframe('SAMEORIGIN')); // lusca = security middleware
 app.use(lusca.xssProtection(true));
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
 /**
  * Primary app routes.
@@ -110,7 +112,7 @@ app.get('/api/auth/google/callback', passport.authenticate('google', { failureRe
 });
 
 /**
- * Error Handler.
+ * Error Handler. only use in development
  */
 app.use(errorHandler());
 
