@@ -94,7 +94,7 @@ app.get('/api/islogged', userController.getIslogged);
 app.use(passportConfig.isAuthenticated);
 
 app.get('/api/signout', userController.signout);
-app.get('/api/me', userController.getAccount);
+app.get('/api/me', userController.getMyAccount);
 app.post('/api/me');
 app.delete('/api/me');
 app.get('/api/profile/:login');

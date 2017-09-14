@@ -116,11 +116,12 @@ exports.postSignup = (req, res, next) => {
  * GET /me
  * Profile page.
  */
-exports.getAccount = (req, res) => {
+exports.getMyAccount = (req, res, next) => {
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
-    return res.send({ error: '', user })
-  })
+    user.password = '';
+    return res.send({ error: '', user });
+  });
 };
 
 /**
@@ -170,11 +171,12 @@ exports.postUpdateProfile = (req, res, next) => {
  * GET /profile/:login
  * Profile page.
  */
-exports.getAccount = (req, res) => {
+exports.getAccount = (req, res, next) => {
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
-    return res.send({ error: '', user })
-  })
+    user.password = '';
+    return res.send({ error: '', user });
+  });
 };
 
 /**
