@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import PrivateRoute from './PrivateRoute';
+import PrivateRoute from './PrivateRoute.js';
 
 // Components
-import NotFound from './components/NotFound';
+import NotFound from './General/components/NotFound.js';
 
 // Containers
-import Header from './containers/Header';
-import MyProfile from './containers/MyProfile';
-import Signin from './containers/Signin';
-import Signup from './containers/Signup';
-import Gallery from './components/GalleryComponent';
+import Header from './General/components/Header.js';
+import MyProfile from './Profile/containers/MyProfile.js';
+import Signin from './HomePage/containers/Signin.js';
+import Signup from './HomePage/containers/Signup.js';
+import Gallery from './Gallery/components/GalleryComponent.js';
 
 const MatchaRouter = ({ isAuthenticated }) => (
   <Router>

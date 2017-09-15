@@ -1,6 +1,3 @@
-/**
- * Module dependencies.
- */
 import express from 'express';
 import compression from 'compression';
 import session from 'express-session';
@@ -17,15 +14,7 @@ import expressStatusMonitor from 'express-status-monitor';
 import multer from 'multer';
 import dotenv from 'dotenv/config';
 
-/**
-* Controllers (route handlers).
-*/
-import userController from './controllers/user';
-
-/**
-* API keys and Passport configuration.
-*/
-import passportConfig from './config/passport';
+import routes from './routes';
 
 // stores sessions in the "sessions" collection by default. See if user is loggedin (passport).
 const MongoStore = require('connect-mongo')(session);
@@ -33,8 +22,6 @@ const MongoStore = require('connect-mongo')(session);
 /**
  * multer configuration
  */
-// const upload = multer({ dest: path.join(__dirname, 'public/uploads/tmp') });
-// CBE: add extension name to file + mimetype check
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, path.join(__dirname, 'public/uploads/tmp'));
@@ -98,38 +85,8 @@ app.use(passport.session());
 app.use(lusca.xframe('SAMEORIGIN')); // lusca = security middleware
 app.use(lusca.xssProtection(true));
 
-/**
- * Primary app routes.
- */
-app.post('/api/signin', userController.postSignin);
-app.post('/api/signup/info', userController.postSignup);
-app.post('/api/signup/upload', upload.single('imageUploaded'), userController.postSignupPicture);
-app.post('/api/forgot', userController.postForgot); // not implemented
-app.post('/api/reset/:token', userController.postReset); // not implemented
-
-app.get('/api/islogged', userController.getIslogged);
-
-// Logged part  ====================
-app.use(passportConfig.isAuthenticated);
-
-app.get('/api/signout', userController.signout);
-app.get('/api/me', userController.getMyAccount);
-app.post('/api/me');
-app.post('/api/profile_pic', upload.single('imageUploaded'), userController.NewPicture);
-app.delete('/api/me');
-app.get('/api/profile/:login');
-
-app.get('/api/search');
-app.get('/api/movie/:id');
-app.post('/api/movie/:id');
-
-/**
- * OAuth authentication routes. (Sign in)
- */
-app.get('/api/auth/google', passport.authenticate('google', { scope: 'profile email' }));
-app.get('/api/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
+// Load routes
+routes(app, upload);
 
 /**
  * Error Handler. only use in development

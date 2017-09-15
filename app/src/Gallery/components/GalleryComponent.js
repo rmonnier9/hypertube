@@ -1,7 +1,7 @@
 import React from 'react';
 // import { Link } from 'react-router-dom';
 // import PropTypes from 'prop-types';
-import GalleryBackground from '../Images/Gallery_background.jpg';
+import GalleryBackground from '../images/Gallery_background.jpg';
 
 const styles = {
   container: {

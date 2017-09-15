@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import SignupComponent from '../components/SignupComponent2';
+import SignupComponent from '../components/SignupComponent.js';
 
-import { loginUser } from '../actions/authAction';
+import { loginUser } from '../../actions/authAction';
+import '../css/homepage.css';
 
 class Signup extends Component {
 

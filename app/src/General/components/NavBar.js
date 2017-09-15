@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const SignOutMenu = props => (
   <button
-      onClick={props.handleSignOut}
+    onClick={props.handleSignOut}
   >
   Signout
   </button>

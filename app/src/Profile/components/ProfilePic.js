@@ -1,21 +1,5 @@
 import React, { Component } from 'react';
-import Dialog from './Dialog.js';
-
-const styles = {
-  picture: {
-    width: '240px',
-    height: '240px',
-  },
-  upload: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  camera: {
-    backgroundColor: 'transparent',
-    border: 'none',
-    outline: 'none',
-  },
-};
+import Dialog from '../../HomePage/components/Dialog.js';
 
 export default class ProfileProfile extends Component {
 
@@ -30,17 +14,16 @@ export default class ProfileProfile extends Component {
     `/static/uploads/${this.props.user.profile.picture}`;
     return (
       <div>
-        <div style={styles.upload}>
+        <div className="upload-new-pic">
           <span>Upload a new profile picture</span>
           <button
-            style={styles.camera}
-            className="material-icons"
+            className="material-icons camera-icon"
             onClick={this.props.handleOpen}
           >
           camera_enhance
           </button>
         </div>
-        <div style={styles.picture}>
+        <div className="profile-pic">
           <img src={path} alt="" />
         </div>
         <Dialog

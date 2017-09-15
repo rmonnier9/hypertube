@@ -3,14 +3,9 @@ import axios from 'axios';
 
 import UpdateInfos from './UpdateInfos.js';
 import ProfilePic from '../components/ProfilePic.js';
+import '../css/profile.css';
 
-const styles = {
-  profile: {
-    margin: '10px',
-  },
-};
-
-export default class MyProfile extends Component {
+class MyProfile extends Component {
 
   state = {
     profileLoaded: false,
@@ -79,7 +74,7 @@ export default class MyProfile extends Component {
       return (<div><h1>{error || 'Loading...'}</h1></div>);
     }
     return (
-      <div style={styles.profile}>
+      <div className="profile-container">
         <h1>Profile</h1>
         <ProfilePic
           user={this.user}
@@ -96,3 +91,5 @@ export default class MyProfile extends Component {
   }
 
 }
+
+export default MyProfile;

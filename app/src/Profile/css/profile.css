@@ -1,0 +1,29 @@
+.profile-container {
+  margin: 10px;
+}
+
+.profile-pic {
+  width: 240px;
+  height: 240px;
+}
+
+.upload-new-pic {
+  display: flex;
+  align-items: center;
+}
+
+button.camera-icon, button.glyphicon-pencil {
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.infos-container {
+  width: 240px;
+  display: inline-block;
+}
+
+.infos-title {
+  width: 70px;
+  display: inline-block;
+}

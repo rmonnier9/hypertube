@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { loginUser } from '../actions/authAction';
-import SigninComponent from '../components/SigninComponent2';
-
+import { loginUser } from '../../actions/authAction';
+import SigninComponent from '../components/SigninComponent.js';
+import '../css/homepage.css';
 
 export default connect(
   ({ auth: { isAuthenticated, message } }) => ({
