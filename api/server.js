@@ -33,8 +33,27 @@ const MongoStore = require('connect-mongo')(session);
 /**
  * multer configuration
  */
-const upload = multer({ dest: path.join(__dirname, 'public/uploads/tmp') });
+// const upload = multer({ dest: path.join(__dirname, 'public/uploads/tmp') });
+// CBE: add extension name to file + mimetype check
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, path.join(__dirname, 'public/uploads/tmp'));
+  },
+  filename: (req, file, callback) => {
+    callback(null, Date.now() + path.extname(file.originalname).toLowerCase());
+  },
+});
 
+const upload = multer({
+  storage,
+  fileFilter: (req, file, callback) => {
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg') {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
+});
 /**
  * Create Express server.
  */
@@ -44,7 +63,7 @@ const app = express();
  * Connect to MongoDB.
  */
 mongoose.Promise = global.Promise; // Use native promises (vs bluebird...) (?)
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true });
 mongoose.connection.on('error', (err) => {
   console.error(err);
   console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
@@ -85,8 +104,8 @@ app.use(lusca.xssProtection(true));
 app.post('/api/signin', userController.postSignin);
 app.post('/api/signup/info', userController.postSignup);
 app.post('/api/signup/upload', upload.single('imageUploaded'), userController.postSignupPicture);
-app.post('/api/forgot', userController.postForgot);
-app.post('/api/reset/:token', userController.postReset);
+app.post('/api/forgot', userController.postForgot); // not implemented
+app.post('/api/reset/:token', userController.postReset); // not implemented
 
 app.get('/api/islogged', userController.getIslogged);
 
@@ -96,6 +115,7 @@ app.use(passportConfig.isAuthenticated);
 app.get('/api/signout', userController.signout);
 app.get('/api/me', userController.getMyAccount);
 app.post('/api/me');
+app.post('/api/profile_pic', upload.single('imageUploaded'), userController.NewPicture);
 app.delete('/api/me');
 app.get('/api/profile/:login');
 

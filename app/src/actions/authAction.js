@@ -66,14 +66,14 @@ const loginUser = creds => (dispatch) => {
 const logoutUser = () => (dispatch) => {
   dispatch(requestLogout());
   return axios.get('/api/signout')
-  .then(({ data : { error }}) => {
+  .then(({ data: { error } }) => {
     if (!error) {
       localStorage.removeItem('isAuthenticated');
       dispatch(receiveLogout());
     } else {
       dispatch(logoutError(error));
     }
-  })
+  });
 };
 
 export {

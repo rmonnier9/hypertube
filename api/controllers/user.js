@@ -53,7 +53,10 @@ exports.postSignupPicture = async (req, res, next) => {
       interpolator: sharp.interpolator.nohalo,
     })
     .toFile(newPath);
-  fs.unlinkSync(oldPath);
+  // CBE: to avoid crash if file doesn't exist
+  if (fs.existsSync(oldPath)) {
+    fs.unlinkSync(oldPath);
+  }
   User.findOne({ email })
     .then((user) => {
       if (!user) {
@@ -74,6 +77,40 @@ exports.postSignupPicture = async (req, res, next) => {
     });
 };
 
+/**
+ * POST /profile_pic
+ * Update profile picture.
+ */
+
+exports.NewPicture = async (req, res, next) => {
+  const { filename } = req.file;
+  const tmpPath = path.resolve(__dirname, `../public/uploads/tmp/${filename}`);
+  const newPath = path.resolve(__dirname, `../public/uploads/${filename}`);
+
+  await sharp(tmpPath)
+    .resize(240, 240, {
+      kernel: sharp.kernel.lanczos2,
+      interpolator: sharp.interpolator.nohalo,
+    })
+    .toFile(newPath);
+  if (fs.existsSync(tmpPath)) {
+    fs.unlinkSync(tmpPath);
+  }
+  User.findById(req.user.id, (err, user) => {
+    if (err) { return next(err); }
+    if (user.profile.picture) {
+      const oldPath = path.resolve(__dirname, `../public/uploads/${user.profile.picture}`);
+      if (fs.existsSync(oldPath)) {
+        fs.unlinkSync(oldPath);
+      }
+    }
+    user.profile.picture = filename;
+    user.save((err) => {
+      if (err) { return next(err); }
+      return res.send({ error: '', picture: filename });
+    });
+  });
+};
 
 exports.postSignup = (req, res, next) => {
   req.assert('email', 'Email is not valid').isEmail();
@@ -152,10 +189,6 @@ exports.postUpdateProfile = (req, res, next) => {
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
     user.email = req.body.email || '';
-    user.profile.name = req.body.name || '';
-    user.profile.gender = req.body.gender || '';
-    user.profile.location = req.body.location || '';
-    user.profile.website = req.body.website || '';
     user.save((err) => {
       if (err) {
         if (err.code === 11000) {

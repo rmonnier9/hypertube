@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import UpdateInfos from './UpdateInfos.js';
+import ProfilePic from '../components/ProfilePic.js';
+
 const styles = {
-  picture: {
-    width: '240px',
-    height: '240px',
+  profile: {
+    margin: '10px',
   },
 };
 
-class MyProfile extends Component {
+export default class MyProfile extends Component {
+
   state = {
     profileLoaded: false,
     error: '',
+    status: 'closed',
+    file: {},
+    picture: '',
   }
 
   componentDidMount() {
@@ -29,28 +35,64 @@ class MyProfile extends Component {
     });
   }
 
+  handleOpen = () => {
+    this.setState({ status: 'open' });
+  }
+
+  imageUpload = (file) => { this.setState({ file }); }
+
+  sendPicture = (file) => {
+    const form = new FormData();
+    form.append('imageUploaded', file);
+    const headers = { 'Content-Type': 'multipart/form-data' };
+    const config = {
+      url: '/api/profile_pic',
+      method: 'POST',
+      data: form,
+      headers,
+    };
+    return axios(config);
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const { file } = this.state;
+    this.sendPicture(file)
+    .then(({ data: { error, picture } }) => {
+      if (error) this.setState({ status: 'open', error });
+      else {
+        this.setState({ status: 'closed', picture });
+      }
+    });
+  }
+
   render() {
-    // console.log("render", this.state)
     const {
       profileLoaded,
       error,
+      picture,
+      status,
+      file,
     } = this.state;
 
     if (error || !profileLoaded) {
       return (<div><h1>{error || 'Loading...'}</h1></div>);
     }
-    const path = `/static/uploads/${this.user.profile.picture}`;
     return (
-      <div className="profile">
-        <h1>{this.user.email} is logged !</h1>
-        <div style={styles.picture}>
-          <img src={path} alt="" />
-        </div>
+      <div style={styles.profile}>
+        <h1>Profile</h1>
+        <ProfilePic
+          user={this.user}
+          picture={picture}
+          handleUpload={this.imageUpload}
+          handleSubmit={this.handleSubmit}
+          handleOpen={this.handleOpen}
+          status={status}
+          file={file}
+        />
+        <UpdateInfos user={this.user} />
       </div>
     );
   }
 
 }
-
-
-export default MyProfile;
