@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import UpdateInfos from './UpdateInfos.js';
+import UpdateMyInfos from './UpdateMyInfos.js';
 import ProfilePic from '../components/ProfilePic.js';
 import '../css/profile.css';
 
@@ -85,7 +85,7 @@ class MyProfile extends Component {
           status={status}
           file={file}
         />
-        <UpdateInfos user={this.user} />
+        <UpdateMyInfos user={this.user} />
       </div>
     );
   }

@@ -36,3 +36,31 @@ button.homepage-submit {
 h2.homepage-title {
   text-align: center;
 }
+
+.picture-preview {
+  object-fit: cover;
+  width: 200px;
+  height: 200px;
+}
+
+.signup-camera-icon {
+  font-size: 48px;
+}
+
+.dropzone-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropzone {
+  margin: 20px;
+  border-style: solid;
+  border-width: medium;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
