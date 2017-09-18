@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-
+import { FormattedMessage } from 'react-intl';
 import UpdateMyInfos from './UpdateMyInfos.js';
 import ProfilePic from '../components/ProfilePic.js';
 import '../css/profile.css';
@@ -75,6 +75,10 @@ class MyProfile extends Component {
     }
     return (
       <div className="profile-container">
+        <FormattedMessage
+          id="Profil"
+          defaultMessage="Profil"
+        />
         <h1>Profile</h1>
         <ProfilePic
           user={this.user}

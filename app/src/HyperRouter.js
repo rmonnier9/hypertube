@@ -15,7 +15,7 @@ import Signin from './HomePage/containers/Signin.js';
 import Signup from './HomePage/containers/Signup.js';
 import Gallery from './Gallery/components/GalleryComponent.js';
 
-const MatchaRouter = ({ isAuthenticated }) => (
+const MatchaRouter = ({ isAuthenticated, locale }) => (
   <Router>
     <div>
       <Header />
@@ -32,18 +32,21 @@ const MatchaRouter = ({ isAuthenticated }) => (
 
 MatchaRouter.propTypes = {
   isAuthenticated: PropTypes.bool,
+  locale: PropTypes.string,
 };
 
 MatchaRouter.defaultProps = {
   isAuthenticated: false,
+  locale: 'en-EN',
 };
 
 //= ====================================
 //  CONNECT
 //-------------------------------------
 
-const mapStateToProps = ({ auth: { isAuthenticated } }) => ({
+const mapStateToProps = ({ auth: { isAuthenticated }, i18n: { locale } }) => ({
   isAuthenticated,
+  locale,
 });
 
 export default connect(mapStateToProps)(MatchaRouter);

@@ -17,8 +17,8 @@ class NavBar extends React.Component {
       <div>
         <button><Link to="/myprofile">To profile</Link></button>
         <button><Link to="/">To Gallery</Link></button>
-        <button onClick={() => this.props.onLocaleChange('fr-FR')}>FR</button>
-        <button onClick={() => this.props.onLocaleChange('en-EN')}>EN</button>
+        <button onClick={() => this.props.onLocaleChange('fr-fr')}>FR</button>
+        <button onClick={() => this.props.onLocaleChange('en-en')}>EN</button>
         <SignOutMenu
           handleSignOut={this.props.handleSignOut}
         />

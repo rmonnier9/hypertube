@@ -5,6 +5,14 @@
   "proxy": "http://localhost:8000",
   "dependencies": {
     "axios": "^0.16.1",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-react-intl": "^2.3.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "better-npm-run": "^0.1.0",
     "browser-cookies": "^1.1.0",
     "material-ui": "^0.19.1",
     "prop-types": "^15.5.9",
@@ -60,9 +68,19 @@
     }
   },
   "scripts": {
+    "geni18n": "better-npm-run geni18n",
+    "buildi18n": "rm -rf ./src/i18n/messages && BABEL_ENV=i18n ./node_modules/babel-cli/bin/babel.js --quiet src > /dev/null",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "betterScripts": {
+    "geni18n": {
+      "command": "node ./bin/i18n-generate",
+      "env": {
+        "DEBUG": "app:*"
+      }
+    }
   }
 }
