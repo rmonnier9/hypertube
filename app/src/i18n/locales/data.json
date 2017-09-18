@@ -1,0 +1,10 @@
+{
+  "fr-FR": {
+    "Signup": "Inscription",
+    "isLogged": "{email} est connecté !"
+  },
+  "en-EN": {
+    "Signup": "Signup",
+    "isLogged": "{email} is logged !"
+  }
+}
