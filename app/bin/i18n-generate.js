@@ -7,6 +7,12 @@ const locales = { 'fr-fr': 'fr', 'en-en': 'en' };
 const filePattern = './src/i18n/messages/**/*.json';
 const outputDir = './src/i18n/locales/';
 
+// schev
+// Firstly. Use the correct syntax to write component needed to be translated. see examples
+// Secondly in the app repository do : npm run buildi18 and npm run geni18n
+// It will create a file in app/src/i18n/locales that will be easy to translate.
+// Current WARNING => running build18n will erase all the translation. Need to fix this
+
 // Aggregates the default messages that were extracted from the example app's
 // React components via the React Intl Babel plugin. An error will be thrown if
 // there are messages in different components that use the same `id`. The result
