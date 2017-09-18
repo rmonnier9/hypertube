@@ -14,7 +14,9 @@
     "react-intl": "^2.4.0",
     "react-redux": "^5.0.4",
     "react-router-dom": "^4.1.1",
+    "react-router-redux": "^4.0.8",
     "redux": "^3.7.2",
+    "redux-auth": "0.0.5-beta5",
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.2.0"
   },
