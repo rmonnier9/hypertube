@@ -30,28 +30,93 @@ exports.getIslogged = (req, res) => {
  * Update profile information.
  */
 exports.postUpdateProfile = (req, res, next) => {
-  req.assert('email', 'Please enter a valid email address.').isEmail();
-  req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+  const { id } = req.body;
+  switch (id) {
 
-  const error = req.validationErrors();
+    case 'name-form': {
+      req.assert('firstName', 'First name can\'t be more than 20 letters long').len({ max: 20 });
+      req.assert('lastName', 'Last name can\'t be more than 20 letters long').len({ max: 20 });
 
-  if (error) {
-    return res.send({ error });
-  }
+      const error = req.validationErrors();
 
-  User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
-    user.email = req.body.email || '';
-    user.save((err) => {
-      if (err) {
-        if (err.code === 11000) {
-          return res.send({ error: 'The email address you have entered is already associated with an account.' });
-        }
-        return next(err);
+      if (error) {
+        return res.send({ error });
       }
-      return res.send({ error: '' });
-    });
-  });
+
+      User.findById(req.user.id, (err, user) => {
+        if (err) { return next(err); }
+        if (req.body.firstName.length !== 0) {
+          user.profile.firstName = req.body.firstName;
+        }
+        if (req.body.lastName.length !== 0) {
+          user.profile.lastName = req.body.lastName;
+        }
+        user.save((err) => {
+          if (err) { return next(err); }
+          user.password = '';
+          return res.send({ error: '', user });
+        });
+      });
+      break;
+    }
+
+    case 'email-form': {
+      req.assert('email', 'Please enter a valid email address.').isEmail();
+      req.assert('password', 'Password cannot be blank').notEmpty();
+      req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+
+      const error = req.validationErrors();
+
+      if (error) {
+        return res.send({ error });
+      }
+
+      User.findById(req.user.id, (err, user) => {
+        if (err) { return next(err); }
+        user.comparePassword(req.body.password, (err, isMatch) => {
+          if (err) { return next(err); }
+          if (isMatch === false) {
+            return res.send({ error: [{ param: 'password', msg: 'Incorrect password.', value: req.body.password }] });
+          }
+          user.email = req.body.email;
+          user.save((err) => {
+            if (err) {
+              if (err.code === 11000) {
+                return res.send({ error: [{ param: 'email', msg: 'The email address you have entered is already associated with an account.', value: req.body.email }] });
+              }
+              return next(err);
+            }
+            user.password = '';
+            return res.send({ error: '', user });
+          });
+        });
+      });
+      break;
+    }
+
+    case 'password-form': {
+      req.assert('password', 'Password must be at least 4 characters long').len(4);
+      req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+
+      const error = req.validationErrors();
+
+      if (error) {
+        return res.send({ error });
+      }
+
+      User.findById(req.user.id, (err, user) => {
+        if (err) { return next(err); }
+        user.password = req.body.password;
+        user.save((err) => {
+          if (err) { return next(err); }
+          return res.send({ error: '', user });
+        });
+      });
+      break;
+    }
+    default:
+      res.status(401).send({ error: 'invalid action requested' });
+  }
 };
 
 /**
@@ -70,25 +135,25 @@ exports.getAccount = (req, res, next) => {
  * POST /account/password
  * Update current password.
  */
-exports.postUpdatePassword = (req, res, next) => {
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
-
-  const error = req.validationErrors();
-
-  if (error) {
-    return res.send({ error });
-  }
-
-  User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
-    user.password = req.body.password;
-    user.save((err) => {
-      if (err) { return next(err); }
-      return res.send({ error: '' })
-    });
-  });
-};
+// exports.postUpdatePassword = (req, res, next) => {
+//   req.assert('password', 'Password must be at least 4 characters long').len(4);
+//   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+//
+//   const error = req.validationErrors();
+//
+//   if (error) {
+//     return res.send({ error });
+//   }
+//
+//   User.findById(req.user.id, (err, user) => {
+//     if (err) { return next(err); }
+//     user.password = req.body.password;
+//     user.save((err) => {
+//       if (err) { return next(err); }
+//       return res.send({ error: '' })
+//     });
+//   });
+// };
 
 /**
  * DELETE /me

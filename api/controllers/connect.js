@@ -36,8 +36,8 @@ exports.postSignup = (req, res, next) => {
   req.assert('email', 'Email is not valid').isEmail();
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
-  req.assert('firstName', 'First name can\'t be more more than 20 letters long').len({ max: 20 });
-  req.assert('lastName', 'Last name name can\'t be more more than 20 letters long').len({ max: 20 });
+  req.assert('firstName', 'First name can\'t be more than 20 letters long').len({ max: 20 });
+  req.assert('lastName', 'Last name can\'t be more than 20 letters long').len({ max: 20 });
   req.sanitize('creds.email').normalizeEmail({ gmail_remove_dots: false });
 
   const error = req.validationErrors();
