@@ -1,6 +1,6 @@
 import passport from 'passport';
 import user from './controllers/user';
-import movie from './controllers/movie';
+import * as movie from './controllers/movie';
 import connect from './controllers/connect'; // signup signin
 import picture from './controllers/picture';
 import passportConfig from './config/passport';
@@ -29,7 +29,7 @@ const routes = (app, upload) => {
   app.get('/api/profile/:login');
 
   app.get('/api/search');
-  app.get('/api/movie/info/:id');
+  app.get('/api/movie/info/:id', movie.GetInfo);
   app.get('/api/movie/stream/:id', movie.Stream);
   app.post('/api/movie/:id');
 

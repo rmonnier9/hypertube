@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-export const Stream = (req, res) => {
+const Stream = (req, res) => {
   const path = 'assets/sample.mp4';
   const stat = fs.statSync(path);
   const fileSize = stat.size;
@@ -30,3 +30,9 @@ export const Stream = (req, res) => {
     fs.createReadStream(path).pipe(res);
   }
 };
+
+const GetInfo = (req, res) => {
+  return res.send({ error: '' });
+};
+
+export { Stream, GetInfo };
