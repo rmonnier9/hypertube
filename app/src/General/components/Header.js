@@ -25,10 +25,6 @@ class Header extends Component {
 }
 
 
-//= ====================================
-//  CONNECT
-//-------------------------------------
-
 const mapStateToProps = ({
   auth: { isAuthenticated },
 }) => ({

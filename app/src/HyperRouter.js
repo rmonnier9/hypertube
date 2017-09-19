@@ -14,14 +14,16 @@ import MyProfile from './Profile/containers/MyProfile.js';
 import Signin from './HomePage/containers/Signin.js';
 import Signup from './HomePage/containers/Signup.js';
 import Gallery from './Gallery/components/GalleryComponent.js';
+import Video from './Video/components/Video.js';
 
-const MatchaRouter = ({ isAuthenticated }) => (
+const MatchaRouter = ({ isAuthenticated, locale }) => (
   <Router>
     <div>
       <Header />
       <Switch>
         <PrivateRoute exact path="/" isAuthenticated={isAuthenticated} component={Gallery} />
         <PrivateRoute exact path="/myprofile" isAuthenticated={isAuthenticated} component={MyProfile} />
+        <PrivateRoute exact path="/video" isAuthenticated={isAuthenticated} component={Video} />
         <Route path="/signin" component={Signin} />
         <Route path="/signup" component={Signup} />
         <Route component={NotFound} />
@@ -32,18 +34,21 @@ const MatchaRouter = ({ isAuthenticated }) => (
 
 MatchaRouter.propTypes = {
   isAuthenticated: PropTypes.bool,
+  locale: PropTypes.string,
 };
 
 MatchaRouter.defaultProps = {
   isAuthenticated: false,
+  locale: 'en-EN',
 };
 
 //= ====================================
 //  CONNECT
 //-------------------------------------
 
-const mapStateToProps = ({ auth: { isAuthenticated } }) => ({
+const mapStateToProps = ({ auth: { isAuthenticated }, i18n: { locale } }) => ({
   isAuthenticated,
+  locale,
 });
 
 export default connect(mapStateToProps)(MatchaRouter);
