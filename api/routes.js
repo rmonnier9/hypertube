@@ -12,8 +12,8 @@ const routes = (app, upload) => {
   app.post('/api/signin', connect.postSignin);
   app.post('/api/signup/info', connect.postSignup);
   app.post('/api/signup/upload', upload.single('imageUploaded'), picture.postSignupPicture);
-  app.post('/api/forgot', user.postForgot); // not implemented
-  app.post('/api/reset/:token', user.postReset); // not implemented
+  app.post('/api/forgot', user.postForgot); // not implemented front-end
+  app.post('/api/reset/:token', user.postReset); // not implemented front-end
 
   app.get('/api/islogged', user.getIslogged);
 
@@ -22,7 +22,7 @@ const routes = (app, upload) => {
 
   app.get('/api/signout', user.signout);
   app.get('/api/me', user.getMyAccount);
-  app.post('/api/me');
+  app.post('/api/me', user.postUpdateProfile);
   app.post('/api/profile_pic', upload.single('imageUploaded'), picture.newPicture);
   app.delete('/api/me');
   app.get('/api/profile/:login');

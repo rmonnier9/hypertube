@@ -21,7 +21,6 @@ export default class CustomDialog extends Component {
   handleClose = () => { this.setState({ open: false }); };
 
   render() {
-    // CBE: if the file uploaded wasn't an image, was crashing. Corrected here:
     const file = this.props.file === undefined ? {} : this.props.file;
     const preview = this.props.file === undefined ? null : this.props.file.preview;
     const error = this.props.file === undefined ? 'Please upload an image only.' : this.props.error;
