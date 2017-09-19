@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import MyInfosForms from '../components/MyInfosForms2.js';
+import MyInfosForms from '../components/MyInfosForms.js';
 
 class UpdateMyInfos extends Component {
 
