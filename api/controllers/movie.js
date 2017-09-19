@@ -8,7 +8,7 @@ const User = require('../models/User');
  * Profile page.
  */
 exports.Stream = (req, res) => {
-  const path = 'assets/sample.mp4'
+  const path = './public/Movies/12.mp4'
   const stat = fs.statSync(path)
   const fileSize = stat.size
   const range = req.headers.range
