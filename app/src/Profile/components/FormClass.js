@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import TextInput from '../../General/components/TextInput.js';
 
 
-const FormClass = ({ status, data }) => {
-  if (status === false) return null;
-  const { onChange, onSubmit, formId, fieldNb, values, name, type, text } = data;
+const FormClass = ({ data }) => {
+  const { onChange, onSubmit, formId, fieldNb, name, type, text, values } = data;
+  console.log('values', values);
   const TextInputDisplay = [];
   for (let i = 0; i < fieldNb; i += 1) {
     TextInputDisplay.push(
