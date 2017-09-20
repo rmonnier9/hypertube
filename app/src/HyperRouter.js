@@ -39,7 +39,7 @@ MatchaRouter.propTypes = {
 
 MatchaRouter.defaultProps = {
   isAuthenticated: false,
-  locale: 'en-EN',
+  locale: 'en-en',
 };
 
 //= ====================================
