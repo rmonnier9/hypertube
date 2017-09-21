@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import PrivateRoute from './PrivateRoute.js';
+import PrivateRoute from './PrivateRoute';
 
 // Components
-import NotFound from './General/components/NotFound.js';
+import NotFound from './General/components/NotFound';
 
 // Containers
-import Header from './General/components/Header.js';
-import MyProfile from './Profile/containers/MyProfile.js';
-import Signin from './HomePage/containers/Signin.js';
-import Signup from './HomePage/containers/Signup.js';
-import Gallery from './Gallery/components/GalleryComponent.js';
-import Video from './Video/components/Video.js';
+import Header from './General/components/Header';
+import MyProfile from './Profile/containers/MyProfile';
+import Signin from './HomePage/containers/Signin';
+import Signup from './HomePage/containers/Signup';
+import Gallery from './Gallery/components/GalleryComponent';
+import Video from './Video/components/Video';
 
 const MatchaRouter = ({ isAuthenticated, locale }) => (
   <Router>

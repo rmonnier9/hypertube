@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { logoutUser } from '../../actions/authAction';
-import NavBar from '../components/NavBar';
+import { logoutUser } from '../../../actions/authAction';
+import NavBar from '../NavBar';
 
 class Header extends Component {
 
@@ -31,4 +31,8 @@ const mapStateToProps = ({
   isAuthenticated,
 });
 
+// Use named export for unconnected component (for tests)
+export { Header };
+
+// Use default export for the connected component (for app)
 export default connect(mapStateToProps)(Header);
