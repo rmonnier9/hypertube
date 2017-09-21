@@ -2,8 +2,15 @@ import React from 'react';
 // import { Link } from 'react-router-dom';
 // import PropTypes from 'prop-types';
 import GalleryBackground from '../images/Gallery_background.jpg';
+import Card from './Card.js';
+import '../css/CardOverlay.css';
 
 const styles = {
+  acontainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    backgroundColor: 'black',
+  },
   container: {
     margin: 'auto',
     marginTop: '25vh',
@@ -40,14 +47,18 @@ const styles = {
   },
 };
 
-const GalleryComponent = () => (
-  <div>
-    <div style={styles.background} />
-    <div style={styles.container}>
-      <h2>GALLERY =&gt; UPCOMMING...</h2>
+
+const GalleryComponent = ({ movies }) => {
+  const Cards = movies.map(movie => (
+    (<Card key={movie.id} movie={movie} style={styles.card} />)
+  ));
+  // const Cardi = (<Card key={movies[0].id} movie={movies[0]} style={styles.card} />)
+  return (
+    <div style={styles.acontainer}>
+      {Cards}
     </div>
-  </div>
-);
+  );
+};
 
 GalleryComponent.PropTypes = {
 };

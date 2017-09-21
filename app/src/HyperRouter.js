@@ -13,7 +13,7 @@ import Header from './General/components/Header.js';
 import MyProfile from './Profile/containers/MyProfile.js';
 import Signin from './HomePage/containers/Signin.js';
 import Signup from './HomePage/containers/Signup.js';
-import Gallery from './Gallery/components/GalleryComponent.js';
+import Gallery from './Gallery/container/Gallery.js';
 import Video from './Video/components/Video.js';
 
 const MatchaRouter = ({ isAuthenticated, locale }) => (
