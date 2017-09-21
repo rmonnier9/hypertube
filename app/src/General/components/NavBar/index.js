@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { updateLocale } from '../../reducers/i18n';
+import { updateLocale } from '../../../reducers/i18n';
 
 const SignOutMenu = props => (
   <button
@@ -14,7 +14,7 @@ const SignOutMenu = props => (
 class NavBar extends React.Component {
   render() {
     return (
-      <div>
+      <div className="navbar">
         <button><Link to="/myprofile">To profile</Link></button>
         <button><Link to="/">To Gallery</Link></button>
         <button onClick={() => this.props.onLocaleChange('fr-fr')}>FR</button>
@@ -35,4 +35,8 @@ const mapDispatchToProps = dispatch => (
   { onLocaleChange: updateLocale({ dispatch }) }
 );
 
+// Use named export for unconnected component (for tests)
+export { NavBar };
+
+// Use default export for the connected component (for app)
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
