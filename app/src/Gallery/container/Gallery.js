@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import GalleryComponent from '../components/GalleryComponent.js';
-import Switcher from '../components/Switcher.js'
+import MovieList from '../components/MovieList';
 // import FilterBar from '../components/FilterBar.js';
 
 const initialQueryYifi = 'https://yts.ag/api/v2/list_movies.json';
@@ -52,6 +51,7 @@ class Gallery extends Component {
     const { movies } = this.state;
     if (!movies) return null;
     return (
+      <MovieList movies={movies} />
       <div>
         <Switcher switch={this.switcher} />
       </div>
