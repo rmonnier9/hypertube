@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import GalleryComponent from '../components/GalleryComponent.js';
+import Switcher from '../components/Switcher.js'
 // import FilterBar from '../components/FilterBar.js';
 
-const initialQuery = 'https://yts.ag/api/v2/list_movies.json';
-const inti = 'https://eztv.ag/api/get-torrents?limit=10&page=1';
+const initialQueryYifi = 'https://yts.ag/api/v2/list_movies.json';
+const initialQueryEztv = 'https://eztv.ag/api/get-torrents?limit=10&page=1';
 
 class Gallery extends Component {
 
@@ -13,8 +14,8 @@ class Gallery extends Component {
   }
 
   componentDidMount() {
-    this.eztvQuery(inti);
-    // this.yifiQuery(initialQuery);
+    this.eztvQuery(initialQueryEztv);
+    // this.yifiQuery(initialQueryYifi);
   }
 
   eztvQuery = (url) => {
@@ -52,8 +53,7 @@ class Gallery extends Component {
     if (!movies) return null;
     return (
       <div>
-
-
+        <Switcher switch={this.switcher} />
       </div>
     );
   }
