@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import GalleryComponent from '../components/GalleryComponent.js';
+import MovieList from '../components/MovieList';
 
 class Gallery extends Component {
 
@@ -26,7 +26,7 @@ class Gallery extends Component {
     const { movies } = this.state;
     if (!movies) return null;
     return (
-      <GalleryComponent movies={movies} />
+      <MovieList movies={movies} />
     );
   }
 
