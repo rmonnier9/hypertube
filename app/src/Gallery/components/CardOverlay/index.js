@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../css/CardOverlay.css';
+import './index.css';
 
 class CardOverlay extends Component {
 

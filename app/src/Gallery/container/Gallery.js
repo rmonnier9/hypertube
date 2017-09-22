@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import MovieList from '../components/MovieList';
+import Switcher from '../components/Switcher';
+
+
 // import FilterBar from '../components/FilterBar.js';
 
 const initialQueryYifi = 'https://yts.ag/api/v2/list_movies.json';
@@ -10,11 +13,12 @@ class Gallery extends Component {
 
   state = {
     movies: null,
+    active: 'yifi',
   }
 
   componentDidMount() {
-    this.eztvQuery(initialQueryEztv);
-    // this.yifiQuery(initialQueryYifi);
+    // this.eztvQuery(initialQueryEztv);
+    this.yifiQuery(initialQueryYifi);
   }
 
   eztvQuery = (url) => {
@@ -38,9 +42,13 @@ class Gallery extends Component {
       } else {
         console.log('yifi success', data);
         const { movies } = data.data;
-        // this.setState({ movies });
+        this.setState({ yifiMovies: movies });
       }
     });
+  }
+
+  switcher = (source) => {
+
   }
 
   filterQuery = (params) => {
@@ -48,12 +56,13 @@ class Gallery extends Component {
   }
 
   render() {
-    const { movies } = this.state;
-    if (!movies) return null;
+    const { yifiMovies, eztvMovies, active } = this.state;
+    if (!yifiMovies) return null;
     return (
-      <MovieList movies={movies} />
       <div>
-        <Switcher switch={this.switcher} />
+        <Switcher switchTab={this.switcher} />
+        { active === 'yifi' ? <MovieList movies={yifiMovies} /> : null }
+        { active === 'eztv' ? <MovieList movies={eztvMovies} /> : null }
       </div>
     );
   }

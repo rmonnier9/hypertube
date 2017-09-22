@@ -1,25 +1,22 @@
 import React from 'react';
 // import { Link } from 'react-router-dom';
 // import PropTypes from 'prop-types';
-import GalleryBackground from '../../images/Gallery_background.jpg';
-import Card from '../Card.js';
-import '../../css/CardOverlay.css';
-import styles from './index.css'
+import Card from '../Card';
+import './index.css';
 
 
-const GalleryComponent = ({ movies }) => {
+const MovieList = ({ movies }) => {
   const Cards = movies.map(movie => (
-    (<Card key={movie.id} movie={movie} style={styles.card} />)
+    (<Card key={movie.id} movie={movie} />)
   ));
-  // const Cardi = (<Card key={movies[0].id} movie={movies[0]} style={styles.card} />)
   return (
-    <div style={styles.acontainer}>
+    <div className="movie-list-container">
       {Cards}
     </div>
   );
 };
 
-GalleryComponent.PropTypes = {
+MovieList.PropTypes = {
 };
 
-export default GalleryComponent;
+export default MovieList;

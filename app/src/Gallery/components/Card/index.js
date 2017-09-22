@@ -1,32 +1,13 @@
 import React, { Component } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import NotFound from '../images/Image_Not_Found.jpg';
-import CardOverlay from './CardOverlay.js';
-import '../css/CardOverlay.css';
+import NotFound from '../../images/Image_Not_Found.jpg';
+import CardOverlay from '../CardOverlay';
+import './index.css';
 
-const styles = {
-  cardContainer: {
-    margin: '10px',
-    width: '250px',
-    height: '400px',
-    borderStyle: 'solid',
-    borderWidth: '1px',
-    textAlign: 'center',
-    padding: '5px 10px',
-    backgroundColor: 'darkgrey',
-    zIndex: 1,
-    color: 'white',
-  },
-  imgContainer: {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-  },
-  imgStyle: {
-    opacity: 1,
-    width: '230px',
-    height: 'auto',
-  },
+const baseStyle = {
+  opacity: 1,
+  width: '230px',
+  height: 'auto',
 };
 
 class Card extends Component {
@@ -35,8 +16,7 @@ class Card extends Component {
     super(props);
     this.state = {
       src: props.movie.medium_cover_image,
-      imgStyle: styles.imgStyle,
-      imgContainer: styles.imgContainer,
+      imgStyle: baseStyle,
       hover: false,
       error: false,
     };
@@ -74,9 +54,9 @@ class Card extends Component {
   render() {
     const { movie } = this.props;
     return (
-      <div style={styles.cardContainer}>
+      <div className="card-container">
         <div
-          style={this.state.imgContainer}
+          className="img-container"
           onMouseOver={(e) => { this.mouseEnter(e); }}
           onMouseLeave={(e) => { this.mouseOut(e); }}
         >
