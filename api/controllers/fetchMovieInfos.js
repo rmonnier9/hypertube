@@ -45,18 +45,18 @@ const FetchImdbApiInfo = (imdbId) => {
     .catch(err => console.log('FetchImdbApiInfo err', err));
 };
 
-const fetchMovieInfo = (torrents, imdbCode) => {
+const fetchMovieInfo = (torrents, idImdb) => {
   const movie = {
     torrents,
     idImdb,
-  }
+  };
   axios.all([
     FetchTheMovieDBInfo(movie.imdbId, 'en'),
     FetchTheMovieDBInfo(movie.imdbId, 'fr'),
     FetchImdbApiInfo(movie.imdbId),
   ])
     .then(axios.spread((MovieDbEn, MovieDbFr, ImdbApi) => {
-      // parse(movie, MovieDbEn, MovieDbFr, ImdbApi);
+      parse(movie, MovieDbEn, MovieDbFr, ImdbApi);
       console.log('test', movie);
     }))
     .catch();
