@@ -6,6 +6,9 @@ import picture from './controllers/picture';
 import * as gallery from './controllers/gallery';
 import passportConfig from './config/passport';
 
+import movieScraper from './controllers/movieScraper';
+
+movieScraper();
 
 const routes = (app, upload) => {
   /**

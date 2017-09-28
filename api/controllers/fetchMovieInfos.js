@@ -12,12 +12,15 @@ const urlImdbApi = imdbId => (
 
 
 const parse = (movie, MovieDbEn, MovieDbFr, ImdbApi) => {
-  movie.title[0] = MovieDbEn.title;
-  movie.title[1] = MovieDbFr.title;
-  movie.overview[0] = MovieDbEn.overview;
-  movie.overview[1] = MovieDbFr.overview;
-  movie.genre[0] = MovieDbEn.genres;
-  movie.genre[1] = MovieDbFr.genres;
+  movie.title = [];
+  movie.title.push(MovieDbEn.title);
+  movie.title.push(MovieDbFr.title);
+  movie.overview = [];
+  movie.overview.push(MovieDbEn.overview);
+  movie.overview.push(MovieDbFr.overview);
+  movie.genre = [];
+  movie.genre.push(MovieDbEn.genres);
+  movie.genre.push(MovieDbFr.genres);
   movie.runtime = ImdbApi.length;
   movie.director = ImdbApi.director;
   movie.stars = ImdbApi.stars;
@@ -42,11 +45,17 @@ const FetchImdbApiInfo = (imdbId) => {
     .catch(err => console.log('FetchImdbApiInfo err', err));
 };
 
-const FetchMovieInfo = (movie) => {
+const FetchMovieInfo = (oldmovie) => {
+  const { torrents, id_imdb: idImdb} = oldmovie;
+  const movie = {
+    torrents,
+    idImdb,
+  }
   axios.all([
-    FetchTheMovieDBInfo(movie.imdbId, 'fr'),
     FetchTheMovieDBInfo(movie.imdbId, 'en'),
-    FetchImdbApiInfo(movie.imdbId)])
+    FetchTheMovieDBInfo(movie.imdbId, 'fr'),
+    FetchImdbApiInfo(movie.imdbId),
+  ])
     .then(axios.spread((MovieDbEn, MovieDbFr, ImdbApi) => {
       parse(movie, MovieDbEn, MovieDbFr, ImdbApi);
       console.log(movie);
