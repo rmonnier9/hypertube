@@ -14,6 +14,7 @@
     "eslint": "eslint **/*.js"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "babel-cli": "^6.24.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.5.1",
@@ -58,6 +59,7 @@
     "request": "^2.81.0",
     "sharp": "^0.18.2",
     "stripe": "^4.24.0",
+    "thepiratebay": "^1.4.5",
     "tumblr.js": "^1.1.1",
     "twilio": "^3.6.3",
     "twit": "^2.2.9",

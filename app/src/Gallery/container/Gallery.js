@@ -1,41 +1,30 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import MovieList from '../components/MovieList';
-import Switcher from '../components/Switcher';
+import MovieList from '../components/MovieList.js';
+import SearchBar from '../components/SearchBar.js';
 
-
-// import FilterBar from '../components/FilterBar.js';
-
-const initialQueryYifi = 'https://yts.ag/api/v2/list_movies.json';
-const initialQueryEztv = 'https://eztv.ag/api/get-torrents?limit=10&page=1';
 
 class Gallery extends Component {
 
   state = {
     movies: null,
-    active: 'yifi',
   }
 
   componentDidMount() {
-    // this.eztvQuery(initialQueryEztv);
-    this.yifiQuery(initialQueryYifi);
-  }
-
-  eztvQuery = (url) => {
-    axios({ url, method: 'GET' })
-    .then((data) => {
-      console.log('data', data);
-      // if (status === 'error') {
-      //   console.log('eztv error:', status_message);
-      // } else {
-      //   console.log('eztv success', data);
-      //   const { movies } = data.data;
-        // this.setState({ movies });
+    // this.initialQuery('/api/gallery/initial')
+    axios.get('/api/gallery/suggestions')
+    .then(({ data: { error, movies, message } }) => {
+      if (error) {
+        console.log('galery error:', message);
+      } else {
+        console.log('movies', movies);
+        this.setState({ movies });
+      }
     });
   }
 
   yifiQuery = (url) => {
-    axios({ url, method: 'GET' })
+    axios.get(url)
     .then(({ status, status_message, data }) => {
       if (status === 'error') {
         console.log('yifi error:', status_message);
@@ -47,22 +36,30 @@ class Gallery extends Component {
     });
   }
 
-  switcher = (source) => {
-
+  eztvQuery = (url) => {
+    axios.get(url)
+    .then(({ status, status_message, data }) => {
+      if (status !== 200) {
+        console.log('eztv error': status_message);
+      } else {
+        console.log('eztv success', data);
+        const { torrents } = data;
+        this.setState({ eztvTorrents: torrents });
+      }
+    });
   }
 
-  filterQuery = (params) => {
-
+  search = (params) => {
+    console.log('params', params);
   }
 
   render() {
-    const { yifiMovies, eztvMovies, active } = this.state;
+    const { yifiMovies, active } = this.state;
     if (!yifiMovies) return null;
     return (
       <div>
-        <Switcher switchTab={this.switcher} />
-        { active === 'yifi' ? <MovieList movies={yifiMovies} /> : null }
-        { active === 'eztv' ? <MovieList movies={eztvMovies} /> : null }
+        <SearchBar onSearch={this.search} />
+        <MovieList movies={yifiMovies} />
       </div>
     );
   }

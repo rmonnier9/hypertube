@@ -1,17 +1,17 @@
-.example-enter {
+.MovieListOverlay-enter {
   opacity: 0.01;
 }
 
-.example-enter.example-enter-active {
+.MovieListOverlay-enter.MovieListOverlay-enter-active {
   opacity: 1;
   transition: opacity 500ms ease-in;
 }
 
-.example-leave {
+.MovieListOverlay-leave {
   opacity: 1;
 }
 
-.example-leave.example-leave-active {
+.MovieListOverlay-leave.MovieListOverlay-leave-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
 }
@@ -46,6 +46,8 @@
   padding: 50px 20px 20px 20px;
   height: 100%;
   width: 100%;
+  color: white;
+  text-align: center;
 }
 
 .card-star-icon {

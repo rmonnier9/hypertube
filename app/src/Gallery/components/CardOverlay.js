@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './index.css';
+import '../css/CardOverlay.css';
 
 class CardOverlay extends Component {
 
@@ -8,10 +8,10 @@ class CardOverlay extends Component {
     return (
       <div className="card-overlay">
         <i className="glyphicon glyphicon-star card-star-icon" />
-        <h4>{movie.rating} / 10</h4>
+        <h4>{movie.rating || null} / 10</h4>
         <br />
-        <h4>{movie.genres[0]}</h4>
-        <h4>{movie.genres[1]}</h4>
+        <h4>{movie.genres[0] || null}</h4>
+        <h4>{movie.genres[1] || null}</h4>
         <div className="card-button-container">
           <button className="card-button">View details</button>
         </div>

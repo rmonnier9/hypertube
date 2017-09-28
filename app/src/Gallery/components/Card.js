@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import NotFound from '../../images/Image_Not_Found.jpg';
-import CardOverlay from '../CardOverlay';
-import './index.css';
+import NotFound from '../images/Image_Not_Found.jpg';
+import CardOverlay from './CardOverlay.js';
+import '../css/Card.css';
 
 const baseStyle = {
   opacity: 1,
@@ -14,8 +14,9 @@ class Card extends Component {
 
   constructor(props) {
     super(props);
+    const { movie } = props
     this.state = {
-      src: props.movie.medium_cover_image,
+      src: movie.medium_cover_image,
       imgStyle: baseStyle,
       hover: false,
       error: false,
@@ -67,15 +68,13 @@ class Card extends Component {
           />
           <ReactCSSTransitionGroup
             component={this.FirstChild}
-            transitionName="example"
+            transitionName="MovieListOverlay"
             transitionEnterTimeout={500}
             transitionLeaveTimeout={300}
           >
             { this.state.hover ? <CardOverlay movie={movie} /> : null }
           </ReactCSSTransitionGroup>
         </div>
-        <h5>{movie.title}</h5>
-        <h6>{movie.year}</h6>
       </div>
     );
   }

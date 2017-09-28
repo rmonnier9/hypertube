@@ -1,0 +1,31 @@
+.nav-tabs {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: none;
+}
+
+.switcher {
+  width: 60px;
+  text-align: center;
+}
+
+.switcher-active {
+  border-style: solid;
+  border-width: 2px;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  border-bottom: none;
+  border-color: #0088cc;
+
+}
+
+.switcher-inactive {
+  border-bottom: 2px solid;
+  border-color: #0088cc;
+}
+
+.switcher-button {
+  border: none;
+  background-color: inherit;
+  color: white;
+}
