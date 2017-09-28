@@ -5,15 +5,6 @@ import fetchMovieInfos from './fetchMovieInfos';
 const urlYify = 'https://yts.ag/api/v2/list_movies.json';
 const urlEztv = 'https://eztv.ag/api/get-torrents'
 
-
-const fetchMovieInfosFromArray = (movies) => {
-  console.log(movies);
-  fetchMovieInfos(movies[0]);
-  // movies.forEach((movie) => {
-  //   fetchMovieInfos(movie);
-  // })
-}
-
 const movieScraperYify = async () => {
   const { data: { data } } = await axios.get(urlYify);
   const { movie_count: movieCount } = data;
@@ -23,14 +14,46 @@ const movieScraperYify = async () => {
   for (let page = 1; page <= 1; page += 1) {
     const url = `${urlYify}?limit=${limit}&page=${page}`;
     axios.get(url).then(({ data: { data: { movies } } }) => {
-      fetchMovieInfosFromArray(movies);
+      console.log(movies[0]);
+      const { torrents, imdbId: imdb_code} = movie[0];
+      fetchMovieInfos(torrents, imdbId);
+      // movies.forEach((movie) => {
+      //   fetchMovieInfos(movie);
+      // })
     });
   }
-}
+};
+
+const movieScraperEztv = async () => {
+  const { data: { data } } = await axios.get(urlEztv);
+  const { torrents_count: torrentsCount } = data;
+
+  const limit = 50;
+  const max = Math.ceil(torrentsCount / limit);
+  for (let page = 1; page <= 1; page += 1) {
+    const url = `${urlEztv}?limit=${limit}&page=${page}`;
+    axios.get(url).then(({ data: { torrents } }) => {
+      console.log('torrents', torrents);
+      torrents.forEach((movie) => {
+        console.log('movie', movie);
+        if (movie.episode === 0) {
+          const { imdb_id: imdbId } = movie;
+          const torrent = {
+            url: movie.torrent_url,
+            magnet: movie.magnet_url,
+            peers: movie.peers,
+            seeds: movie.seeds,
+          }
+          fetchMovieInfos(torrent, imdbId);
+        }
+      });
+    });
+  }
+};
 
 const movieScraper = async () => {
   await movieScraperYify();
-  // await movieScraperEztv();
+  await movieScraperEztv();
 }
 
 export default movieScraper;

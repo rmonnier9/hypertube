@@ -14,15 +14,15 @@ const movieSchema = new mongoose.Schema({
   idImdb: { type: String, unique: true },
   torrents: [Torrents],
   title: [String],
-  year: { type: Number },
+  year: Number,
   overview: [String],
   genres: [[String]],
-  runtime: { type: Number },
-  director: { type: String },
+  runtime: Number,
+  director: String,
   cast: [String],
-  rating: { type: Number },
-  posterLarge: { type: String },
-  thumb: { type: String },
+  rating: Number,
+  posterLarge: String,
+  thumb: String,
 });
 
 const Movie = mongoose.model('Movie', movieSchema);

@@ -45,8 +45,7 @@ const FetchImdbApiInfo = (imdbId) => {
     .catch(err => console.log('FetchImdbApiInfo err', err));
 };
 
-const FetchMovieInfo = (oldmovie) => {
-  const { torrents, id_imdb: idImdb} = oldmovie;
+const fetchMovieInfo = (torrents, imdbCode) => {
   const movie = {
     torrents,
     idImdb,
@@ -57,10 +56,10 @@ const FetchMovieInfo = (oldmovie) => {
     FetchImdbApiInfo(movie.imdbId),
   ])
     .then(axios.spread((MovieDbEn, MovieDbFr, ImdbApi) => {
-      parse(movie, MovieDbEn, MovieDbFr, ImdbApi);
-      console.log(movie);
+      // parse(movie, MovieDbEn, MovieDbFr, ImdbApi);
+      console.log('test', movie);
     }))
     .catch();
 };
 
-export default FetchMovieInfo;
+export default fetchMovieInfo;
