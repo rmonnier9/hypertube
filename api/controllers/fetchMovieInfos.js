@@ -11,7 +11,11 @@ const urlImdbApi = imdbId => (
 );
 
 
-const parse = (movie, MovieDbEn, MovieDbFr, ImdbApi) => {
+const parse = (movie, { MovieDbEn }, { MovieDbFr }, { imdbApi }) => {
+  console.log('parse movie', movie);
+  console.log('parse MovieDbEn', MovieDbEn);
+  console.log('parse MovieDbFr', MovieDbFr);
+  console.log('parse imdbApi', imdbApi);
   movie.title = [];
   movie.title.push(MovieDbEn.title);
   movie.title.push(MovieDbFr.title);
@@ -21,35 +25,42 @@ const parse = (movie, MovieDbEn, MovieDbFr, ImdbApi) => {
   movie.genre = [];
   movie.genre.push(MovieDbEn.genres);
   movie.genre.push(MovieDbFr.genres);
-  movie.runtime = ImdbApi.length;
-  movie.director = ImdbApi.director;
-  movie.stars = ImdbApi.stars;
-  movie.rating = parseFloat(ImdbApi.rating);
-  movie.posterLarge = ImdbApi.poster_large;
-  movie.thumb = ImdbApi.thumb;
-  movie.year = parseInt(ImdbApi.year, 10);
+  movie.runtime = imdbApi.length;
+  movie.director = imdbApi.director;
+  movie.stars = imdbApi.stars;
+  movie.rating = parseFloat(imdbApi.rating);
+  movie.posterLarge = imdbApi.poster.large;
+  movie.thumb = imdbApi.poster.thumb;
+  movie.year = parseInt(imdbApi.year, 10);
 };
 
 const FetchTheMovieDBInfo = (imdbId, lang) => {
   return axios.get(urlMovieDb(imdbId, lang))
-    .then(({ movie_results }) => {
-      if (lang === 'eng') return { MovieDbEn: movie_results };
-      else if (lang === 'fr') return { MovieDbFr: movie_results };
+    .then(({ data }) => {
+      console.log('movie db', data);
+      if (lang === 'en') return { MovieDbEn: data.movie_results[0] };
+      else if (lang === 'fr') return { MovieDbFr: data.movie_results[0] };
     })
     .catch(err => console.log('FetchTheMovieDBInfo err', err));
 };
 
 const FetchImdbApiInfo = (imdbId) => {
+
   return axios.get(urlImdbApi(imdbId))
-    .then(data => ({ imdbApi: data }))
+    .then(({ data }) => {
+      console.log('fetchaMovieInfos', data);
+      return { imdbApi: data };
+    })
     .catch(err => console.log('FetchImdbApiInfo err', err));
 };
 
-const fetchMovieInfo = (torrents, idImdb) => {
+const fetchMovieInfo = (torrents, imdbId) => {
   const movie = {
     torrents,
-    idImdb,
+    imdbId,
   };
+  console.log('url', urlImdbApi(imdbId));
+  console.log('start', movie);
   axios.all([
     FetchTheMovieDBInfo(movie.imdbId, 'en'),
     FetchTheMovieDBInfo(movie.imdbId, 'fr'),
