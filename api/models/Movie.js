@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 
 const torrentsSchema = new mongoose.Schema({
-  url: String,
-  hash: String,
-  magnet: String,
+  url: String, // yifi
+  magnet: String, // eztv
+  title: String, // eztv
+  hash: String, // for key
   quality: String,
   size: String,
   seeds: Number,
   peers: Number,
-  leech: Number,
 });
 
 const Torrents = mongoose.model('Torrents', torrentsSchema);
