@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const torrentsSchema = new mongoose.Schema({
+const torrentSchema = new mongoose.Schema({
   url: String, // yifi
   magnet: String, // eztv
   title: String, // eztv
@@ -12,11 +12,11 @@ const torrentsSchema = new mongoose.Schema({
   source: String, // yifi or eztv
 });
 
-const Torrents = mongoose.model('Torrents', torrentsSchema);
-
 const movieSchema = new mongoose.Schema({
   idImdb: { type: String, unique: true },
-  // torrents: [Torrents],
+  torrents: [
+    torrentSchema
+  ],
   title: {
     en: String,
     fr: String,
