@@ -14,10 +14,6 @@ import expressStatusMonitor from 'express-status-monitor';
 import multer from 'multer';
 import dotenv from 'dotenv/config';
 
-import movieScraper from './controllers/movieScraper';
-
-movieScraper();
-
 import routes from './routes';
 
 // stores sessions in the "sessions" collection by default. See if user is loggedin (passport).

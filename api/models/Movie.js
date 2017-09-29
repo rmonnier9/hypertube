@@ -16,14 +16,26 @@ const Torrents = mongoose.model('Torrents', torrentsSchema);
 
 const movieSchema = new mongoose.Schema({
   idImdb: { type: String, unique: true },
-  torrents: [Torrents],
-  title: [String],
+  // torrents: [Torrents],
+  title: {
+    en: String,
+    fr: String,
+  },
   year: Number,
-  overview: [String],
-  genres: [[String]],
+  overview: {
+    en: String,
+    fr: String,
+  },
+  genres: [{
+    en: String,
+    fr: String,
+  }],
   runtime: Number,
   director: String,
-  cast: [String],
+  cast: {
+    en: String,
+    fr: String,
+  },
   rating: Number,
   posterLarge: String,
   thumb: String,
