@@ -13,17 +13,23 @@ async function movieScraperYify() {
   const max = Math.ceil(movieCount / limit);
   for (let page = 1; page <= 1; page += 1) {
     const url = `${urlYify}?limit=${limit}&page=${page}`;
-    axios.get(url).then(({ data: { data: { movies } } }) => {
-      console.log(movies[0]);
-      const { torrents, imdb_code: imdbId } = movies[0];
-      console.log('test2', torrents, imdbId);
-      fetchMovieInfos(torrents, imdbId);
-      // movies.forEach((movie) => {
-      //   fetchMovieInfos(movie);
-      // })
+    axios.get(url).then(async ({ data: { data: { movies } } }) => {
+      // console.log(movies[0]);
+      // const { torrents, imdb_code: imdbId } = movies[0];
+      // console.log('test2', torrents, imdbId);
+      // fetchMovieInfos(torrents, imdbId);
+      const movie1 = [];
+      for (let i = 0; i < 20; i += 1) {
+        movie1.push(movies[i]);
+      }
+      const results = await Promise.all(movie1.map((movie) => {
+        const { torrents, imdb_code: imdbId } = movie;
+        return fetchMovieInfos(torrents, imdbId);
+      }));
+      console.log('rsult', results);
     });
   }
-};
+}
 
 // async function movieScraperEztv() {
 //   const { data: { data } } = await axios.get(urlEztv);
