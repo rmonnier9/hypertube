@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const torrentsSchema = new mongoose.Schema({
   url: String,
+  hash: String,
   magnet: String,
   quality: String,
   size: String,
