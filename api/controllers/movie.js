@@ -1,4 +1,5 @@
 import fs from 'fs';
+import Movie from '../models/Movie';
 
 const Stream = (req, res) => {
   const path = 'assets/sample.mp4';
@@ -10,8 +11,8 @@ const Stream = (req, res) => {
     const start = parseInt(parts[0], 10);
     const end = parts[1]
       ? parseInt(parts[1], 10)
-      : fileSize-1;
-    const chunksize = (end-start) + 1;
+      : fileSize - 1;
+    const chunksize = (end - start) + 1;
     const file = fs.createReadStream(path, { start, end });
     const head = {
       'Content-Range': `bytes ${start}-${end}/${fileSize}`,
@@ -31,8 +32,13 @@ const Stream = (req, res) => {
   }
 };
 
-const GetInfo = (req, res) => {
-  return res.send({ error: '' });
+const GetInfo = (req, res, next) => {
+  const { idImdb } = req.params;
+  Movie.findOne({ idImdb }, (err, movie) => {
+    if (err) { return next(err); }
+    console.log(movie);
+    return res.send({ error: '', movie });
+  });
 };
 
 export { Stream, GetInfo };

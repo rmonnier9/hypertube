@@ -5,5 +5,7 @@ html, body {
 }
 
 body {
-  background-color: black;
+  background-color: #101010;
+  box-sizing: border-box;
+  font-family: Helvetica, sans-serif;
 }

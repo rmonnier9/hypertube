@@ -1,13 +1,14 @@
-const bluebird = require('bluebird');
+import bluebird from 'bluebird';
+import nodemailer from 'nodemailer';
+import User from '../models/User';
+
 const crypto = bluebird.promisifyAll(require('crypto'));
-const nodemailer = require('nodemailer');
-const User = require('../models/User');
 
 /**
  * GET /me
  * Profile page.
  */
-exports.getMyAccount = (req, res, next) => {
+export const getMyAccount = (req, res, next) => {
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
     user.password = '';
@@ -18,7 +19,7 @@ exports.getMyAccount = (req, res, next) => {
 /**
  * GET /islogged
  */
-exports.getIslogged = (req, res) => {
+export const getIslogged = (req, res) => {
   if (req.isAuthenticated()) {
     return res.send({ error: '' });
   }
@@ -29,10 +30,9 @@ exports.getIslogged = (req, res) => {
  * POST /me
  * Update profile information.
  */
-exports.postUpdateProfile = (req, res, next) => {
+export const postUpdateProfile = (req, res, next) => {
   const { id } = req.body;
   switch (id) {
-
     case 'name-form': {
       req.assert('firstName', 'First name can\'t be more than 20 letters long').len({ max: 20 });
       req.assert('lastName', 'Last name can\'t be more than 20 letters long').len({ max: 20 });
@@ -123,7 +123,7 @@ exports.postUpdateProfile = (req, res, next) => {
  * GET /profile/:login
  * Profile page.
  */
-exports.getAccount = (req, res, next) => {
+export const getAccount = (req, res, next) => {
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
     user.password = '';
@@ -159,7 +159,7 @@ exports.getAccount = (req, res, next) => {
  * DELETE /me
  * Delete user account.
  */
-exports.deleteDeleteAccount = (req, res, next) => {
+export const deleteDeleteAccount = (req, res, next) => {
   User.remove({ _id: req.user.id }, (err) => {
     if (err) { return next(err); }
     req.logout();
@@ -171,7 +171,7 @@ exports.deleteDeleteAccount = (req, res, next) => {
  * GET /logout
  * Log out.
  */
-exports.signout = (req, res) => {
+export const signout = (req, res) => {
   req.logout();
   res.send({ error: '' });
 };
@@ -180,7 +180,7 @@ exports.signout = (req, res) => {
  * GET /account/unlink/:provider
  * Unlink OAuth provider.
  */
-exports.getOauthUnlink = (req, res, next) => {
+export const getOauthUnlink = (req, res, next) => {
   const provider = req.params.provider;
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
@@ -188,7 +188,7 @@ exports.getOauthUnlink = (req, res, next) => {
     user.tokens = user.tokens.filter(token => token.kind !== provider);
     user.save((err) => {
       if (err) { return next(err); }
-        return res.send({ error: '' })
+      return res.send({ error: '' });
     });
   });
 };
@@ -197,7 +197,7 @@ exports.getOauthUnlink = (req, res, next) => {
  * POST /reset/:token
  * Process the reset password request.
  */
-exports.postReset = (req, res, next) => {
+export const postReset = (req, res, next) => {
   req.assert('password', 'Password must be at least 4 characters long.').len(4);
   req.assert('confirm', 'Passwords must match.').equals(req.body.password);
 
@@ -242,9 +242,9 @@ exports.postReset = (req, res, next) => {
       text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
     };
     return transporter.sendMail(mailOptions)
-      .then(() => {
-        return res.send({ error: '' })
-      });
+      .then(() => (
+        res.send({ error: '' })
+      ));
   };
 
   resetPassword()
@@ -257,7 +257,7 @@ exports.postReset = (req, res, next) => {
  * POST /forgot
  * Create a random token, then the send user an email with a reset link.
  */
-exports.postForgot = (req, res, next) => {
+export const postForgot = (req, res, next) => {
   req.assert('email', 'Please enter a valid email address.').isEmail();
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
@@ -277,11 +277,10 @@ exports.postForgot = (req, res, next) => {
       .then((user) => {
         if (!user) {
           return res.send({ error: 'Account with that email address does not exist.' });
-        } else {
-          user.passwordResetToken = token;
-          user.passwordResetExpires = Date.now() + 3600000; // 1 hour
-          user = user.save();
         }
+        user.passwordResetToken = token;
+        user.passwordResetExpires = Date.now() + 3600000; // 1 hour
+        user = user.save();
         return user;
       });
 
@@ -305,9 +304,9 @@ exports.postForgot = (req, res, next) => {
         If you did not request this, please ignore this email and your password will remain unchanged.\n`
     };
     return transporter.sendMail(mailOptions)
-      .then(() => {
-        return({ error: '' })
-      });
+      .then(() => (
+        { error: '' }
+      ));
   };
 
   createRandomToken

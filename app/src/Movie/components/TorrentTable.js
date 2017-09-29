@@ -1,30 +1,42 @@
 import React, { Component } from 'react';
+// import { FormattedMessage } from 'react-intl';
+
+// <FormattedMessage
+//   id="Profil"
+//   defaultMessage="Profil"
+// />
 
 class TorrentTable extends Component {
 
   render() {
-    const { movie } = this.props;
-    const torrents = movie.torrents.map(torrent => (
-      <tr>
-        <td>{torrent.url}</td>
-        <td>{torrent.size}</td>
-        <td>{torrent.quality}</td>
-        <td>{torrent.seeds}</td>
-        <td>{torrent.peers}</td>
-      </tr>
-    ));
+    const { movie, lang } = this.props;
+    const torrents = movie.torrents.map((torrent) => {
+      const title = `${movie.title[lang]} - ${torrent.quality}`;
+      return (
+        <tr key={torrent.hash}>
+          <td>{title}</td>
+          <td>{torrent.size}</td>
+          <td style={{ color: 'green' }}>{torrent.seeds}</td>
+          <td style={{ color: 'red' }}>{torrent.peers}</td>
+          <td>
+            <button type="button" className="play">
+              <span className="glyphicon glyphicon-play-circle" /> {/* download video or play video on click */}
+            </button>
+          </td>
+        </tr>
+      );
+    });
 
     return (
       <div className="movie-torrents">
-        <span>Torrents</span>
-        <table className="torrents-table">
+        <table className="table torrents-table">
           <thead>
             <tr>
-              <th>Url</th>
+              <th>Movie</th>
               <th>Size</th>
-              <th>Quality</th>
-              <th>Seeds</th>
-              <th>Peers</th>
+              <th style={{ color: 'green' }}>Seeds</th>
+              <th style={{ color: 'red' }}>Peers</th>
+              <th>Play</th>
             </tr>
           </thead>
           <tbody>

@@ -1,15 +1,23 @@
 .movie-container {
-  color: white;
+  color: #F5F5F5;
   display: flex;
   flex-direction: row;
 }
 
 .movie-poster {
   height: 100vh;
-  margin-right: 10px;
+}
+
+.movie-infos {
+  max-width: 900px;
+  padding-left: 20px;
 }
 
 .movie-details {
+  margin-top: 20px;
+}
+
+.movie-overview {
   margin-top: 20px;
 }
 
@@ -17,8 +25,41 @@
   margin-top: 20px;
 }
 
+.movie-details-text {
+  margin-right: 5px;
+  color: grey;
+}
+
+.movie-year {
+  margin-right: 10px;
+}
+
+.movie-rating {
+  font-size: 1.3em;
+}
+
+.glyphicon-star {
+  color: yellow;
+  font-size: 1.3em;
+  margin-right: 5px;
+}
+
 .torrents-table {
   width: 100%;
-  border: 1px solid grey;
-  padding: 10px;
+  /*border: 1px solid grey;*/
+  padding: 100px;
+  box-shadow:inset 1px 1px 40px 0 rgba(100,100,100,.45);
+}
+
+button.play {
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+  font-size: 1.3em;
+  padding: 0;
+  margin: 0;
+}
+
+button.play:hover {
+  color: yellow;
 }
