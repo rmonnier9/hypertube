@@ -9,6 +9,7 @@ const torrentsSchema = new mongoose.Schema({
   size: String,
   seeds: Number,
   peers: Number,
+  source: String, // yifi or eztv
 });
 
 const Torrents = mongoose.model('Torrents', torrentsSchema);
