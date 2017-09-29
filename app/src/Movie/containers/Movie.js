@@ -29,15 +29,24 @@ const movie = {
       "source": "yifi",
     }
   ],
-  title: ["Wish Upon", "I Wish - Faites un vœu"], //tmdb
+  title: { en: "Wish Upon", fr: "I Wish - Faites un vœu" }, //tmdb
   year: 2017, //tmdb
-  overview: [
-    "A teenage girl discovers a box with magical powers, but those powers comes with a deadly price.",
-    "Pas facile de survivre à l'enfer du lycée, Claire Shannon et ses copines en savent quelque chose. Du coup, quand son père lui offre une ancienne boîte à musique dont les inscriptions promettent d'exaucer tous ses vœux, Claire tente sa chance. Et ça marche ! Argent, popularité, petit ami, tout semble parfait. Mais le rêve a un prix : au fur et à mesure de ses souhaits, des personnes de son entourage meurent dans des conditions particulièrement atroces. Claire le sait : elle doit se débarrasser de la boîte pour sauver sa vie et celle de ses proches avant de faire le voeu de trop."
-  ], //tmdb
+  overview: { en: "A teenage girl discovers a box with magical powers, but those powers comes with a deadly price.",
+    fr: "Pas facile de survivre à l'enfer du lycée, Claire Shannon et ses copines en savent quelque chose. Du coup, quand son père lui offre une ancienne boîte à musique dont les inscriptions promettent d'exaucer tous ses vœux, Claire tente sa chance. Et ça marche ! Argent, popularité, petit ami, tout semble parfait. Mais le rêve a un prix : au fur et à mesure de ses souhaits, des personnes de son entourage meurent dans des conditions particulièrement atroces. Claire le sait : elle doit se débarrasser de la boîte pour sauver sa vie et celle de ses proches avant de faire le voeu de trop."
+  }, //tmdb
   genres: [
-    ["Fantasy", "Horror", "Thriller"],
-    ["Fantastique", "Horreur", "Thriller"]
+    {
+      en: "Fantasy",
+      fr: "Fantastique",
+    },
+    {
+      en: "Horror",
+      fr: "Horreur",
+    },
+    {
+      en: "Thriller",
+      fr: "Thriller",
+    },
   ], //tmdb
   length: 90, //tmdb
   director: "John R. Leonetti",
@@ -47,7 +56,7 @@ const movie = {
   thumb: "https://images-na.ssl-images-amazon.com/images/M/MV5BOGQxN2NlMWItNzMyOC00ODYxLThkNDktMWQ0ZjA2MjQyYjIwXkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_UX182_CR0,0,182,268_AL_.jpg",
 }
 
-const lang = 1; // lang = 0 => english, lang = 1 = francais
+const lang = 'fr';
 
 const timing = (length) => {
   const hours = Math.trunc(length / 60);
@@ -79,11 +88,11 @@ class Movie extends Component {
   render() {
     // const { loaded } = this.state;
     // if (loaded === false) { return <Loading />; }
-    const genres = movie.genres[lang].map((genre, index, array) => {
+    const genres = movie.genres.map((genre, index, array) => {
       if (index === array.length - 1) {
-        return (<span key={genre}>{genre}</span>);
+        return (<span key={genre[lang]}>{genre[lang]}</span>);
       }
-      return (<span key={genre}>{genre}, </span>);
+      return (<span key={genre[lang]}>{genre[lang]}, </span>);
     });
     const actors = movie.cast.map((actor, index, array) => {
       if (index === array.length - 1) {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+// import { FormattedMessage } from 'react-intl';
 
-// test
 // <FormattedMessage
 //   id="Profil"
 //   defaultMessage="Profil"
@@ -12,7 +11,7 @@ class TorrentTable extends Component {
   render() {
     const { movie, lang } = this.props;
     const torrents = movie.torrents.map((torrent) => {
-      const title = (movie.source === 'yifi' ? `${movie.title[lang]} - ${torrent.quality}` : movie.title);
+      const title = `${movie.title[lang]} - ${torrent.quality}`;
       return (
         <tr key={torrent.hash}>
           <td>{title}</td>
@@ -33,12 +32,7 @@ class TorrentTable extends Component {
         <table className="table torrents-table">
           <thead>
             <tr>
-              <th>
-                <FormattedMessage
-                  id="Movie"
-                  defaultMessage="Movie"
-                />
-              </th>
+              <th>Movie</th>
               <th>Size</th>
               <th style={{ color: 'green' }}>Seeds</th>
               <th style={{ color: 'red' }}>Peers</th>
