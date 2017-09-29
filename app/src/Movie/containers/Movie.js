@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Loading from '../../General/components/Loading';
+// import Loading from '../../General/components/Loading';
 import TorrentTable from '../components/TorrentTable';
 import '../css/movie.css';
 
