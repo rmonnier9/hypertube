@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 
 const torrentsSchema = new mongoose.Schema({
-  url: { type: String },
-  magnet: { type: String },
-  seed: { type: Number },
-  leech: { type: Number },
-  peer: { type: Number },
+  url: String,
+  magnet: String,
+  quality: String,
+  size: String,
+  seeds: Number,
+  peers: Number,
+  leech: Number,
 });
 
 const Torrents = mongoose.model('Torrents', torrentsSchema);
