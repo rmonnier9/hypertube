@@ -17,16 +17,6 @@ export const getMyAccount = (req, res, next) => {
 };
 
 /**
- * GET /islogged
- */
-export const getIslogged = (req, res) => {
-  if (req.isAuthenticated()) {
-    return res.send({ error: '' });
-  }
-  res.send({ error: 'You are not logged.' });
-};
-
-/**
  * POST /me
  * Update profile information.
  */
@@ -120,11 +110,12 @@ export const postUpdateProfile = (req, res, next) => {
 };
 
 /**
- * GET /profile/:login
+ * GET /profile/:email
  * Profile page.
  */
 export const getAccount = (req, res, next) => {
-  User.findById(req.user.id, (err, user) => {
+  const { email } = req.params;
+  User.findOne({ email }, (err, user) => {
     if (err) { return next(err); }
     user.password = '';
     return res.send({ error: '', user });
@@ -171,26 +162,9 @@ export const deleteDeleteAccount = (req, res, next) => {
  * GET /logout
  * Log out.
  */
-export const signout = (req, res) => {
+export const getSignout = (req, res) => {
   req.logout();
   res.send({ error: '' });
-};
-
-/**
- * GET /account/unlink/:provider
- * Unlink OAuth provider.
- */
-export const getOauthUnlink = (req, res, next) => {
-  const provider = req.params.provider;
-  User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
-    user[provider] = undefined;
-    user.tokens = user.tokens.filter(token => token.kind !== provider);
-    user.save((err) => {
-      if (err) { return next(err); }
-      return res.send({ error: '' });
-    });
-  });
 };
 
 /**

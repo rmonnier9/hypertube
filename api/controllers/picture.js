@@ -9,7 +9,7 @@ import User from '../models/User';
  * Save profile picture on signup.
  */
 
-exports.postSignupPicture = async (req, res, next) => {
+export const postSignupPicture = async (req, res, next) => {
   const { filename } = req.file;
   const { email } = req.headers;
 
@@ -51,7 +51,7 @@ exports.postSignupPicture = async (req, res, next) => {
  * Update profile picture on profile.
  */
 
-exports.newPicture = async (req, res, next) => {
+export const newPicture = async (req, res, next) => {
   const { filename } = req.file;
   const tmpPath = path.resolve(__dirname, `../public/uploads/tmp/${filename}`);
   const newPath = path.resolve(__dirname, `../public/uploads/${filename}`);

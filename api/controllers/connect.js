@@ -2,6 +2,16 @@ import passport from 'passport';
 import User from '../models/User';
 
 /**
+ * GET /islogged
+ */
+export const getIslogged = (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.send({ error: '' });
+  }
+  res.send({ error: 'You are not logged.' });
+};
+
+/**
  * POST /signin
  * Sign in using email and password.
  */
@@ -25,7 +35,7 @@ export const postSignin = (req, res, next) => {
       if (err) { return next(err); }
       return res.send({ error: '' });
     });
-  })(req, res, next); // <= ??
+  })(req, res, next);
 };
 
 /**
