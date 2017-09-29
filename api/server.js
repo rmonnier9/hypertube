@@ -14,9 +14,9 @@ import expressStatusMonitor from 'express-status-monitor';
 import multer from 'multer';
 import dotenv from 'dotenv/config';
 
-import movieScraper from './controllers/movieScraper';
+// import movieScraper from './controllers/movieScraper';
 
-movieScraper();
+// movieScraper();
 
 import routes from './routes';
 

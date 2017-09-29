@@ -1,4 +1,5 @@
 const passport = require('passport');
+const mongoose = require('mongoose');
 const request = require('request');
 const InstagramStrategy = require('passport-instagram').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
@@ -18,7 +19,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
+  mongoose.model('User').findById(id, (err, user) => {
     done(err, user);
   });
 });
@@ -27,7 +28,7 @@ passport.deserializeUser((id, done) => {
  * Sign in using Email and Password.
  */
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-  User.findOne({ email: email.toLowerCase() }, (err, user) => {
+  mongoose.model('User').findOne({ email: email.toLowerCase() }, (err, user) => {
     if (err) {
       return done(err);
     }
