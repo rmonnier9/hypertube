@@ -38,16 +38,16 @@ const parse = async (movie, { MovieDbEn }, { MovieDbFr }, { imdbApi }) => {
   return movie;
 };
 
-const FetchTheMovieDBInfo = (imdbId, lang) => {
+const FetchTheMovieDBInfo = async (imdbId, lang) => {
   return axios.get(urlMovieDb(imdbId, lang))
     .then(({ data }) => {
       if (lang === 'en') return { MovieDbEn: data.movie_results[0] };
       else if (lang === 'fr') return { MovieDbFr: data.movie_results[0] };
     })
-    .catch(err => console.log('FetchTheMovieDBInfo err', err.response.data));
+    .catch(err => console.log('FetchTheMovieDBInfo err', err.response));
 };
 
-const FetchImdbApiInfo = (imdbId) => {
+const FetchImdbApiInfo = async (imdbId) => {
   return axios.get(urlImdbApi(imdbId))
     .then(({ data }) => {
       return { imdbApi: data };
@@ -55,7 +55,7 @@ const FetchImdbApiInfo = (imdbId) => {
     .catch(err => console.log('FetchImdbApiInfo err', err));
 };
 
-const fetchMovieInfo = (torrents, imdbId) => {
+const fetchMovieInfo = async (torrents, imdbId) => {
   const movie = {
     torrents,
     imdbId,
@@ -68,7 +68,7 @@ const fetchMovieInfo = (torrents, imdbId) => {
     .then(axios.spread((MovieDbEn, MovieDbFr, ImdbApi) => {
       return parse(movie, MovieDbEn, MovieDbFr, ImdbApi);
     }))
-    .catch(err => console.log('fetchMovieInfo err', err));
+    .catch(err => console.log('fetchMovieInfo err'));
 };
 
 export default fetchMovieInfo;

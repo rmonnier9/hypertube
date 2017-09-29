@@ -1,35 +1,44 @@
 import axios from 'axios';
-import _ from 'lodash';
+import { RateLimiter } from 'limiter';
+import moment from 'moment';
 import fetchMovieInfos from './fetchMovieInfos';
 
-const urlYify = 'https://yts.ag/api/v2/list_movies.json';
+const urlYify = 'https://yts.ag/api/v2/list_movies.json?sort=seeds&limit=50';
 const urlEztv = 'https://eztv.ag/api/get-torrents'
 
-async function movieScraperYify() {
-  const { data: { data } } = await axios.get(urlYify);
-  const { movie_count: movieCount } = data;
-
-  const limit = 50;
-  const max = Math.ceil(movieCount / limit);
-  for (let page = 1; page <= 1; page += 1) {
-    const url = `${urlYify}?limit=${limit}&page=${page}`;
-    axios.get(url).then(async ({ data: { data: { movies } } }) => {
-      // console.log(movies[0]);
-      // const { torrents, imdb_code: imdbId } = movies[0];
-      // console.log('test2', torrents, imdbId);
-      // fetchMovieInfos(torrents, imdbId);
-      const movie1 = [];
-      for (let i = 0; i < 20; i += 1) {
-        movie1.push(movies[i]);
-      }
-      const results = await Promise.all(movie1.map((movie) => {
+async function movieScraperYify(page, max, buffer, old) {
+  if (page === max) return buffer;
+  const url = `${urlYify}&page=${page}`;
+  const toRemove = [];
+  return axios.get(url)
+    .then(async ({ data: { data: { movies } } }) => {
+      movies.forEach((movie) => {
+        const { torrents } = movie;
+        let { seeds } = torrents[0];
+        torrents.forEach((torrent) => {
+          if (torrent.seeds > seeds) { seeds = torrent.seeds; }
+        });
+        if (seeds < 5) {
+          toRemove.push(movie.imdb_code);
+        }
+      });
+      const limiter = new RateLimiter(1, 600);
+      const results = await Promise.all(movies.map((movie) => {
         const { torrents, imdb_code: imdbId } = movie;
-        return fetchMovieInfos(torrents, imdbId);
+        return new Promise((resolve) => {
+          limiter.removeTokens(1, () => {
+            resolve(fetchMovieInfos(torrents, imdbId));
+          });
+        });
       }));
-      console.log('rsult', results);
+      results.forEach((result) => { buffer.push(result); });
+      console.log('completion: ', page * 50, ' / ', max * 50);
+      const now = moment();
+      console.log('last batch took', (now - old) / 1000, ' seconds');
+      return movieScraperYify(page + 1, max, buffer, now);
     });
-  }
 }
+
 
 // async function movieScraperEztv() {
 //   const { data: { data } } = await axios.get(urlEztv);
@@ -59,7 +68,18 @@ async function movieScraperYify() {
 // };
 
 async function movieScraper() {
-  await movieScraperYify();
+  const { data: { data } } = await axios.get(urlYify);
+  const { movie_count: movieCount } = data;
+  const max = Math.ceil(movieCount / 50);
+  const buffer = [];
+  console.log('Current number of movie to proccess', max * 50, ' movies');
+  console.log('We currently can make 40 requests per 10 seconds on The Movie DB or 240 per minutes');
+  console.log('To be sure not to pass the limit we do 33.33 requests per 10 second or 200 per minutes');
+  console.log('A movie needs two requests so it makes 100 per minutes');
+  console.log('So is should take', parseInt((max * 0.6 * 50) / 60, 10), 'minutes........., go relax =)');
+  const now = moment();
+  const results = await movieScraperYify(1, max, buffer, now);
+  console.log('end', results);
   // await movieScraperEztv();
 }
 
