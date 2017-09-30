@@ -1,16 +1,11 @@
-const passport = require('passport');
-const mongoose = require('mongoose');
-const request = require('request');
-const InstagramStrategy = require('passport-instagram').Strategy;
-const LocalStrategy = require('passport-local').Strategy;
-const FacebookStrategy = require('passport-facebook').Strategy;
-const TwitterStrategy = require('passport-twitter').Strategy;
-const GitHubStrategy = require('passport-github').Strategy;
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
-const OpenIDStrategy = require('passport-openid').Strategy;
-const OAuthStrategy = require('passport-oauth').OAuthStrategy;
-const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
+import passport from 'passport';
+import mongoose from 'mongoose';
+import request from 'request';
+import LocalStrategy from 'passport-local/Strategy';
+import GoogleStrategy from 'passport-google-oauth/OAuth2Strategy';
+import JwtStrategy from 'passport-jwt/Strategy';
+import ExtractJwt from 'passport-jwt/ExctractJwt';
+
 
 const User = require('../models/User');
 
@@ -43,6 +38,25 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
       return done(null, false, [{ param: 'password', msg: 'Invalid password.' }]);
     });
   });
+}));
+
+var opts = {}
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = 'secret';
+opts.issuer = 'accounts.examplesoft.com';
+opts.audience = 'yoursite.net';
+passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
+    User.findOne({id: jwt_payload.sub}, function(err, user) {
+        if (err) {
+            return done(err, false);
+        }
+        if (user) {
+            return done(null, user);
+        } else {
+            return done(null, false);
+            // or you could create a new account
+        }
+    });
 }));
 
 /**
