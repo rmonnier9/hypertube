@@ -1,147 +1,130 @@
-import passport from 'passport';
-import mongoose from 'mongoose';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import User from '../models/User';
 
+export const passportConfig = (passport) => {
 
-const User = require('../models/User');
-
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-  mongoose.model('User').findById(id, (err, user) => {
-    done(err, user);
-  });
-});
-
-/**
- * Sign in using Email and Password.
- */
-passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-  mongoose.model('User').findOne({ email: email.toLowerCase() }, (err, user) => {
-    if (err) {
-      return done(err);
-    }
-    if (!user) {
-      return done(null, false, [{ param: 'email', msg: `Email ${email} not found.`, value: email }]);
-    }
-    user.comparePassword(password, (err, isMatch) => {
-      if (err) return done(err);
-      if (isMatch) {
-        return done(null, user);
+  /**
+   * Sign in using Email and Password.
+   */
+  passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+    User.findOne({ email: email.toLowerCase() }, (err, user) => {
+      if (err) {
+        return done(err);
       }
-      return done(null, false, [{ param: 'password', msg: 'Invalid password.' }]);
+      if (!user) {
+        return done(null, false, [{ param: 'email', msg: `Email ${email} not found.`, value: email }]);
+      }
+      user.comparePassword(password, (err, isMatch) => {
+        if (err) return done(err);
+        if (isMatch) {
+          return done(null, user);
+        }
+        return done(null, false, [{ param: 'password', msg: 'Invalid password.' }]);
+      });
     });
-  });
-}));
+  }));
 
-const opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = 'secret';
-opts.issuer = 'accounts.examplesoft.com';
-opts.audience = 'yoursite.net';
+  /**
+   * Authenticate JWT in requests headers
+   */
 
-passport.use(new JwtStrategy(opts, (jwtPayload, done) => {
-  User.findOne({ id: jwtPayload.sub }, (err, user) => {
-    if (err) {
-      return done(err, false);
-    }
-    if (user) { return done(null, user); }
-    return done(null, false);
-    // or you could create a new account
-  });
-}));
+  const opts = {};
+  opts.jwtFromRequest = ExtractJwt.fromHeader('x-access-token');
+  opts.secretOrKey = process.env.SESSION_SECRET;
 
-/**
- * OAuth Strategy Overview
- *
- * - User is already logged in.
- *   - Check if there is an existing account with a provider id.
- *     - If there is, return an error message. (Account merging not supported)
- *     - Else link new OAuth account with currently logged-in user.
- * - User is not logged in.
- *   - Check if it's a returning user.
- *     - If returning user, sign in and we are done.
- *     - Else check if there is an existing account with user's email.
- *       - If there is, return an error message.
- *       - Else create a new account.
- */
-
-/**
- * Sign in with Google.
- */
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_ID,
-  clientSecret: process.env.GOOGLE_SECRET,
-  callbackURL: '/auth/google/callback',
-  passReqToCallback: true
-}, (req, accessToken, refreshToken, profile, done) => {
-  if (req.user) {
-    User.findOne({ google: profile.id }, (err, existingUser) => {
-      if (err) { return done(err); }
-      if (existingUser) {
-        req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
-        done(err);
-      } else {
-        User.findById(req.user.id, (err, user) => {
-          if (err) { return done(err); }
-          user.google = profile.id;
-          user.tokens.push({ kind: 'google', accessToken });
-          user.profile.name = user.profile.name || profile.displayName;
-          user.profile.gender = user.profile.gender || profile._json.gender;
-          user.profile.picture = user.profile.picture || profile._json.image.url;
-          user.save((err) => {
-            req.flash('info', { msg: 'Google account has been linked.' });
-            done(err, user);
-          });
-        });
+  passport.use(new JwtStrategy(opts, (jwtPayload, done) => {
+    User.findOne({ id: jwtPayload.sub }, (err, user) => {
+      if (err) {
+        console.log('test1');
+        return done(err, false);
       }
+      if (user) { return done(null, user); }
+      console.log('test2');
+      return done(null, false);
+      // or you could create a new account
     });
-  } else {
-    User.findOne({ google: profile.id }, (err, existingUser) => {
-      if (err) { return done(err); }
-      if (existingUser) {
-        return done(null, existingUser);
-      }
-      User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
+  }));
+
+  /**
+   * OAuth Strategy Overview
+   *
+   * - User is already logged in.
+   *   - Check if there is an existing account with a provider id.
+   *     - If there is, return an error message. (Account merging not supported)
+   *     - Else link new OAuth account with currently logged-in user.
+   * - User is not logged in.
+   *   - Check if it's a returning user.
+   *     - If returning user, sign in and we are done.
+   *     - Else check if there is an existing account with user's email.
+   *       - If there is, return an error message.
+   *       - Else create a new account.
+   */
+
+  /**
+   * Sign in with Google.
+   */
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_ID,
+    clientSecret: process.env.GOOGLE_SECRET,
+    callbackURL: '/auth/google/callback',
+    passReqToCallback: true
+  }, (req, accessToken, refreshToken, profile, done) => {
+    if (req.user) {
+      User.findOne({ google: profile.id }, (err, existingUser) => {
         if (err) { return done(err); }
-        if (existingEmailUser) {
-          req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.' });
+        if (existingUser) {
+          req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
           done(err);
         } else {
-          const user = new User();
-          user.email = profile.emails[0].value;
-          user.google = profile.id;
-          user.tokens.push({ kind: 'google', accessToken });
-          user.profile.name = profile.displayName;
-          user.profile.gender = profile._json.gender;
-          user.profile.picture = profile._json.image.url;
-          user.save((err) => {
-            done(err, user);
+          User.findById(req.user.id, (err, user) => {
+            if (err) { return done(err); }
+            user.google = profile.id;
+            user.tokens.push({ kind: 'google', accessToken });
+            user.profile.name = user.profile.name || profile.displayName;
+            user.profile.gender = user.profile.gender || profile._json.gender;
+            user.profile.picture = user.profile.picture || profile._json.image.url;
+            user.save((err) => {
+              req.flash('info', { msg: 'Google account has been linked.' });
+              done(err, user);
+            });
           });
         }
       });
-    });
-  }
-}));
-
-/**
- * Login Required middleware.
- */
-exports.isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.send({ error: 'You are not logged or endpoint doesn\'t exist' });
+    } else {
+      User.findOne({ google: profile.id }, (err, existingUser) => {
+        if (err) { return done(err); }
+        if (existingUser) {
+          return done(null, existingUser);
+        }
+        User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
+          if (err) { return done(err); }
+          if (existingEmailUser) {
+            req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.' });
+            done(err);
+          } else {
+            const user = new User();
+            user.email = profile.emails[0].value;
+            user.google = profile.id;
+            user.tokens.push({ kind: 'google', accessToken });
+            user.profile.name = profile.displayName;
+            user.profile.gender = profile._json.gender;
+            user.profile.picture = profile._json.image.url;
+            user.save((err) => {
+              done(err, user);
+            });
+          }
+        });
+      });
+    }
+  }));
 };
 
 /**
  * Authorization Required middleware.
  */
-exports.isAuthorized = (req, res, next) => {
+export const isAuthorized = (req, res, next) => {
   const provider = req.path.split('/').slice(-1)[0];
   const token = req.user.tokens.find(token => token.kind === provider);
   if (token) {
@@ -150,3 +133,5 @@ exports.isAuthorized = (req, res, next) => {
     res.redirect(`/auth/${provider}`);
   }
 };
+
+export default passportConfig;

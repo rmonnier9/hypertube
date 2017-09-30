@@ -1,6 +1,7 @@
 import passport from 'passport';
 import User from '../models/User';
 import mail from './mail';
+import jwt from 'jsonwebtoken';
 
 /**
  * GET /islogged
@@ -32,12 +33,13 @@ export const postSignin = (req, res, next) => {
     if (!user) {
       return res.send({ error: info });
     }
-    req.logIn(user, (err) => {
-      if (err) { return next(err); }
-      return res.send({ error: '' });
-    });
+    const token = jwt.sign({ _id: user._id, username: user.email, provider: 'local' }, process.env.SESSION_SECRET);
+    res.set('Access-Control-Expose-Headers', 'x-access-token');
+    res.set('x-access-token', token);
+    res.send({ error: '' });
   })(req, res, next);
 };
+
 
 /**
  * POST /signup/info

@@ -51,9 +51,9 @@ const loginUser = creds => (dispatch) => {
   dispatch(requestLogin(creds));
 
   return axios.post('/api/signin', creds)
-  .then(({ data: { error } }) => {
+  .then(({ data: { error }, headers }) => {
     if (!error) {
-      localStorage.setItem('isAuthenticated', creds.email);
+      localStorage.setItem('x-access-token', headers['x-access-token']);
       dispatch(receiveLogin());
     } else {
       dispatch(loginError(error));

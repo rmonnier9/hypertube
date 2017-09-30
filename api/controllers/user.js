@@ -9,6 +9,7 @@ const crypto = bluebird.promisifyAll(require('crypto'));
  * Profile page.
  */
 export const getMyAccount = (req, res, next) => {
+  console.log(req.user);
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
     user.password = '';

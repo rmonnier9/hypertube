@@ -1,5 +1,4 @@
 import passport from 'passport';
-import passportConfig from './config/passport';
 import * as stream from './controllers/stream';
 import * as user from './controllers/user';
 import * as movie from './controllers/movie';
@@ -20,7 +19,7 @@ const routes = (app, upload) => {
 
 
   // Logged part  ====================
-  app.use(passportConfig.isAuthenticated);
+  app.use(passport.authenticate('jwt', { session: false }));
 
   app.get('/api/signout', user.getSignout);
   app.get('/api/me', user.getMyAccount);
