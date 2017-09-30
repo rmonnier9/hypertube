@@ -1,10 +1,8 @@
 import passport from 'passport';
 import mongoose from 'mongoose';
-import request from 'request';
-import LocalStrategy from 'passport-local/Strategy';
-import GoogleStrategy from 'passport-google-oauth/OAuth2Strategy';
-import JwtStrategy from 'passport-jwt/Strategy';
-import ExtractJwt from 'passport-jwt/ExctractJwt';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 
 
 const User = require('../models/User');
@@ -40,23 +38,21 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
   });
 }));
 
-var opts = {}
+const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = 'secret';
 opts.issuer = 'accounts.examplesoft.com';
 opts.audience = 'yoursite.net';
-passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({id: jwt_payload.sub}, function(err, user) {
-        if (err) {
-            return done(err, false);
-        }
-        if (user) {
-            return done(null, user);
-        } else {
-            return done(null, false);
-            // or you could create a new account
-        }
-    });
+
+passport.use(new JwtStrategy(opts, (jwtPayload, done) => {
+  User.findOne({ id: jwtPayload.sub }, (err, user) => {
+    if (err) {
+      return done(err, false);
+    }
+    if (user) { return done(null, user); }
+    return done(null, false);
+    // or you could create a new account
+  });
 }));
 
 /**
