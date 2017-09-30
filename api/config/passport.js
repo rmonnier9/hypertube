@@ -3,8 +3,7 @@ import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import User from '../models/User';
 
-export const passportConfig = (passport) => {
-
+const passportConfig = (passport) => {
   /**
    * Sign in using Email and Password.
    */
@@ -35,15 +34,12 @@ export const passportConfig = (passport) => {
   opts.secretOrKey = process.env.SESSION_SECRET;
 
   passport.use(new JwtStrategy(opts, (jwtPayload, done) => {
-    User.findOne({ id: jwtPayload.sub }, (err, user) => {
+    User.findById(jwtPayload._id, (err, user) => {
       if (err) {
-        console.log('test1');
         return done(err, false);
       }
       if (user) { return done(null, user); }
-      console.log('test2');
       return done(null, false);
-      // or you could create a new account
     });
   }));
 

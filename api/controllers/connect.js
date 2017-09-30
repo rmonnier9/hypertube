@@ -1,17 +1,7 @@
 import passport from 'passport';
+import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import mail from './mail';
-import jwt from 'jsonwebtoken';
-
-/**
- * GET /islogged
- */
-export const getIslogged = (req, res) => {
-  if (req.isAuthenticated()) {
-    return res.send({ error: '' });
-  }
-  res.send({ error: 'You are not logged.' });
-};
 
 /**
  * POST /signin
@@ -33,7 +23,7 @@ export const postSignin = (req, res, next) => {
     if (!user) {
       return res.send({ error: info });
     }
-    const token = jwt.sign({ _id: user._id, username: user.email, provider: 'local' }, process.env.SESSION_SECRET);
+    const token = jwt.sign({ _id: user._id, email: user.email, provider: 'local' }, process.env.SESSION_SECRET);
     res.set('Access-Control-Expose-Headers', 'x-access-token');
     res.set('x-access-token', token);
     res.send({ error: '' });
@@ -75,13 +65,10 @@ export const postSignup = (req, res, next) => {
     }
     user.save((err) => {
       if (err) { return next(err); }
-      req.logIn(user, (err) => {
-        if (err) return next(err);
-        const subject = 'Hypertube - Account created !';
-        const content = `Welcome to Hypertube !`;
-        mail(req.body.email, subject, content);
-        return res.send({ error: '' });
-      });
+      const subject = 'Hypertube - Account created !';
+      const content = 'Welcome to Hypertube !';
+      mail(req.body.email, subject, content);
+      return res.send({ error: '' });
     });
   });
 };

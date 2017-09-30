@@ -36,12 +36,9 @@ export const postSignupPicture = async (req, res, next) => {
         return res.send({ errorPic: 'You can\'t upload a new picture here, go to your profile' });
       }
       user.profile.picture = filename;
-      user.save((err, user) => {
+      user.save((err) => {
         if (err) { return next(err); }
-        req.logIn(user, (err) => {
-          if (err) return next(err);
-          return res.send({ errorPic: '' });
-        });
+        return res.send({ errorPic: '' });
       });
     });
 };

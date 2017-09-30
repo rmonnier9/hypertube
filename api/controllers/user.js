@@ -9,7 +9,6 @@ const crypto = bluebird.promisifyAll(require('crypto'));
  * Profile page.
  */
 export const getMyAccount = (req, res, next) => {
-  console.log(req.user);
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
     user.password = '';
@@ -111,12 +110,11 @@ export const postUpdateProfile = (req, res, next) => {
 };
 
 /**
- * GET /profile/:email
+ * GET /profile/:id
  * Profile page.
  */
 export const getAccount = (req, res, next) => {
-  const { email } = req.params;
-  User.findOne({ email }, (err, user) => {
+  User.findById(req.params.id, (err, user) => {
     if (err) { return next(err); }
     user.password = '';
     return res.send({ error: '', user });
@@ -154,18 +152,8 @@ export const postUpdatePassword = (req, res, next) => {
 export const deleteDeleteAccount = (req, res, next) => {
   User.remove({ _id: req.user.id }, (err) => {
     if (err) { return next(err); }
-    req.logout();
     res.send({ error: '' });
   });
-};
-
-/**
- * GET /logout
- * Log out.
- */
-export const getSignout = (req, res) => {
-  req.logout();
-  res.send({ error: '' });
 };
 
 /**

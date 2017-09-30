@@ -1,6 +1,5 @@
 import express from 'express';
 import compression from 'compression';
-import session from 'express-session';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
 import chalk from 'chalk';
@@ -67,7 +66,7 @@ app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: 3155
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator()); // validate form inputs. cf req.assert in controllers files
-app.use(passport.initialize());
+// app.use(passport.initialize());
 passportConfig(passport);
 app.use(lusca.xframe('SAMEORIGIN')); // lusca = security middleware
 app.use(lusca.xssProtection(true));

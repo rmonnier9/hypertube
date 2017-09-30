@@ -54,6 +54,7 @@ const loginUser = creds => (dispatch) => {
   .then(({ data: { error }, headers }) => {
     if (!error) {
       localStorage.setItem('x-access-token', headers['x-access-token']);
+      localStorage.setItem('isAuthenticated', true);
       dispatch(receiveLogin());
     } else {
       dispatch(loginError(error));
@@ -65,15 +66,9 @@ const loginUser = creds => (dispatch) => {
 // logout action function, remove local storage
 const logoutUser = () => (dispatch) => {
   dispatch(requestLogout());
-  return axios.get('/api/signout')
-  .then(({ data: { error } }) => {
-    if (!error) {
-      localStorage.removeItem('isAuthenticated');
-      dispatch(receiveLogout());
-    } else {
-      dispatch(logoutError(error));
-    }
-  });
+  localStorage.removeItem('x-access-token');
+  localStorage.removeItem('isAuthenticated');
+  dispatch(receiveLogout());
 };
 
 export {

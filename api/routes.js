@@ -10,7 +10,6 @@ const routes = (app, upload) => {
   /**
    * Primary app routes.
    */
-  app.get('/api/islogged', connect.getIslogged);
   app.post('/api/signin', connect.postSignin);
   app.post('/api/signup/info', connect.postSignup);
   app.post('/api/signup/upload', upload.single('imageUploaded'), picture.postSignupPicture);
@@ -21,7 +20,6 @@ const routes = (app, upload) => {
   // Logged part  ====================
   app.use(passport.authenticate('jwt', { session: false }));
 
-  app.get('/api/signout', user.getSignout);
   app.get('/api/me', user.getMyAccount);
   app.post('/api/me', user.postUpdateProfile);
   app.delete('/api/me', user.deleteDeleteAccount);
