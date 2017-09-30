@@ -72,7 +72,7 @@ app.use(lusca.xframe('SAMEORIGIN')); // lusca = security middleware
 app.use(lusca.xssProtection(true));
 
 // Load routes
-routes(app, upload);
+routes(app, passport, upload);
 
 /**
  * Error Handler. only use in development

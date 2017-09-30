@@ -1,4 +1,3 @@
-import passport from 'passport';
 import * as stream from './controllers/stream';
 import * as user from './controllers/user';
 import * as movie from './controllers/movie';
@@ -6,7 +5,7 @@ import * as connect from './controllers/connect'; // signup signin
 import * as picture from './controllers/picture';
 import * as gallery from './controllers/gallery';
 
-const routes = (app, upload) => {
+const routes = (app, passport, upload) => {
   /**
    * Primary app routes.
    */
