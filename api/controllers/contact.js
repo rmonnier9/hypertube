@@ -40,3 +40,5 @@ export const postContact = (req, res) => {
     res.redirect('/contact');
   });
 };
+
+export default postContact;

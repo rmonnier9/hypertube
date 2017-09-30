@@ -1,6 +1,6 @@
 import passport from 'passport';
 import passportConfig from './config/passport';
-import stream from './controllers/stream';
+import * as stream from './controllers/stream';
 import * as user from './controllers/user';
 import * as movie from './controllers/movie';
 import * as connect from './controllers/connect'; // signup signin
@@ -26,15 +26,15 @@ const routes = (app, upload) => {
   app.get('/api/me', user.getMyAccount);
   app.post('/api/me', user.postUpdateProfile);
   app.delete('/api/me', user.deleteDeleteAccount);
+  app.post('/api/me/password', user.postUpdatePassword);
   app.post('/api/profile_pic', upload.single('imageUploaded'), picture.newPicture);
   app.get('/api/profile/:email', user.getAccount);
   app.get('/api/movie/info/:idImdb', movie.getInfos);
 
   // not implemented
-  // app.get('/api/search', gallery.getSearch);
-  // app.get('/api/suggestion', gallery.getSuggestion);
-  // app.get('/api/movie/stream/:id', stream.getStream);
-  // app.post('/api/movie/:id');
+  app.get('/api/search', gallery.getSearch);
+  app.get('/api/suggestion', gallery.getSuggestion);
+  app.get('/api/movie/stream/:id', stream.getStream);
 
   /**
    * OAuth authentication routes. (Sign in)

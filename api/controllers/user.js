@@ -123,28 +123,28 @@ export const getAccount = (req, res, next) => {
 };
 
 /**
- * POST /account/password
+ * POST /me/password
  * Update current password.
  */
-// exports.postUpdatePassword = (req, res, next) => {
-//   req.assert('password', 'Password must be at least 4 characters long').len(4);
-//   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
-//
-//   const error = req.validationErrors();
-//
-//   if (error) {
-//     return res.send({ error });
-//   }
-//
-//   User.findById(req.user.id, (err, user) => {
-//     if (err) { return next(err); }
-//     user.password = req.body.password;
-//     user.save((err) => {
-//       if (err) { return next(err); }
-//       return res.send({ error: '' })
-//     });
-//   });
-// };
+export const postUpdatePassword = (req, res, next) => {
+  req.assert('password', 'Password must be at least 4 characters long').len(4);
+  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+
+  const error = req.validationErrors();
+
+  if (error) {
+    return res.send({ error });
+  }
+
+  User.findById(req.user.id, (err, user) => {
+    if (err) { return next(err); }
+    user.password = req.body.password;
+    user.save((err) => {
+      if (err) { return next(err); }
+      return res.send({ error: '' });
+    });
+  });
+};
 
 /**
  * DELETE /me

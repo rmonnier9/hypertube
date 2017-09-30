@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const getStream = (req, res) => {
+export const getStream = (req, res) => {
   const path = 'assets/sample.mp4';
   const stat = fs.statSync(path);
   const fileSize = stat.size;

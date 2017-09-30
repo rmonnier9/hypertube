@@ -1,5 +1,6 @@
 import passport from 'passport';
 import User from '../models/User';
+import mail from './mail';
 
 /**
  * GET /islogged
@@ -74,6 +75,9 @@ export const postSignup = (req, res, next) => {
       if (err) { return next(err); }
       req.logIn(user, (err) => {
         if (err) return next(err);
+        const subject = 'Hypertube - Account created !';
+        const content = `Welcome to Hypertube !`;
+        mail(req.body.email, subject, content);
         return res.send({ error: '' });
       });
     });
