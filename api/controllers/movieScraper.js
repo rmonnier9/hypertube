@@ -13,22 +13,11 @@ async function movieScraperYify(page, max, buffer, old) {
   const toRemove = [];
   return axios.get(url)
     .then(async ({ data: { data: { movies } } }) => {
-      movies.forEach((movie) => {
-        const { torrents } = movie;
-        let { seeds } = torrents[0];
-        torrents.forEach((torrent) => {
-          if (torrent.seeds > seeds) { seeds = torrent.seeds; }
-        });
-        if (seeds < 5) {
-          toRemove.push(movie.imdb_code);
-        }
-      });
       const limiter = new RateLimiter(1, 600);
       const results = await Promise.all(movies.map((movie) => {
-        const { torrents, imdb_code: idImdb } = movie;
         return new Promise((resolve) => {
           limiter.removeTokens(1, () => {
-            resolve(fetchMovieInfos(torrents, idImdb));
+            resolve(fetchMovieInfos(movie));
           });
         });
       }));
@@ -41,6 +30,17 @@ async function movieScraperYify(page, max, buffer, old) {
     });
 }
 
+//
+// movies.forEach((movie) => {
+//   const { torrents } = movie;
+//   let { seeds } = torrents[0];
+//   torrents.forEach((torrent) => {
+//     if (torrent.seeds > seeds) { seeds = torrent.seeds; }
+//   });
+//   if (seeds < 5) {
+//     toRemove.push(movie.imdb_code);
+//   }
+// });
 
 // async function movieScraperEztv() {
 //   const { data: { data } } = await axios.get(urlEztv);
@@ -83,13 +83,13 @@ async function movieScraper() {
   const now = moment();
   const results = await movieScraperYify(1, 2, buffer, now);
   console.log('end', results);
-  Movie.insertMany(results, (err, docs) => {
-    if (err) {
+  Movie.insertMany(results)
+    .then((results) => {
+      console.log('db insert success of ', results.length);
+    })
+    .catch((err) => {
       console.log('db err', err);
-    } else {
-      console.log('db insert success of ', docs.length);
-    }
-  });
+    });
   // // await movieScraperEztv();
 }
 

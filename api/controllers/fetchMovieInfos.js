@@ -13,36 +13,35 @@ const urlImdbApi = idImdb => (
   `http://www.theimdbapi.org/api/movie?movie_id=${idImdb}`
 );
 
-const parseTorrent = (oldtorrent) => {
-  const torrent = new Torrent({
-    url: oldtorrent.url,
-    magnet: '',
-    title: '',
-    hash: oldtorrent.hash,
-    quality: oldtorrent.quality,
-    size: oldtorrent.size,
-    seeds: oldtorrent.seeds,
-    peers: oldtorrent.peers,
-    source: 'yifi',
-  });
-  return torrent;
-};
+const parseTorrent = (torrents, title) => (
+  torrents.map(torrent => (
+    new Torrent({
+      url: torrent.url,
+      magnet: '',
+      title: {
+        en: `${title.en} - ${torrent.quality}`,
+        fr: `${title.fr} - ${torrent.quality}`
+      },
+      hash: torrent.hash,
+      quality: torrent.quality,
+      size: torrent.size,
+      seeds: torrent.seeds,
+      peers: torrent.peers,
+      source: 'yifi',
+    })
+  ))
+);
 
-const parseMovie = (movie, { MovieDbEn }, { MovieDbFr }, { imdbApi }) => {
+const parseMovie = (idImdb, torrents, MovieDbEn, MovieDbFr, ImdbApi) => {
+  const title = { en: MovieDbEn.title || '', fr: MovieDbFr.title || '' };
+  const overview = { en: MovieDbEn.overview || 'Unavailable', fr: MovieDbFr.overview || 'Non disponible' };
   const genres = parseGenre(MovieDbEn.genre_ids, MovieDbFr.genre_ids);
-  for (let i = 0; i < movie.torrents.length; i += 1) {
-    const torrentTitle = {
-      en: `${MovieDbEn.title} - ${movie.torrents[i].quality}`,
-      fr: `${MovieDbFr.title} - ${movie.torrents[i].quality}`
-    };
-    movie.torrents[i].title = torrentTitle;
-  }
   const newMovie = new Movie({
-    idImdb: movie.idImdb,
-    torrents: movie.torrents,
-    title: { en: MovieDbEn.title, fr: MovieDbFr.title },
-    overview: { en: MovieDbEn.overview, fr: MovieDbFr.overview },
+    idImdb,
+    title,
     genres,
+    overview,
+    torrents: parseTorrent(torrents, title),
     runtime: parseInt(imdbApi.length, 10),
     director: imdbApi.director,
     stars: imdbApi.stars,
@@ -54,34 +53,31 @@ const parseMovie = (movie, { MovieDbEn }, { MovieDbFr }, { imdbApi }) => {
   return newMovie;
 };
 
-const FetchTheMovieDBInfo = async (idImdb, lang) => {
-  return axios.get(urlMovieDb(idImdb, lang))
-    .then(({ data }) => {
-      if (lang === 'en') return { MovieDbEn: data.movie_results[0] };
-      else if (lang === 'fr') return { MovieDbFr: data.movie_results[0] };
-    })
-    .catch(err => console.log('FetchTheMovieDBInfo err', err.response));
-};
+const FetchTheMovieDBInfo = async (idImdb, lang) => (
+  axios.get(urlMovieDb(idImdb, lang))
+    .then(({ data }) => (
+      data.movie_results[0]
+    ))
+    .catch(err => console.log('FetchTheMovieDBInfo err', err.response))
+);
 
-const FetchImdbApiInfo = async (idImdb) => {
-  return axios.get(urlImdbApi(idImdb))
-    .then(({ data }) => {
-      return { imdbApi: data };
-    })
-    .catch(err => console.log('FetchImdbApiInfo err', err));
-};
+const FetchImdbApiInfo = async idImdb => (
+  axios.get(urlImdbApi(idImdb))
+    .then(({ data }) => (data))
+    .catch(err => console.log('FetchImdbApiInfo err', err))
+);
 
-const fetchMovieInfo = async (torrents, idImdb) => {
+const fetchMovieInfo = async (movieold) => {
   const movie = {};
-  movie.torrents = torrents.map(torrent => parseTorrent(torrent));
+  const { torrents, imdb_code: idImdb } = movieold;
   movie.idImdb = idImdb;
   return axios.all([
-    FetchTheMovieDBInfo(movie.idImdb, 'en'),
-    FetchTheMovieDBInfo(movie.idImdb, 'fr'),
-    FetchImdbApiInfo(movie.idImdb),
+    FetchTheMovieDBInfo(idImdb, 'en'),
+    FetchTheMovieDBInfo(idImdb, 'fr'),
+    FetchImdbApiInfo(idImdb),
   ])
     .then(axios.spread((MovieDbEn, MovieDbFr, ImdbApi) => {
-      return parseMovie(movie, MovieDbEn, MovieDbFr, ImdbApi);
+      return parseMovie(idImdb, torrents, MovieDbEn, MovieDbFr, ImdbApi);
     }))
     .catch(err => console.log('fetchMovieInfo err', err));
 };
