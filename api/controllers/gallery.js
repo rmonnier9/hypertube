@@ -12,10 +12,20 @@ const getSortObj = (sort) => {
 };
 
 export const getSuggestion = async (req, res) => {
-  const { query } = req;
+  const { query, name } = req;
+  let matchObj;
 
-  // initialize the suggestion object
-  const matchObj = {};
+  if (name) {
+    const regex = new RegExp(name);
+
+    matchObj = {
+      $or: [
+        // { login: regex },
+        { name: regex },
+        // { lastname: regex },
+      ],
+    };
+  }
 
   // create aggregate params
   const sortObj = getSortObj(query.sort);
@@ -36,7 +46,6 @@ export const getSuggestion = async (req, res) => {
   );
 
   const movies = await cursor.exec();
-  console.log(movies.length);
 
   // format server response
   const resObj = { error: '', movies };
