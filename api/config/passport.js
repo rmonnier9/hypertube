@@ -1,6 +1,6 @@
 import { Strategy as LocalStrategy } from 'passport-local';
-import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import User from '../models/User';
 
 const passportConfig = (passport) => {

@@ -7,12 +7,13 @@ import mail from './mail';
  * POST /signin
  * Sign in using email and password.
  */
-export const postSignin = (req, res, next) => {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password cannot be blank').notEmpty();
+export const postSignin = async (req, res, next) => {
+  req.checkBody('email', 'Email is not valid').isEmail();
+  req.checkBody('password', 'Password cannot be blank').notEmpty();
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
-  const error = req.validationErrors();
+  const validationObj = await req.getValidationResult();
+  const error = validationObj.array();
 
   if (error) {
     return res.send({ error });
@@ -35,15 +36,19 @@ export const postSignin = (req, res, next) => {
  * POST /signup/info
  * Create new account and sign in.
  */
-export const postSignup = (req, res, next) => {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
-  req.assert('firstName', 'First name can\'t be more than 20 letters long').len({ max: 20 });
-  req.assert('lastName', 'Last name can\'t be more than 20 letters long').len({ max: 20 });
+export const postSignup = async (req, res, next) => {
+  req.checkBody('email', 'Email is not valid').isEmail();
+  req.checkBody('password', 'Password must be at least 4 characters long').len({ max: 6 });
+  req.checkBody('password', 'Password must contain at least one uppercase, one lowercase and one digit.')
+    .matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/);
+  req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.checkBody('firstName', 'First name can\'t be more than 20 letters long').len({ max: 20 });
+  req.checkBody('lastName', 'Last name can\'t be more than 20 letters long').len({ max: 20 });
+
   req.sanitize('creds.email').normalizeEmail({ gmail_remove_dots: false });
 
-  const error = req.validationErrors();
+  const validationObj = await req.getValidationResult();
+  const error = validationObj.array();
 
   if (error) {
     return res.send({ error });
