@@ -28,8 +28,8 @@ const routes = (app, passport, upload) => {
   app.get('/api/movie/info/:idImdb', movie.getInfos);
 
   // not implemented
-  app.get('/api/search', gallery.getSearch);
-  app.get('/api/suggestion', gallery.getSuggestion);
+  app.get('/api/gallery/search', gallery.getSearch);
+  app.get('/api/gallery/suggestion', gallery.getSuggestion);
   app.get('/api/movie/stream/:id', stream.getStream);
 
   /**

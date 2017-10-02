@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import axios from 'axios';
 // import Loading from '../../General/components/Loading';
 import TorrentTable from '../components/TorrentTable';
 import '../css/movie.css';
@@ -71,7 +72,21 @@ class Movie extends Component {
   }
 
   componentDidMount() {
-    // const url = '/api/movie';
+    // const { pathname } = this.props.location;
+    // const idImdb = pathname.split('/').pop();
+    // this.getMovie(idImdb);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // const { pathname } = nextProps.location;
+    // const idImdb = pathname.split('/').pop();
+    // this.setState({ loaded: false });
+    // this.getMovie(idImdb);
+  }
+
+
+  getMovie = (idImdb) => {
+    // const url = `/api/movie/info/${idImdb}`;
     // axios({ url, method: 'GET' })
     // .then(({ data: { error, movie } }) => {
     //   if (error) {

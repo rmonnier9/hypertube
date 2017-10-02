@@ -73,7 +73,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator()); // validate form inputs. cf req.assert in controllers files
 // app.use(passport.initialize());
 passportConfig(passport);
-app.use(lusca.xframe('SAMEORIGIN')); // lusca = security middleware
+app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 
 // Load routes

@@ -20,16 +20,17 @@ export const getMyAccount = (req, res, next) => {
  * POST /me
  * Update profile information.
  */
-export const postUpdateProfile = (req, res, next) => {
+export const postUpdateProfile = async (req, res, next) => {
   const { id } = req.body;
   switch (id) {
     case 'name-form': {
-      req.assert('firstName', 'First name can\'t be more than 20 letters long').len({ max: 20 });
-      req.assert('lastName', 'Last name can\'t be more than 20 letters long').len({ max: 20 });
+      req.checkBody('firstName', 'First name can\'t be more than 20 letters long').len({ max: 20 });
+      req.checkBody('lastName', 'Last name can\'t be more than 20 letters long').len({ max: 20 });
 
-      const error = req.validationErrors();
+      const validationObj = await req.getValidationResult();
+      const error = validationObj.array();
 
-      if (error) {
+      if (error.length) {
         return res.send({ error });
       }
 
@@ -51,13 +52,14 @@ export const postUpdateProfile = (req, res, next) => {
     }
 
     case 'email-form': {
-      req.assert('email', 'Please enter a valid email address.').isEmail();
-      req.assert('password', 'Password cannot be blank').notEmpty();
+      req.checkBody('email', 'Please enter a valid email address.').isEmail();
+      req.checkBody('password', 'Password cannot be blank').notEmpty();
       req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
-      const error = req.validationErrors();
+      const validationObj = await req.getValidationResult();
+      const error = validationObj.array();
 
-      if (error) {
+      if (error.length) {
         return res.send({ error });
       }
 
@@ -85,12 +87,13 @@ export const postUpdateProfile = (req, res, next) => {
     }
 
     case 'password-form': {
-      req.assert('password', 'Password must be at least 4 characters long').len(4);
-      req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+      req.checkBody('password', 'Password must be at least 4 characters long').len(4);
+      req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
-      const error = req.validationErrors();
+      const validationObj = await req.getValidationResult();
+      const error = validationObj.array();
 
-      if (error) {
+      if (error.length) {
         return res.send({ error });
       }
 
@@ -125,13 +128,14 @@ export const getAccount = (req, res, next) => {
  * POST /me/password
  * Update current password.
  */
-export const postUpdatePassword = (req, res, next) => {
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+export const postUpdatePassword = async (req, res, next) => {
+  req.checkBody('password', 'Password must be at least 4 characters long').len(4);
+  req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
-  const error = req.validationErrors();
+  const validationObj = await req.getValidationResult();
+  const error = validationObj.array();
 
-  if (error) {
+  if (error.length) {
     return res.send({ error });
   }
 
@@ -160,13 +164,14 @@ export const deleteDeleteAccount = (req, res, next) => {
  * POST /reset/:token
  * Process the reset password request.
  */
-export const postReset = (req, res, next) => {
-  req.assert('password', 'Password must be at least 4 characters long.').len(4);
-  req.assert('confirm', 'Passwords must match.').equals(req.body.password);
+export const postReset = async (req, res, next) => {
+  req.checkBody('password', 'Password must be at least 4 characters long.').len(4);
+  req.checkBody('confirm', 'Passwords must match.').equals(req.body.password);
 
-  const error = req.validationErrors();
+  const validationObj = await req.getValidationResult();
+  const error = validationObj.array();
 
-  if (error) {
+  if (error.length) {
     return res.send({ error });
   }
 
@@ -220,13 +225,14 @@ export const postReset = (req, res, next) => {
  * POST /forgot
  * Create a random token, then the send user an email with a reset link.
  */
-export const postForgot = (req, res, next) => {
-  req.assert('email', 'Please enter a valid email address.').isEmail();
+export const postForgot = async (req, res, next) => {
+  req.checkBody('email', 'Please enter a valid email address.').isEmail();
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
-  const error = req.validationErrors();
+  const validationObj = await req.getValidationResult();
+  const error = validationObj.array();
 
-  if (error) {
+  if (error.length) {
     return res.send({ error });
   }
 

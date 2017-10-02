@@ -2,27 +2,44 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { updateLocale } from '../../reducers/i18n';
+import '../css/nav.css';
 
 const SignOutMenu = props => (
   <button
     onClick={props.handleSignOut}
-  >
-  Signout
-  </button>
+    className="glyphicon glyphicon-off"
+  />
 );
 
 class NavBar extends React.Component {
   render() {
     return (
-      <div>
-        <button><Link to="/myprofile">To profile</Link></button>
-        <button><Link to="/">To Gallery</Link></button>
-        <button onClick={() => this.props.onLocaleChange('fr-fr')}>FR</button>
-        <button onClick={() => this.props.onLocaleChange('en-en')}>EN</button>
-        <SignOutMenu
-          handleSignOut={this.props.handleSignOut}
-        />
-      </div>
+      <nav className="navbar">
+        <div className="container-fluid">
+          <div className="navbar-header">
+            <div className="navbar-brand">Hypertube</div>
+          </div>
+          <ul className="nav navbar-nav">
+            <li className="nav-link">
+              <Link className="test" to="/myprofile">My profile</Link>
+            </li>
+            <li className="nav-link">
+              <Link to="/">Gallery</Link>
+            </li>
+            <li className="nav-link">
+              <button className="nav-lang" onClick={() => this.props.onLocaleChange('fr-fr')}>FR</button>
+            </li>
+            <li className="nav-link">
+              <button className="nav-lang" onClick={() => this.props.onLocaleChange('en-en')}>EN</button>
+            </li>
+            <li className="nav-link">
+              <SignOutMenu
+                handleSignOut={this.props.handleSignOut}
+              />
+            </li>
+          </ul>
+        </div>
+      </nav>
     );
   }
 }

@@ -1,0 +1,40 @@
+.navbar {
+  border-radius: 0;
+  border-bottom: 1px solid #D8D8D8;
+  background-color: #fff;
+  margin-bottom: 15px;
+  font-size: 1.6rem;
+  padding-top: 10px;
+}
+
+.navbar-brand {
+  color: green;
+  text-decoration: none;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding-left: 15px;
+  text-decoration: none;
+}
+
+.nav a, button.glyphicon-off, button.nav-lang {
+  border: none;
+  color: black;
+  background-color: #fff;
+  padding: 15px;
+  margin-right: 10px;
+}
+
+.test:hover, button.glyphicon-off:hover, button.nav-lang:hover {
+  text-decoration: none;
+  background-color: #fff;
+  color: #8E1468;
+}
+
+button.glyphicon-off:focus, button.nav-lang:focus {
+  outline: 0;
+}
+
+/*.nav-link {
+  position: relative;
+}*/

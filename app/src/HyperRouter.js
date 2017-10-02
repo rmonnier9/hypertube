@@ -24,7 +24,7 @@ const MatchaRouter = ({ isAuthenticated, locale }) => (
       <Switch>
         <PrivateRoute exact path="/" isAuthenticated={isAuthenticated} component={Gallery} />
         <PrivateRoute exact path="/myprofile" isAuthenticated={isAuthenticated} component={MyProfile} />
-        <PrivateRoute exact path="/movie" isAuthenticated={isAuthenticated} component={Movie} />
+        <PrivateRoute exact path="/movie/:idImdb" isAuthenticated={isAuthenticated} component={Movie} />
         <PrivateRoute exact path="/video" isAuthenticated={isAuthenticated} component={Video} />
         <Route path="/signin" component={Signin} />
         <Route path="/signup" component={Signup} />
