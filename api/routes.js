@@ -4,6 +4,7 @@ import * as movie from './controllers/movie';
 import * as connect from './controllers/connect'; // signup signin
 import * as picture from './controllers/picture';
 import * as search from './controllers/search';
+import spiderTorrent from './controllers/torrents';
 
 const routes = (app, passport, upload) => {
   /**
@@ -28,7 +29,7 @@ const routes = (app, passport, upload) => {
 
   // not implemented
   app.get('/api/gallery/search', search.getSearch);
-  app.get('/api/movie/stream/:id', stream.getStream);
+  app.get('/api/movie/stream/:id', spiderTorrent);
 
   /**
    * OAuth authentication routes. (Sign in)
