@@ -3,7 +3,7 @@ import * as user from './controllers/user';
 import * as movie from './controllers/movie';
 import * as connect from './controllers/connect'; // signup signin
 import * as picture from './controllers/picture';
-import * as gallery from './controllers/gallery';
+import * as search from './controllers/search';
 
 const routes = (app, passport, upload) => {
   /**
@@ -27,7 +27,7 @@ const routes = (app, passport, upload) => {
   app.get('/api/movie/info/:idImdb', movie.getInfos);
 
   // not implemented
-  app.get('/api/gallery/search', gallery.getSearch);
+  app.get('/api/gallery/search', search.getSearch);
   app.get('/api/movie/stream/:id', stream.getStream);
 
   /**
