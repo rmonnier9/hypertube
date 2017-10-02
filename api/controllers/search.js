@@ -16,7 +16,7 @@ export const getSearch = async (req, res) => {
   let matchObj = {};
 
   if (query.name) {
-    const regex = new RegExp(query.name, i);
+    const regex = new RegExp(query.name, 'i');
 
     matchObj = {
       $or: [
