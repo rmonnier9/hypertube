@@ -28,7 +28,6 @@ const routes = (app, passport, upload) => {
 
   // not implemented
   app.get('/api/gallery/search', gallery.getSearch);
-  app.get('/api/gallery/suggestion', gallery.getSuggestion);
   app.get('/api/movie/stream/:id', stream.getStream);
 
   /**

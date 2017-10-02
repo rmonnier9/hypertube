@@ -11,7 +11,7 @@ const getSortObj = (sort) => {
   return sortObj;
 };
 
-export const getSuggestion = async (req, res) => {
+const getSearch = async (req, res) => {
   const { query, name } = req;
   let matchObj;
 
@@ -51,14 +51,11 @@ export const getSuggestion = async (req, res) => {
   const resObj = { error: '', movies };
   if (movies.length === numberPerRequest) {
     query.start = toSkip + numberPerRequest;
-    resObj.nextHref = `/api/gallery/suggestion/?${queryString.stringify(query)}`;
+    resObj.nextHref = `/api/gallery/search?${queryString.stringify(query)}`;
   }
 
   // send response and end request
   return res.send(resObj);
 };
 
-export const getSearch = (req, res) => {
-
-  return res.send({ error: '' });
-}
+export default getSearch;
