@@ -36,7 +36,6 @@ export const getSearch = async (req, res) => {
   const numberPerRequest = 10;
 
   // get users from db
-  console.log(matchObj);
   const cursor = Movie.find(
     matchObj,
     null,
