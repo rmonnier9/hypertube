@@ -30,6 +30,7 @@
     "express-session": "^1.15.5",
     "express-status-monitor": "^1.0.0",
     "express-validator": "^3.2.1",
+    "fluent-ffmpeg": "^2.1.2",
     "jsonwebtoken": "^8.0.1",
     "limiter": "^1.1.2",
     "lob": "^4.1.1",
@@ -46,6 +47,8 @@
     "passport-local": "^1.0.0",
     "query-string": "^5.0.0",
     "sharp": "^0.18.2",
+    "throttle": "^1.0.3",
+    "torrent-stream": "^1.0.3",
     "validator": "^8.0.0"
   },
   "devDependencies": {
