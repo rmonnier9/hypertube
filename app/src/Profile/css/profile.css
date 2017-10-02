@@ -3,6 +3,7 @@
 }
 
 .profile-pic {
+  margin-top: 30px;
   width: 240px;
   height: 240px;
 }
@@ -10,15 +11,24 @@
 .upload-new-pic {
   display: flex;
   align-items: center;
+  color: grey;
+
 }
 
 button.camera-icon, button.glyphicon-pencil {
+  color: #F5F5F5;
   background-color: transparent;
   border: none;
   outline: none;
+  margin-left: 5px;
+}
+
+button.camera-icon:hover, button.glyphicon-pencil:hover {
+  color: green;
 }
 
 .infos-container {
+  margin-top: 20px;
   width: 240px;
   display: inline-block;
 }
@@ -26,4 +36,9 @@ button.camera-icon, button.glyphicon-pencil {
 .infos-title {
   width: 70px;
   display: inline-block;
+  color: grey;
+}
+
+.infos-password {
+  color: grey;
 }

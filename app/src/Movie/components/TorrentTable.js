@@ -11,10 +11,10 @@ class TorrentTable extends Component {
   render() {
     const { movie, lang } = this.props;
     const torrents = movie.torrents.map((torrent) => {
-      const title = `${movie.title[lang]} - ${torrent.quality}`;
+      // const title = `${movie.title[lang]} - ${torrent.quality}`;
       return (
         <tr key={torrent.hash}>
-          <td>{title}</td>
+          <td>{torrent.title[lang]}</td>
           <td>{torrent.size}</td>
           <td style={{ color: 'green' }}>{torrent.seeds}</td>
           <td style={{ color: 'red' }}>{torrent.peers}</td>

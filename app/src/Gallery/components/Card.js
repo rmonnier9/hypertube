@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import NotFound from '../images/Image_Not_Found.jpg';
 import CardOverlay from './CardOverlay.js';
-import '../css/Card.css';
 
 const baseStyle = {
   opacity: 1,
@@ -14,9 +13,9 @@ class Card extends Component {
 
   constructor(props) {
     super(props);
-    const { movie } = props
+    const { movie } = props;
     this.state = {
-      src: movie.medium_cover_image,
+      src: movie.thumb,
       imgStyle: baseStyle,
       hover: false,
       error: false,

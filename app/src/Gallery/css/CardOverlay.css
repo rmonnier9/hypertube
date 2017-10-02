@@ -18,17 +18,9 @@
 
 .card-button {
   background: #34d95a;
-  background-image: -webkit-linear-gradient(top, #34d95a, #246926);
-  background-image: -moz-linear-gradient(top, #34d95a, #246926);
-  background-image: -ms-linear-gradient(top, #34d95a, #246926);
-  background-image: -o-linear-gradient(top, #34d95a, #246926);
-  background-image: linear-gradient(to bottom, #34d95a, #246926);
-  -webkit-border-radius: 28;
-  -moz-border-radius: 28;
   border-radius: 28px;
-  font-family: Arial;
   color: #ffffff;
-  font-size: 20px;
+  font-size: 1.6em;
   padding: 10px 20px 10px 20px;
   text-decoration: none;
 }

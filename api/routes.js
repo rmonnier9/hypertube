@@ -15,7 +15,6 @@ const routes = (app, passport, upload) => {
   app.post('/api/forgot', user.postForgot); // not implemented front-end
   app.post('/api/reset/:token', user.postReset); // not implemented front-end
 
-
   // Logged part  ====================
   app.use(passport.authenticate('jwt', { session: false }));
 
