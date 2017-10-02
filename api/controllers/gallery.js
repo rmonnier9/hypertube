@@ -51,7 +51,7 @@ export const getSuggestion = async (req, res) => {
   const resObj = { error: '', movies };
   if (movies.length === numberPerRequest) {
     query.start = toSkip + numberPerRequest;
-    resObj.nextHref = `/search?${queryString.stringify(query)}`;
+    resObj.nextHref = `/api/gallery/suggestion/?${queryString.stringify(query)}`;
   }
 
   // send response and end request

@@ -112,7 +112,7 @@ class MyInfosForms extends Component {
           <button id="email" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
         </div>
         <div>
-          <span className="">Change my password</span>
+          <span className="infos-password">Change my password</span>
           <button id="password" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
         </div>
         {formEmail}

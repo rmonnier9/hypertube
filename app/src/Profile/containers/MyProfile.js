@@ -75,11 +75,12 @@ class MyProfile extends Component {
     }
     return (
       <div className="profile-container">
-        <FormattedMessage
-          id="Profil"
-          defaultMessage="Profil"
-        />
-        <h1>Profile</h1>
+        <h1>
+          <FormattedMessage
+            id="Profil"
+            defaultMessage="Profil"
+          />
+        </h1>
         <ProfilePic
           user={this.user}
           picture={picture}

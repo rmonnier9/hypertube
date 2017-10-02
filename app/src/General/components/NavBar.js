@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { updateLocale } from '../../reducers/i18n';
@@ -11,21 +11,25 @@ const SignOutMenu = props => (
   />
 );
 
-class NavBar extends React.Component {
+class NavBar extends Component {
   render() {
     return (
       <nav className="navbar">
         <div className="container-fluid">
           <div className="navbar-header">
-            <div className="navbar-brand">Hypertube</div>
+            <div className="navbar-brand">
+              Hypertube
+            </div>
           </div>
           <ul className="nav navbar-nav">
             <li className="nav-link">
-              <Link className="test" to="/myprofile">My profile</Link>
+              <Link to="/myprofile">My profile</Link>
             </li>
             <li className="nav-link">
               <Link to="/">Gallery</Link>
             </li>
+          </ul>
+          <ul className="nav navbar-nav navbar-right">
             <li className="nav-link">
               <button className="nav-lang" onClick={() => this.props.onLocaleChange('fr-fr')}>FR</button>
             </li>

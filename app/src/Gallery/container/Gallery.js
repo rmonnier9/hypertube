@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import queryString from 'query-string';
 import InfiniteScroll from 'react-infinite-scroller';
 import Loading from '../../General/components/Loading';
 import MovieList from '../components/MovieList.js';
 import SearchBar from '../components/SearchBar.js';
+import '../css/gallery.css';
 
 const CancelToken = axios.CancelToken;
 
@@ -24,13 +24,14 @@ class Gallery extends Component {
   }
 
   getSearchURL = () => {
-    const { pathname, search } = this.props.location;
-    return (pathname + search);
+    const { search } = this.props.location;
+    return (`/api/gallery/suggestion/${search}`);
   }
 
   loadItems = () => {
     const { nextHref, source } = this.state;
     const url = nextHref || this.getSearchURL();
+    console.log(url);
     axios({
       url,
       method: 'GET',
@@ -84,7 +85,7 @@ class Gallery extends Component {
     const {
       movies,
       hasMoreItems,
-      message,
+      // message,
     } = this.state;
     const loader = <Loading />;
     return (
