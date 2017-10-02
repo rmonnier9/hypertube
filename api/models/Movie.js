@@ -1,16 +1,21 @@
 import mongoose from 'mongoose';
 
 const torrentSchema = new mongoose.Schema({
+  hash: { type: String, unique: true }, // for key
   url: String, // yifi
   magnet: String, // eztv
-  title: String, // eztv
-  hash: String, // for key
+  title: {
+    en: String,
+    fr: String,
+  },
   quality: String,
   size: String,
   seeds: Number,
   peers: Number,
   source: String, // yifi or eztv
 });
+
+export const Torrent = mongoose.model('Torrent', torrentSchema);
 
 const movieSchema = new mongoose.Schema({
   idImdb: { type: String, unique: true },
@@ -32,15 +37,12 @@ const movieSchema = new mongoose.Schema({
   }],
   runtime: Number,
   director: String,
-  cast: {
-    en: String,
-    fr: String,
-  },
+  stars: [String],
   rating: Number,
   posterLarge: String,
   thumb: String,
 });
 
-const Movie = mongoose.model('Movie', movieSchema);
+export const Movie = mongoose.model('Movie', movieSchema);
 
 export default Movie;

@@ -29,10 +29,10 @@ const findGenre = (id, lang) => {
   return genres[genres.length].genre[index];
 };
 
-const parseGenres = (ids, lang) => {
+const parseGenres = (idsEn, idsFr) => {
   const result = [];
-  for (let i = 0; i < ids.length; i += 1) {
-    result.push(findGenre(ids[i], lang));
+  for (let i = 0; i < idsEn.length; i += 1) {
+    result[i] = { en: findGenre(idsEn[i], 'en'), fr: findGenre(idsFr[i], 'fr') };
   }
   return result;
 };

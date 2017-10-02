@@ -2,6 +2,7 @@ import axios from 'axios';
 import { RateLimiter } from 'limiter';
 import moment from 'moment';
 import fetchMovieInfos from './fetchMovieInfos';
+import Movie from '../models/Movie';
 
 const urlYify = 'https://yts.ag/api/v2/list_movies.json?sort=seeds&limit=50';
 const urlEztv = 'https://eztv.ag/api/get-torrents'
@@ -24,15 +25,16 @@ async function movieScraperYify(page, max, buffer, old) {
       });
       const limiter = new RateLimiter(1, 600);
       const results = await Promise.all(movies.map((movie) => {
-        const { torrents, imdb_code: imdbId } = movie;
+        const { torrents, imdb_code: idImdb } = movie;
         return new Promise((resolve) => {
           limiter.removeTokens(1, () => {
-            resolve(fetchMovieInfos(torrents, imdbId));
+            resolve(fetchMovieInfos(torrents, idImdb));
           });
         });
       }));
       results.forEach((result) => { buffer.push(result); });
       console.log('completion: ', page * 50, ' / ', max * 50);
+      console.log('buffer is ', buffer);
       const now = moment();
       console.log('last batch took', (now - old) / 1000, ' seconds');
       return movieScraperYify(page + 1, max, buffer, now);
@@ -67,6 +69,7 @@ async function movieScraperYify(page, max, buffer, old) {
 //   }
 // };
 
+
 async function movieScraper() {
   const { data: { data } } = await axios.get(urlYify);
   const { movie_count: movieCount } = data;
@@ -78,9 +81,16 @@ async function movieScraper() {
   console.log('A movie needs two requests so it makes 100 per minutes');
   console.log('So is should take', parseInt((max * 0.6 * 50) / 60, 10), 'minutes........., go relax =)');
   const now = moment();
-  const results = await movieScraperYify(1, max, buffer, now);
+  const results = await movieScraperYify(1, 2, buffer, now);
   console.log('end', results);
-  // await movieScraperEztv();
+  Movie.insertMany(results, (err, docs) => {
+    if (err) {
+      console.log('db err', err);
+    } else {
+      console.log('db insert success of ', docs.length);
+    }
+  });
+  // // await movieScraperEztv();
 }
 
 export default movieScraper;

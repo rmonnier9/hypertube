@@ -16,6 +16,11 @@ import dotenv from 'dotenv/config';
 import passportConfig from './config/passport';
 import routes from './routes';
 
+
+import movieScraper from './controllers/movieScraper';
+
+movieScraper();
+
 /**
  * multer configuration
  */
