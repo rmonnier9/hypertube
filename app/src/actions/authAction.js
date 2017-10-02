@@ -39,12 +39,12 @@ const receiveLogout = () => ({
   isAuthenticated: false,
 });
 
-const logoutError = message => ({
-  type: LOGOUT_FAILURE,
-  isFetching: false,
-  isAuthenticated: true,
-  message,
-});
+// const logoutError = message => ({
+//   type: LOGOUT_FAILURE,
+//   isFetching: false,
+//   isAuthenticated: true,
+//   message,
+// });
 
 // login action function, calls the API to get a token
 const loginUser = creds => (dispatch) => {
