@@ -29,13 +29,14 @@ export const getSuggestion = async (req, res) => {
     matchObj,
     null,
     {
-      $sort: sortObj,
-      $skip: toSkip,
-      $limit: numberPerRequest,
+      sort: sortObj,
+      skip: toSkip,
+      limit: numberPerRequest,
     }
   );
 
   const movies = await cursor.exec();
+  console.log(movies.length);
 
   // format server response
   const resObj = { error: '', movies };

@@ -19,7 +19,7 @@ import routes from './routes';
 
 import movieScraper from './controllers/movieScraper';
 
-movieScraper();
+// movieScraper();
 
 /**
  * multer configuration
