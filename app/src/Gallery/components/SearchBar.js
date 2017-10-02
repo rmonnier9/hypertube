@@ -19,7 +19,6 @@ class SearchBar extends Component {
 
   render() {
     const { search } = this.state;
-    console.log(this.props.location.search);
 
     return (
       <form className="" onSubmit={this.handleSubmit}>
