@@ -14,10 +14,9 @@
 }
 
 .searchBar-container {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border: solid white 2px;
+  margin: 10px;
+  border: solid green 2px;
   height: 55px;
+  width: 95%;
   border-radius: 12px;
-  display: flex;
 }

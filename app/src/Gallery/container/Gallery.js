@@ -87,11 +87,14 @@ class Gallery extends Component {
       hasMoreItems,
       // message,
     } = this.state;
-    console.log(movies);
+    // console.log(movies);
     const loader = <Loading />;
     return (
       <div>
-        <SearchBar onSearch={this.search} />
+        <SearchBar
+          onSearch={this.search}
+          location={this.props.location}
+        />
         <InfiniteScroll
           pageStart={0}
           loadMore={this.loadItems}

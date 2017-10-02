@@ -18,7 +18,7 @@ class SearchBar extends Component {
   }
 
   render() {
-    const { search } = this.state;
+    const search = this.state.search || this.props.location.search.split('=').pop();
 
     return (
       <form className="" onSubmit={this.handleSubmit}>

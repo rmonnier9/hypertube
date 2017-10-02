@@ -4,7 +4,7 @@ import Loading from '../../General/components/Loading';
 import TorrentTable from '../components/TorrentTable';
 import '../css/movie.css';
 
-const lang = 'en';
+const lang = 'fr';
 
 const timing = (length) => {
   const hours = Math.trunc(length / 60);

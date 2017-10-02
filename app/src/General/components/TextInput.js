@@ -10,11 +10,12 @@ class TextInput extends Component {
   }
 
   render() {
-    const { currentValue, name, type, text, className } = this.props;
+    const { currentValue, name, type, text } = this.props;
+    const className = this.props.className || '';
     const classNameInput = `form-control ${className}`;
 
     return (
-      <div className="form-inline">
+      <div className="">
         <label htmlFor={name} className="input-label">{text}</label>
         <input
           className={classNameInput}
