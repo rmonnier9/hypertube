@@ -25,15 +25,17 @@ export const getSuggestion = async (req, res) => {
   const numberPerRequest = 10;
 
   // get users from db
-  const cursor = Movie.find({
-    $match: matchObj,
-    $sort: sortObj,
-    $skip: toSkip,
-    $limit: numberPerRequest,
-  });
+  const cursor = Movie.find(
+    matchObj,
+    null,
+    {
+      $sort: sortObj,
+      $skip: toSkip,
+      $limit: numberPerRequest,
+    }
+  );
 
-  const movies = await cursor.toArray();
-  cursor.close();
+  const movies = await cursor.exec();
 
   // format server response
   const resObj = { error: '', movies };
