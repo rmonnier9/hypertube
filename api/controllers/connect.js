@@ -15,7 +15,7 @@ export const postSignin = async (req, res, next) => {
   const validationObj = await req.getValidationResult();
   const error = validationObj.array();
 
-  if (error) {
+  if (error.length) {
     return res.send({ error });
   }
 
@@ -50,7 +50,7 @@ export const postSignup = async (req, res, next) => {
   const validationObj = await req.getValidationResult();
   const error = validationObj.array();
 
-  if (error) {
+  if (error.length) {
     return res.send({ error });
   }
 

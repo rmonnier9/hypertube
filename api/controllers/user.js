@@ -30,7 +30,7 @@ export const postUpdateProfile = async (req, res, next) => {
       const validationObj = await req.getValidationResult();
       const error = validationObj.array();
 
-      if (error) {
+      if (error.length) {
         return res.send({ error });
       }
 
@@ -59,7 +59,7 @@ export const postUpdateProfile = async (req, res, next) => {
       const validationObj = await req.getValidationResult();
       const error = validationObj.array();
 
-      if (error) {
+      if (error.length) {
         return res.send({ error });
       }
 
@@ -93,7 +93,7 @@ export const postUpdateProfile = async (req, res, next) => {
       const validationObj = await req.getValidationResult();
       const error = validationObj.array();
 
-      if (error) {
+      if (error.length) {
         return res.send({ error });
       }
 
@@ -135,7 +135,7 @@ export const postUpdatePassword = async (req, res, next) => {
   const validationObj = await req.getValidationResult();
   const error = validationObj.array();
 
-  if (error) {
+  if (error.length) {
     return res.send({ error });
   }
 
@@ -171,7 +171,7 @@ export const postReset = async (req, res, next) => {
   const validationObj = await req.getValidationResult();
   const error = validationObj.array();
 
-  if (error) {
+  if (error.length) {
     return res.send({ error });
   }
 
@@ -232,7 +232,7 @@ export const postForgot = async (req, res, next) => {
   const validationObj = await req.getValidationResult();
   const error = validationObj.array();
 
-  if (error) {
+  if (error.length) {
     return res.send({ error });
   }
 
