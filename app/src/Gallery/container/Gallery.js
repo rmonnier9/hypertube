@@ -25,13 +25,13 @@ class Gallery extends Component {
 
   getSearchURL = () => {
     const { search } = this.props.location;
-    return (`/api/gallery/suggestion/${search}`);
+    return (`/api/gallery/search${search}`);
   }
 
   loadItems = () => {
     const { nextHref, source } = this.state;
     const url = nextHref || this.getSearchURL();
-    console.log(url);
+    console.log('url ', url);
     axios({
       url,
       method: 'GET',
@@ -69,7 +69,7 @@ class Gallery extends Component {
     } = this.state;
     source.cancel('Request canceled by reloading.');
     const { pathname } = this.props.location;
-    const newUrl = `${pathname}?${search}`;
+    const newUrl = `${pathname}?name=${search}`;
     this.props.history.push(newUrl);
     this.setState({
       search,
@@ -87,6 +87,7 @@ class Gallery extends Component {
       hasMoreItems,
       // message,
     } = this.state;
+    console.log(movies);
     const loader = <Loading />;
     return (
       <div>
