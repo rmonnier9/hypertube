@@ -2,7 +2,6 @@ import axios from 'axios';
 import parseGenre from './genre';
 import { Movie, Torrent } from '../models/Movie';
 
-
 const keyMovieDb = '92d923e066d13a3034abbbfb0d5ea7ab';
 
 const urlMovieDb = (idImdb, lang) => (
@@ -32,10 +31,10 @@ const parseTorrent = (torrents, title) => (
   ))
 );
 
-const parseMovie = (idImdb, torrents, MovieDbEn, MovieDbFr, ImdbApi) => {
-  const title = { en: MovieDbEn.title || '', fr: MovieDbFr.title || '' };
-  const overview = { en: MovieDbEn.overview || 'Unavailable', fr: MovieDbFr.overview || 'Non disponible' };
-  const genres = parseGenre(MovieDbEn.genre_ids, MovieDbFr.genre_ids);
+const parseMovie = (idImdb, torrents, movieDb, imdbApi) => {
+  const title = { en: movieDb.en.title || '', fr: movieDb.fr.title || '' };
+  const overview = { en: movieDb.en.overview || 'Unavailable', fr: movieDb.fr.overview || 'Non disponible' };
+  const genres = parseGenre(movieDb.en.genre_ids, movieDb.fr.genre_ids);
   const newMovie = new Movie({
     idImdb,
     title,
@@ -58,28 +57,25 @@ const FetchTheMovieDBInfo = async (idImdb, lang) => (
     .then(({ data }) => (
       data.movie_results[0]
     ))
-    .catch(err => console.log('FetchTheMovieDBInfo err', err.response))
+    .catch(err => console.error('FetchTheMovieDBInfo err', err.response))
 );
 
 const FetchImdbApiInfo = async idImdb => (
   axios.get(urlImdbApi(idImdb))
     .then(({ data }) => (data))
-    .catch(err => console.log('FetchImdbApiInfo err', err))
+    .catch(err => console.error('FetchImdbApiInfo err', err))
 );
 
-const fetchMovieInfo = async (movieold) => {
-  const movie = {};
-  const { torrents, imdb_code: idImdb } = movieold;
-  movie.idImdb = idImdb;
-  return axios.all([
+const fetchMovieInfo = async ({ torrents, imdb_code: idImdb }) => (
+  axios.all([
     FetchTheMovieDBInfo(idImdb, 'en'),
     FetchTheMovieDBInfo(idImdb, 'fr'),
     FetchImdbApiInfo(idImdb),
   ])
-    .then(axios.spread((MovieDbEn, MovieDbFr, ImdbApi) => {
-      return parseMovie(idImdb, torrents, MovieDbEn, MovieDbFr, ImdbApi);
-    }))
-    .catch(err => console.log('fetchMovieInfo err', err));
-};
+    .then(axios.spread((movieDbEn, movieDbFr, imdbApi) => (
+      parseMovie(idImdb, torrents, { en: movieDbEn, fr: movieDbFr }, imdbApi)
+    )))
+    .catch(err => console.error('fetchMovieInfo err', err))
+);
 
 export default fetchMovieInfo;
