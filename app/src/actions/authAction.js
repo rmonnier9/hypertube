@@ -55,6 +55,8 @@ const loginUser = creds => (dispatch) => {
     if (!error) {
       localStorage.setItem('x-access-token', headers['x-access-token']);
       localStorage.setItem('isAuthenticated', true);
+      console.log(axios.defaults.headers);
+      axios.defaults.headers.common['x-access-token'] = headers['x-access-token'];
       dispatch(receiveLogin());
     } else {
       dispatch(loginError(error));
@@ -68,6 +70,7 @@ const logoutUser = () => (dispatch) => {
   dispatch(requestLogout());
   localStorage.removeItem('x-access-token');
   localStorage.removeItem('isAuthenticated');
+  delete axios.defaults.headers.common['x-access-token'];
   dispatch(receiveLogout());
 };
 

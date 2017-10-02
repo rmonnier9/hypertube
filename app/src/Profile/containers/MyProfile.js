@@ -17,7 +17,7 @@ class MyProfile extends Component {
 
   componentDidMount() {
     const url = '/api/me';
-    axios({ url, method: 'GET', headers: { 'x-access-token': localStorage.getItem('x-access-token') } })
+    axios({ url, method: 'GET' })
     .then(({ data: { error, user } }) => {
       if (error) {
         this.setState({ error });
