@@ -12,17 +12,18 @@ const getSortObj = (sort) => {
 };
 
 export const getSearch = async (req, res) => {
-  const { query, name } = req;
-  let matchObj;
+  const { query } = req;
+  let matchObj = {};
 
-  if (name) {
-    const regex = new RegExp(name);
+  if (query.name) {
+    const regex = new RegExp(query.name);
 
     matchObj = {
       $or: [
         { 'title.fr': regex },
         { 'title.en': regex },
         { director: regex },
+        { stars: regex },
       ],
     };
   }
@@ -35,6 +36,7 @@ export const getSearch = async (req, res) => {
   const numberPerRequest = 10;
 
   // get users from db
+  console.log(matchObj);
   const cursor = Movie.find(
     matchObj,
     null,
