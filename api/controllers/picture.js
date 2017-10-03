@@ -9,7 +9,7 @@ import User from '../models/User';
  * Save profile picture on signup.
  */
 
-exports.postSignupPicture = async (req, res, next) => {
+export const postSignupPicture = async (req, res, next) => {
   const { filename } = req.file;
   const { email } = req.headers;
 
@@ -36,12 +36,9 @@ exports.postSignupPicture = async (req, res, next) => {
         return res.send({ errorPic: 'You can\'t upload a new picture here, go to your profile' });
       }
       user.profile.picture = filename;
-      user.save((err, user) => {
+      user.save((err) => {
         if (err) { return next(err); }
-        req.logIn(user, (err) => {
-          if (err) return next(err);
-          return res.send({ errorPic: '' });
-        });
+        return res.send({ errorPic: '' });
       });
     });
 };
@@ -51,7 +48,7 @@ exports.postSignupPicture = async (req, res, next) => {
  * Update profile picture on profile.
  */
 
-exports.newPicture = async (req, res, next) => {
+export const newPicture = async (req, res, next) => {
   const { filename } = req.file;
   const tmpPath = path.resolve(__dirname, `../public/uploads/tmp/${filename}`);
   const newPath = path.resolve(__dirname, `../public/uploads/${filename}`);

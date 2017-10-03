@@ -1,13 +1,14 @@
-const bluebird = require('bluebird');
+import bluebird from 'bluebird';
+import nodemailer from 'nodemailer';
+import User from '../models/User';
+
 const crypto = bluebird.promisifyAll(require('crypto'));
-const nodemailer = require('nodemailer');
-const User = require('../models/User');
 
 /**
  * GET /me
  * Profile page.
  */
-exports.getMyAccount = (req, res, next) => {
+export const getMyAccount = (req, res, next) => {
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
     user.password = '';
@@ -16,30 +17,20 @@ exports.getMyAccount = (req, res, next) => {
 };
 
 /**
- * GET /islogged
- */
-exports.getIslogged = (req, res) => {
-  if (req.isAuthenticated()) {
-    return res.send({ error: '' });
-  }
-  res.send({ error: 'You are not logged.' });
-};
-
-/**
  * POST /me
  * Update profile information.
  */
-exports.postUpdateProfile = (req, res, next) => {
+export const postUpdateProfile = async (req, res, next) => {
   const { id } = req.body;
   switch (id) {
-
     case 'name-form': {
-      req.assert('firstName', 'First name can\'t be more than 20 letters long').len({ max: 20 });
-      req.assert('lastName', 'Last name can\'t be more than 20 letters long').len({ max: 20 });
+      req.checkBody('firstName', 'First name can\'t be more than 20 letters long').len({ max: 20 });
+      req.checkBody('lastName', 'Last name can\'t be more than 20 letters long').len({ max: 20 });
 
-      const error = req.validationErrors();
+      const validationObj = await req.getValidationResult();
+      const error = validationObj.array();
 
-      if (error) {
+      if (error.length) {
         return res.send({ error });
       }
 
@@ -61,13 +52,14 @@ exports.postUpdateProfile = (req, res, next) => {
     }
 
     case 'email-form': {
-      req.assert('email', 'Please enter a valid email address.').isEmail();
-      req.assert('password', 'Password cannot be blank').notEmpty();
+      req.checkBody('email', 'Please enter a valid email address.').isEmail();
+      req.checkBody('password', 'Password cannot be blank').notEmpty();
       req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
-      const error = req.validationErrors();
+      const validationObj = await req.getValidationResult();
+      const error = validationObj.array();
 
-      if (error) {
+      if (error.length) {
         return res.send({ error });
       }
 
@@ -95,12 +87,13 @@ exports.postUpdateProfile = (req, res, next) => {
     }
 
     case 'password-form': {
-      req.assert('password', 'Password must be at least 4 characters long').len(4);
-      req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+      req.checkBody('password', 'Password must be at least 4 characters long').len(4);
+      req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
-      const error = req.validationErrors();
+      const validationObj = await req.getValidationResult();
+      const error = validationObj.array();
 
-      if (error) {
+      if (error.length) {
         return res.send({ error });
       }
 
@@ -120,11 +113,11 @@ exports.postUpdateProfile = (req, res, next) => {
 };
 
 /**
- * GET /profile/:login
+ * GET /profile/:id
  * Profile page.
  */
-exports.getAccount = (req, res, next) => {
-  User.findById(req.user.id, (err, user) => {
+export const getAccount = (req, res, next) => {
+  User.findById(req.params.id, (err, user) => {
     if (err) { return next(err); }
     user.password = '';
     return res.send({ error: '', user });
@@ -132,64 +125,38 @@ exports.getAccount = (req, res, next) => {
 };
 
 /**
- * POST /account/password
+ * POST /me/password
  * Update current password.
  */
-// exports.postUpdatePassword = (req, res, next) => {
-//   req.assert('password', 'Password must be at least 4 characters long').len(4);
-//   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
-//
-//   const error = req.validationErrors();
-//
-//   if (error) {
-//     return res.send({ error });
-//   }
-//
-//   User.findById(req.user.id, (err, user) => {
-//     if (err) { return next(err); }
-//     user.password = req.body.password;
-//     user.save((err) => {
-//       if (err) { return next(err); }
-//       return res.send({ error: '' })
-//     });
-//   });
-// };
+export const postUpdatePassword = async (req, res, next) => {
+  req.checkBody('password', 'Password must be at least 4 characters long').len(4);
+  req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
+
+  const validationObj = await req.getValidationResult();
+  const error = validationObj.array();
+
+  if (error.length) {
+    return res.send({ error });
+  }
+
+  User.findById(req.user.id, (err, user) => {
+    if (err) { return next(err); }
+    user.password = req.body.password;
+    user.save((err) => {
+      if (err) { return next(err); }
+      return res.send({ error: '' });
+    });
+  });
+};
 
 /**
  * DELETE /me
  * Delete user account.
  */
-exports.deleteDeleteAccount = (req, res, next) => {
+export const deleteDeleteAccount = (req, res, next) => {
   User.remove({ _id: req.user.id }, (err) => {
     if (err) { return next(err); }
-    req.logout();
     res.send({ error: '' });
-  });
-};
-
-/**
- * GET /logout
- * Log out.
- */
-exports.signout = (req, res) => {
-  req.logout();
-  res.send({ error: '' });
-};
-
-/**
- * GET /account/unlink/:provider
- * Unlink OAuth provider.
- */
-exports.getOauthUnlink = (req, res, next) => {
-  const provider = req.params.provider;
-  User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
-    user[provider] = undefined;
-    user.tokens = user.tokens.filter(token => token.kind !== provider);
-    user.save((err) => {
-      if (err) { return next(err); }
-        return res.send({ error: '' })
-    });
   });
 };
 
@@ -197,13 +164,14 @@ exports.getOauthUnlink = (req, res, next) => {
  * POST /reset/:token
  * Process the reset password request.
  */
-exports.postReset = (req, res, next) => {
-  req.assert('password', 'Password must be at least 4 characters long.').len(4);
-  req.assert('confirm', 'Passwords must match.').equals(req.body.password);
+export const postReset = async (req, res, next) => {
+  req.checkBody('password', 'Password must be at least 4 characters long.').len(4);
+  req.checkBody('confirm', 'Passwords must match.').equals(req.body.password);
 
-  const error = req.validationErrors();
+  const validationObj = await req.getValidationResult();
+  const error = validationObj.array();
 
-  if (error) {
+  if (error.length) {
     return res.send({ error });
   }
 
@@ -242,9 +210,9 @@ exports.postReset = (req, res, next) => {
       text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
     };
     return transporter.sendMail(mailOptions)
-      .then(() => {
-        return res.send({ error: '' })
-      });
+      .then(() => (
+        res.send({ error: '' })
+      ));
   };
 
   resetPassword()
@@ -257,13 +225,14 @@ exports.postReset = (req, res, next) => {
  * POST /forgot
  * Create a random token, then the send user an email with a reset link.
  */
-exports.postForgot = (req, res, next) => {
-  req.assert('email', 'Please enter a valid email address.').isEmail();
+export const postForgot = async (req, res, next) => {
+  req.checkBody('email', 'Please enter a valid email address.').isEmail();
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
-  const error = req.validationErrors();
+  const validationObj = await req.getValidationResult();
+  const error = validationObj.array();
 
-  if (error) {
+  if (error.length) {
     return res.send({ error });
   }
 
@@ -277,11 +246,10 @@ exports.postForgot = (req, res, next) => {
       .then((user) => {
         if (!user) {
           return res.send({ error: 'Account with that email address does not exist.' });
-        } else {
-          user.passwordResetToken = token;
-          user.passwordResetExpires = Date.now() + 3600000; // 1 hour
-          user = user.save();
         }
+        user.passwordResetToken = token;
+        user.passwordResetExpires = Date.now() + 3600000; // 1 hour
+        user = user.save();
         return user;
       });
 
@@ -305,9 +273,9 @@ exports.postForgot = (req, res, next) => {
         If you did not request this, please ignore this email and your password will remain unchanged.\n`
     };
     return transporter.sendMail(mailOptions)
-      .then(() => {
-        return({ error: '' })
-      });
+      .then(() => (
+        { error: '' }
+      ));
   };
 
   createRandomToken

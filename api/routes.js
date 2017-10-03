@@ -1,12 +1,12 @@
-import passport from 'passport';
-import user from './controllers/user';
+import * as stream from './controllers/stream';
+import * as user from './controllers/user';
 import * as movie from './controllers/movie';
-import connect from './controllers/connect'; // signup signin
-import picture from './controllers/picture';
-import passportConfig from './config/passport';
+import * as connect from './controllers/connect'; // signup signin
+import * as picture from './controllers/picture';
+import * as search from './controllers/search';
+import spiderTorrent from './controllers/torrents';
 
-
-const routes = (app, upload) => {
+const routes = (app, passport, upload) => {
   /**
    * Primary app routes.
    */
@@ -16,22 +16,20 @@ const routes = (app, upload) => {
   app.post('/api/forgot', user.postForgot); // not implemented front-end
   app.post('/api/reset/:token', user.postReset); // not implemented front-end
 
-  app.get('/api/islogged', user.getIslogged);
-
   // Logged part  ====================
-  app.use(passportConfig.isAuthenticated);
+  app.use(passport.authenticate('jwt', { session: false }));
 
-  app.get('/api/signout', user.signout);
   app.get('/api/me', user.getMyAccount);
   app.post('/api/me', user.postUpdateProfile);
+  app.delete('/api/me', user.deleteDeleteAccount);
+  app.post('/api/me/password', user.postUpdatePassword);
   app.post('/api/profile_pic', upload.single('imageUploaded'), picture.newPicture);
-  app.delete('/api/me');
-  app.get('/api/profile/:login');
+  app.get('/api/profile/:id', user.getAccount);
+  app.get('/api/movie/info/:idImdb', movie.getInfos);
 
-  app.get('/api/search');
-  app.get('/api/movie/info/:id', movie.GetInfo);
-  app.get('/api/movie/stream/:id', movie.Stream);
-  app.post('/api/movie/:id');
+  // not implemented
+  app.get('/api/gallery/search', search.getSearch);
+  app.get('/api/movie/stream/:id', spiderTorrent);
 
   /**
    * OAuth authentication routes. (Sign in)

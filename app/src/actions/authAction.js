@@ -39,21 +39,24 @@ const receiveLogout = () => ({
   isAuthenticated: false,
 });
 
-const logoutError = message => ({
-  type: LOGOUT_FAILURE,
-  isFetching: false,
-  isAuthenticated: true,
-  message,
-});
+// const logoutError = message => ({
+//   type: LOGOUT_FAILURE,
+//   isFetching: false,
+//   isAuthenticated: true,
+//   message,
+// });
 
 // login action function, calls the API to get a token
 const loginUser = creds => (dispatch) => {
   dispatch(requestLogin(creds));
 
   return axios.post('/api/signin', creds)
-  .then(({ data: { error } }) => {
+  .then(({ data: { error }, headers }) => {
     if (!error) {
-      localStorage.setItem('isAuthenticated', creds.email);
+      localStorage.setItem('x-access-token', headers['x-access-token']);
+      localStorage.setItem('isAuthenticated', true);
+      console.log(axios.defaults.headers);
+      axios.defaults.headers.common['x-access-token'] = headers['x-access-token'];
       dispatch(receiveLogin());
     } else {
       dispatch(loginError(error));
@@ -65,15 +68,10 @@ const loginUser = creds => (dispatch) => {
 // logout action function, remove local storage
 const logoutUser = () => (dispatch) => {
   dispatch(requestLogout());
-  return axios.get('/api/signout')
-  .then(({ data: { error } }) => {
-    if (!error) {
-      localStorage.removeItem('isAuthenticated');
-      dispatch(receiveLogout());
-    } else {
-      dispatch(logoutError(error));
-    }
-  });
+  localStorage.removeItem('x-access-token');
+  localStorage.removeItem('isAuthenticated');
+  delete axios.defaults.headers.common['x-access-token'];
+  dispatch(receiveLogout());
 };
 
 export {

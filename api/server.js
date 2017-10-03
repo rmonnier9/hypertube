@@ -1,6 +1,5 @@
 import express from 'express';
 import compression from 'compression';
-import session from 'express-session';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
 import chalk from 'chalk';
@@ -14,10 +13,13 @@ import expressStatusMonitor from 'express-status-monitor';
 import multer from 'multer';
 import dotenv from 'dotenv/config';
 
+import passportConfig from './config/passport';
 import routes from './routes';
 
-// stores sessions in the "sessions" collection by default. See if user is loggedin (passport).
-const MongoStore = require('connect-mongo')(session);
+
+import movieScraper from './controllers/movieScraper';
+
+// movieScraper();
 
 /**
  * multer configuration
@@ -69,24 +71,13 @@ app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: 3155
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator()); // validate form inputs. cf req.assert in controllers files
-// express-session: sends a session ID over cookies to the client
-app.use(session({
-  resave: true, // automatically write to the session store
-  saveUninitialized: true, // saved new sessions
-  secret: process.env.SESSION_SECRET,
-  store: new MongoStore({
-    url: process.env.MONGODB_URI,
-    autoReconnect: true,
-    clear_interval: 3600
-  })
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(lusca.xframe('SAMEORIGIN')); // lusca = security middleware
+// app.use(passport.initialize());
+passportConfig(passport);
+app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 
 // Load routes
-routes(app, upload);
+routes(app, passport, upload);
 
 /**
  * Error Handler. only use in development
@@ -101,4 +92,4 @@ app.listen(app.get('port'), () => {
   console.log('  Press CTRL-C to stop\n');
 });
 
-module.exports = app;
+export default app;

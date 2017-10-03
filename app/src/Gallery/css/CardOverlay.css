@@ -1,0 +1,48 @@
+.MovieListOverlay-enter {
+  opacity: 0.01;
+}
+
+.MovieListOverlay-enter.MovieListOverlay-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.MovieListOverlay-leave {
+  opacity: 1;
+}
+
+.MovieListOverlay-leave.MovieListOverlay-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+.card-button {
+  background: #34d95a;
+  border-radius: 28px;
+  color: #ffffff;
+  font-size: 1.6em;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.card-button-container {
+  margin-top: 55px;
+}
+
+.card-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 50px 20px 20px 20px;
+  height: 100%;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+
+.card-star-icon {
+  font-size: 40px;
+  color: #42f44b;
+}

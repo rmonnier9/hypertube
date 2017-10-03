@@ -14,17 +14,17 @@ export default class ProfileProfile extends Component {
     `/static/uploads/${this.props.user.profile.picture}`;
     return (
       <div>
+        <div className="profile-pic">
+          <img src={path} alt="" />
+        </div>
         <div className="upload-new-pic">
           <span>Upload a new profile picture</span>
           <button
             className="material-icons camera-icon"
             onClick={this.props.handleOpen}
           >
-          camera_enhance
+            camera_enhance
           </button>
-        </div>
-        <div className="profile-pic">
-          <img src={path} alt="" />
         </div>
         <Dialog
           preview={this.props.preview}

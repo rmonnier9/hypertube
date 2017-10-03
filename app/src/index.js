@@ -7,6 +7,7 @@ import thunkMiddleware from 'redux-thunk';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import en from 'react-intl/locale-data/en';
+import axios from 'axios';
 import fr from 'react-intl/locale-data/fr';
 import { IntlProvider, addLocaleData } from 'react-intl';
 
@@ -21,6 +22,11 @@ import registerServiceWorker from './registerServiceWorker';
 addLocaleData([...en, ...fr]);
 const mapStateToProps = state => ({ locale: state.i18n.locale, messages: state.i18n.messages });
 const ConnectedIntlProvider = connect(mapStateToProps)(IntlProvider);
+
+const token = localStorage.getItem('x-access-token');
+if (token) {
+  axios.defaults.headers.common['x-access-token'] = token;
+}
 
 const loggerMiddleware = createLogger();
 
