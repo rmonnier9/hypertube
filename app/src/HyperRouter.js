@@ -9,13 +9,13 @@ import PrivateRoute from './PrivateRoute';
 import NotFound from './General/components/NotFound';
 
 // Containers
-import Header from './General/components/Header.js';
-import MyProfile from './Profile/containers/MyProfile.js';
-import Signin from './HomePage/containers/Signin.js';
-import Signup from './HomePage/containers/Signup.js';
-import Gallery from './Gallery/container/Gallery.js';
-import Video from './Video/components/Video.js';
-import Movie from './Movie/containers/Movie.js';
+import Header from './General/components/Header';
+import MyProfile from './Profile/containers/MyProfile';
+import Signin from './HomePage/containers/Signin';
+import Signup from './HomePage/containers/Signup';
+import Gallery from './Gallery/container/Gallery';
+import Video from './Video/components/Video';
+import Movie from './Movie/containers/Movie';
 
 const MatchaRouter = ({ isAuthenticated, locale }) => (
   <Router>
@@ -25,7 +25,7 @@ const MatchaRouter = ({ isAuthenticated, locale }) => (
         <PrivateRoute exact path="/" isAuthenticated={isAuthenticated} component={Gallery} />
         <PrivateRoute exact path="/myprofile" isAuthenticated={isAuthenticated} component={MyProfile} />
         <PrivateRoute exact path="/movie/:idImdb" isAuthenticated={isAuthenticated} component={Movie} />
-        <PrivateRoute exact path="/video" isAuthenticated={isAuthenticated} component={Video} />
+        <PrivateRoute exact path="/video/:hash" isAuthenticated={isAuthenticated} component={Video} />
         <Route path="/signin" component={Signin} />
         <Route path="/signup" component={Signup} />
         <Route component={NotFound} />

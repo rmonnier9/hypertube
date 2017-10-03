@@ -1,20 +1,22 @@
-import * as stream from './controllers/stream';
 import * as user from './controllers/user';
 import * as movie from './controllers/movie';
 import * as connect from './controllers/connect'; // signup signin
 import * as picture from './controllers/picture';
 import * as search from './controllers/search';
-import spiderTorrent from './controllers/torrents';
+import getStream from './controllers/stream/streamer';
 
-const routes = (app, passport, upload) => {
+const routes = async (app, passport, upload) => {
   /**
    * Primary app routes.
    */
+
   app.post('/api/signin', connect.postSignin);
   app.post('/api/signup/info', connect.postSignup);
   app.post('/api/signup/upload', upload.single('imageUploaded'), picture.postSignupPicture);
   app.post('/api/forgot', user.postForgot); // not implemented front-end
   app.post('/api/reset/:token', user.postReset); // not implemented front-end
+
+  app.get('/api/movie/stream/:hash', getStream);
 
   // Logged part  ====================
   app.use(passport.authenticate('jwt', { session: false }));
@@ -29,7 +31,6 @@ const routes = (app, passport, upload) => {
 
   // not implemented
   app.get('/api/gallery/search', search.getSearch);
-  app.get('/api/movie/stream/:id', spiderTorrent);
 
   /**
    * OAuth authentication routes. (Sign in)

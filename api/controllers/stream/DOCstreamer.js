@@ -3,20 +3,12 @@ import Throttle from 'throttle';
 import ffmpeg from 'fluent-ffmpeg';
 
 import settings from './config.json';
-import mimeTypes from './mimeTypes';
+import getMimeType from './getMimeType';
 
 let ffmpegKeyGen = 0;
 const ffmpegHash = {};
 const dataHash = {};
 
-const getFileExtension = (name) => {
-  if (typeof name !== typeof '') return '';
-
-  const extension = name.match(/\..+?$/);
-
-  if (extension === null) return '';
-  return extension[0].toLowerCase();
-};
 
 // const movie_data = {
 //   name: movieFile.name,
@@ -31,27 +23,33 @@ const getFileExtension = (name) => {
 // info.size = data.length;
 // info.modified = data.date;
 
+const getFileExtension = (name) => {
+  if (typeof name !== typeof '') return '';
+
+  const extension = name.match(/\..+?$/);
+
+  if (extension === null) return '';
+  return extension[0].toLowerCase();
+};
+
 const spiderStreamer = (file, query, rangeString, res) => {
   let stream;
-  const info = {};
   let range;
   let i;
   let timerId;
 
 
-  const extension = getFileExtension(file.name)
+  const extension = getFileExtension(file.name);
   if (!extension) {
     console.error('spiderStreamer Error:', 'No extension', file.name);
     return res.json({ error: 'No extension' });
   }
 
-  file.mime = mimeTypes[extension]
+  file.mime = getMimeType[extension];
   if (!file.mime) {
     console.error('spiderStreamer Error:', 'File extension not supported.', extension);
     return res.json({ error: 'Unsupported file extension' });
   }
-
-  console.error('spiderStreamer Notice: Mime type', file.mime, 'found for file:', file.name);
 
   new Promise(((fulfill, reject) => {
 
@@ -102,7 +100,7 @@ const spiderStreamer = (file, query, rangeString, res) => {
               // .inputFormat(format)
                 .audioCodec('aac')
                 .videoCodec('libx264')
-                .output(converted_path)
+                .output(convertedPath)
                 .outputFormat('mp4')
                 .outputOptions('-movflags frag_keyframe+empty_moov')
                 .run();
@@ -129,8 +127,8 @@ const spiderStreamer = (file, query, rangeString, res) => {
         fulfill(dataHash[oldPath]);
       }
 
-      info.file = converted_file;
-      info.path = converted_path;
+      info.file = convertedFile;
+      info.path = convertedPath;
       info.mime = 'video/mp4';
       // info.modified = startup_date;
       info.modified = new Date();

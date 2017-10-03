@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import TextInput from '../../General/components/TextInput.js';
-import SubmitForm from '../../General/components/SubmitForm.js';
+import TextInput from '../../General/components/TextInput';
+import SubmitForm from '../../General/components/SubmitForm';
 
 class MyInfosForms extends Component {
 

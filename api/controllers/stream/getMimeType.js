@@ -1,9 +1,9 @@
-const mimeTypes = {
+const getMimeType = {
   '.flv': 'video/x-flv',
   '.f4v': 'video/mp4',
   '.f4p': 'video/mp4',
   '.mp4': 'video/mp4',
-  '.mkv': 'video/matroska', /* FAST PATCH (POSSIBLY MUST FIX LATER) (SHOULD ACTUALLY BE CONVERTED FROM video/mkv TO WHATEVER) */
+  '.mkv': 'video/matroska',
   '.asf': 'video/x-ms-asf',
   '.asr': 'video/x-ms-asf',
   '.asx': 'video/x-ms-asf',
@@ -22,4 +22,4 @@ const mimeTypes = {
   '.ogg': 'video/ogg'
 };
 
-export default mimeTypes;
+export default getMimeType;
