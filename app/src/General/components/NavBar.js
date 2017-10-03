@@ -57,7 +57,7 @@ const mapDispatchToProps = dispatch => (
 );
 
 // Use named export for unconnected component (for tests)
-export { NavBar };
+// export { NavBar };
 
 // Use default export for the connected component (for app)
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
