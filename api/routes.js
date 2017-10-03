@@ -24,7 +24,8 @@ const routes = (app, passport, upload) => {
   app.delete('/api/me', user.deleteDeleteAccount);
   app.post('/api/me/password', user.postUpdatePassword);
   app.post('/api/profile_pic', upload.single('imageUploaded'), picture.newPicture);
-  app.get('/api/profile/:email', user.getAccount);
+  app.get('/api/profile/:name', user.getAccount);
+  app.get('/api/profile/id/:id', user.getAccountById);
   app.get('/api/movie/info/:idImdb', movie.getInfos);
 
   // not implemented

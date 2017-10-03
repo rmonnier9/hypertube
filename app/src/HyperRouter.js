@@ -11,6 +11,7 @@ import NotFound from './General/components/NotFound.js';
 // Containers
 import Header from './General/components/Header.js';
 import MyProfile from './Profile/containers/MyProfile.js';
+import OneProfile from './Profile/containers/OneProfile.js';
 import Signin from './HomePage/containers/Signin.js';
 import Signup from './HomePage/containers/Signup.js';
 import Gallery from './Gallery/container/Gallery.js';
@@ -24,6 +25,7 @@ const MatchaRouter = ({ isAuthenticated, locale }) => (
       <Switch>
         <PrivateRoute exact path="/" isAuthenticated={isAuthenticated} component={Gallery} />
         <PrivateRoute exact path="/myprofile" isAuthenticated={isAuthenticated} component={MyProfile} />
+        <PrivateRoute exact path="/profile/:id" isAuthenticated={isAuthenticated} component={OneProfile} />
         <PrivateRoute exact path="/movie/:idImdb" isAuthenticated={isAuthenticated} component={Movie} />
         <PrivateRoute exact path="/video" isAuthenticated={isAuthenticated} component={Video} />
         <Route path="/signin" component={Signin} />

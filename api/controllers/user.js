@@ -1,5 +1,6 @@
 import bluebird from 'bluebird';
 import nodemailer from 'nodemailer';
+import mongoose from 'mongoose';
 import User from '../models/User';
 
 const crypto = bluebird.promisifyAll(require('crypto'));
@@ -113,25 +114,70 @@ export const postUpdateProfile = async (req, res, next) => {
 };
 
 /**
- * GET /profile/:email
- * Profile page.
+ * GET /profile/:name
+ * Search profiles.
  */
 export const getAccount = (req, res, next) => {
-  console.log(req.params.email);
-  User.findOne({ email: req.params.email }, (err, existingUser) => {
+  const { name } = req.params;
+  const nameTab = name.split(' ');
+
+  let matchObj;
+  if (nameTab.length === 1) {
+    const regex = new RegExp(name, 'i');
+    matchObj = {
+      $or: [
+        { 'profile.firstName': regex },
+        { 'profile.lastName': regex },
+      ],
+    };
+  } else {
+    matchObj = {
+      $or: [
+        {
+          $and: [
+            { 'profile.firstName': new RegExp(nameTab[0], 'i') },
+            { 'profile.lastName': new RegExp(nameTab[1], 'i') },
+          ]
+        },
+        {
+          $and: [
+            { 'profile.lastName': new RegExp(nameTab[0], 'i') },
+            { 'profile.firstName': new RegExp(nameTab[1], 'i') },
+          ],
+        }
+      ]
+    };
+  }
+  User.find(matchObj, (err, existingUsers) => {
     if (err) { return next(err); }
-    if (!existingUser) {
-      return res.send({ error: [{ param: 'email', msg: 'Account with that email address does not exist.' }] });
+    if (!existingUsers) {
+      return res.send({ error: [{ param: 'userName', msg: 'No account with that name.' }] });
     }
-    existingUser.password = '';
-    existingUser.email = '';
-    return res.send({ error: '', user: existingUser });
+    existingUsers.forEach((user) => {
+      user.password = '';
+      user.email = '';
+    });
+    return res.send({ error: '', users: existingUsers });
   });
-  // User.findById(req.params.id, (err, user) => {
-  //   if (err) { return next(err); }
-  //   user.password = '';
-  //   return res.send({ error: '', user });
-  // });
+};
+
+/**
+ * GET /profile/:id
+ * Other user profile page.
+ */
+export const getAccountById = (req, res, next) => {
+  let objectId = req.params.id;
+  try { objectId = mongoose.Types.ObjectId(req.params.id) }
+  catch (err) { return res.send({ error: 'Wrong Id.' }); }
+  User.findById(objectId, (err, user) => {
+    if (err) { return next(err); }
+    if (!user) {
+      return res.send({ error: 'Cannot find a user.' });
+    }
+    user.password = '';
+    user.email = '';
+    return res.send({ error: '', user });
+  });
 };
 
 /**

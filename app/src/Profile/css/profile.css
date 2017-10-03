@@ -18,6 +18,7 @@
 .profile-pic {
   margin-top: 30px;
   margin-bottom: 5px;
+  object-fit: cover;
   width: 250px;
   height: 250px;
 }
@@ -92,4 +93,29 @@ button.camera-icon:hover, button.glyphicon-pencil:hover {
 
 .search-user-input {
   width: 240px;
+}
+
+.profile-pic-search {
+  object-fit: cover;
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
+}
+
+.one-user-search-display {
+  margin-top: 5px;
+}
+
+a.one-user-search-display {
+  color: #F5F5F5;
+}
+
+.users-search-display {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.one-user-profile {
+  margin-bottom: 20px;
 }

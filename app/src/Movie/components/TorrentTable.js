@@ -32,7 +32,7 @@ class TorrentTable extends Component {
         <table className="table torrents-table">
           <thead>
             <tr>
-              <th>Movie</th>
+              <th>Video</th>
               <th>Size</th>
               <th style={{ color: 'green' }}>Seeds</th>
               <th style={{ color: 'red' }}>Peers</th>

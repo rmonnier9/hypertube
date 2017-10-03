@@ -1,25 +1,28 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import TextInput from '../../General/components/TextInput.js';
 import SubmitForm from '../../General/components/SubmitForm.js';
 
 class FindUser extends Component {
 
   state = {
-    email: '',
+    userName: '',
+    error: [],
+    users: [],
   }
 
   handleSubmit = (event) => {
     event.preventDefault(event);
-    const { email } = this.state;
-    const url = `/api/profile/${email}`;
+    const { userName } = this.state;
+    const url = `/api/profile/${userName}`;
     axios({ url, method: 'GET' })
-    .then(({ data: { error, user } }) => {
+    .then(({ data: { error, users } }) => {
       if (error) {
-        // this.setState({ error });
-        console.log(error);
+        this.setState({ error });
       } else {
-        console.log(user);
+        this.setState({ error: '', users });
+        console.log(users);
       }
     });
   }
@@ -29,21 +32,42 @@ class FindUser extends Component {
   }
 
   render() {
+    const { error, users } = this.state;
+    const errorMessage = error.length === 0 ? '' : error[0].msg;
+    let usersDisplay = '';
+    if (users) {
+      usersDisplay = users.map(user => (
+        <Link to={`/profile/${user._id}`} className="one-user-search-display" key={user._id}>
+          <img
+            className="profile-pic-search"
+            src={`/static/uploads/${user.profile.picture}`}
+            alt="profile-pic"
+          />
+          <span>{user.profile.firstName} </span>
+          <span>{user.profile.lastName}</span>
+        </Link>
+      ));
+    }
+
     return (
       <div className="search-user-container">
         <form id="user-form" onSubmit={this.handleSubmit}>
           <TextInput
-            name="email"
-            type="email"
-            text="Enter an email to find another user"
+            name="userName"
+            type="text"
+            text="Enter a name to find another user"
             className="search-user-input"
             onChange={this.saveState}
           />
-          <SubmitForm
-            className="btn btn-default submit-button"
-            value="Search"
-          />
         </form>
+        <SubmitForm
+          className="btn btn-default submit-button"
+          value="Search"
+        />
+        <div className="users-search-display">
+          {usersDisplay}
+        </div>
+        <div style={{ color: 'red', marginTop: '5px' }}>{errorMessage}</div>
       </div>
     );
   }

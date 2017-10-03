@@ -14,6 +14,7 @@ class MyProfile extends Component {
     status: 'closed',
     file: {},
     picture: '',
+    otherUser: {},
   }
 
   componentDidMount() {
@@ -97,7 +98,7 @@ class MyProfile extends Component {
           file={file}
         />
         <UpdateMyInfos user={this.user} />
-        <FindUser />
+        <FindUser handleSearch={this.handleSearch} />
       </div>
     );
   }
