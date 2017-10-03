@@ -9,42 +9,63 @@ let ffmpegKeyGen = 0;
 const ffmpegHash = {};
 const dataHash = {};
 
-const spiderStreamer = (data, query, rangeString, res) => {
+const getFileExtension = (name) => {
+  if (typeof name !== typeof '') return '';
+
+  const extension = name.match(/\..+?$/);
+
+  if (extension === null) return '';
+  return extension[0].toLowerCase();
+};
+
+// const movie_data = {
+//   name: movieFile.name,
+//   length: movieFile.length,
+//   date: movie.released,
+//   stream: movieFile.createReadStream({ flags: "r", start: 0, end: movieFile.length - 1 })
+//   path: `${engine.path}/${movieFile.path}`
+// };
+//
+// info.name = file.name;
+// info.path = data.path;
+// info.size = data.length;
+// info.modified = data.date;
+
+const spiderStreamer = (file, query, rangeString, res) => {
   let stream;
   const info = {};
-  let ext;
   let range;
   let i;
   let timerId;
 
-  ext = data.name.match(/.*(\..+?)$/);
 
-  if (ext === null || ext.length !== 2 || (info.mime = mimeTypes[ext[1].toLowerCase()]) === undefined) {
-    console.error('spiderStreamer Error:'.red, 'Invalid mime type:', data.name);
-    res.json({ error: 'badMime' });
-    return false;
+  const extension = getFileExtension(file.name)
+  if (!extension) {
+    console.error('spiderStreamer Error:', 'No extension', file.name);
+    return res.json({ error: 'No extension' });
   }
 
-  console.error('spiderStreamer Notice: Mime type', info.mime, 'found for file:', data.name);
+  file.mime = mimeTypes[extension]
+  if (!file.mime) {
+    console.error('spiderStreamer Error:', 'File extension not supported.', extension);
+    return res.json({ error: 'Unsupported file extension' });
+  }
 
-  info.file = data.name;
-  info.path = data.path;
-  info.size = data.length;
-  info.modified = data.date;
+  console.error('spiderStreamer Notice: Mime type', file.mime, 'found for file:', file.name);
 
   new Promise(((fulfill, reject) => {
-    /* ONLY DO THE FOLLOWING IF NOT MP4, WEBM, OR OGG */
-    if (info.mime !== 'video/mp4' && info.mime !== 'video/webm' && info.mime !== 'video/ogg') {
-      console.log('spiderStreamer Notice: Needs to be converted to video/mp4:', info.path);
-      const old_path = info.path;
-      const converted_path = `${info.path}.converted.mp4`;
-      const converted_file = `${info.file}.converted.mp4`;
+
+    // media conversion if not mp4, nor webm, nor ogg
+    if (file.mime !== 'video/mp4' && file.mime !== 'video/webm' && file.mime !== 'video/ogg') {
+      const oldPath = file.path;
+      const convertedPath = `${file.path}.converted.mp4`;
+      const convertedFile = `${file.name}.converted.mp4`;
       const key = ++ffmpegKeyGen;
-      if (ffmpegHash[old_path] === undefined) {
+      if (ffmpegHash[oldPath] === undefined) {
         console.log('fluent-ffmpeg Notice:', `${key}:`, 'Movie not yet converted, competing for key...');
-        ffmpegHash[old_path] = key;
+        ffmpegHash[oldPath] = key;
       }
-      if (ffmpegHash[old_path] === key) {
+      if (ffmpegHash[oldPath] === key) {
         console.log('fluent-ffmpeg Notice:', `${key}:`, 'Chosen for conversion');
         console.log('spiderStreamer Notice: Converting to video/mp4');
         let fails = 0;
@@ -56,9 +77,9 @@ const spiderStreamer = (data, query, rangeString, res) => {
               // var format = ext[1].slice(1);
               // if (format === 'mkv') format = 'matroska';
               // ffmpeg().input(stream)
-              ffmpeg().input(old_path)
+              ffmpeg().input(oldPath)
                 .on('error', (err, stdout, stderr) => {
-                  console.error('spiderStreamer Error:'.red, 'Could not convert file:', old_path);
+                  console.error('spiderStreamer Error:'.red, 'Could not convert file:', oldPath);
                   console.log('fluent-ffmpeg Error:'.red, '\nErr:', err, '\nStdOut:', stdout, '\nStdErr:', stderr);
                   /* Handle error */
                   ++fails;
@@ -73,7 +94,7 @@ const spiderStreamer = (data, query, rangeString, res) => {
                   console.log('fluent-ffmpeg Notice: CodecData:', data);
                   clearInterval(intervalId);
                   fulfill(data);
-                  dataHash[old_path] = data;
+                  dataHash[oldPath] = data;
                 })
               // .on('progress', function(progress) {
               // 	console.log('fluent-ffmpeg Notice: Progress:', progress.timemark, 'converted');
@@ -87,7 +108,7 @@ const spiderStreamer = (data, query, rangeString, res) => {
                 .run();
               // .pipe(res);
             } catch (exception) {
-              console.error('spiderStreamer Error:'.red, 'Could not convert file:', old_path);
+              console.error('spiderStreamer Error:'.red, 'Could not convert file:', oldPath);
               console.error('fluent-ffmpeg Error:'.red, exception);
               /* Handle error */
               ++fails;
@@ -105,7 +126,7 @@ const spiderStreamer = (data, query, rangeString, res) => {
         }, 3000);
       } else {
         console.log('fluent-ffmpeg Notice:', `${key}:`, 'Movie already converted');
-        fulfill(dataHash[old_path]);
+        fulfill(dataHash[oldPath]);
       }
 
       info.file = converted_file;
