@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { updateLocale } from '../../../reducers/i18n';
-import '../../css/nav.css';
+import { updateLocale } from '../../reducers/i18n';
+import '../css/nav.css';
 
 const SignOutMenu = props => (
   <button
