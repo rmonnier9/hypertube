@@ -18,7 +18,12 @@ export default class CustomDialog extends Component {
     this.setState({ open: status === 'open' });
   }
 
-  handleClose = () => { this.setState({ open: false }); };
+  handleClose = () => {
+    this.setState({ open: false });
+    if (this.props.handleClose !== undefined) {
+      this.props.handleClose();
+    }
+  };
 
   render() {
     const file = this.props.file === undefined ? {} : this.props.file;

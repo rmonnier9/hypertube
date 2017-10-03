@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactCSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import NotFound from '../images/Image_Not_Found.jpg';
 import CardOverlay from './CardOverlay.js';
 

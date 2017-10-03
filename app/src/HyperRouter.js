@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 
 // Components
-import NotFound from './General/components/NotFound';
+import NotFound from './General/components/NotFound.js';
 
 // Containers
 import Header from './General/components/Header.js';

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { FormattedMessage } from 'react-intl';
 import UpdateMyInfos from './UpdateMyInfos.js';
+import FindUser from './FindUser.js';
 import ProfilePic from '../components/ProfilePic.js';
 import '../css/profile.css';
 
@@ -32,6 +33,10 @@ class MyProfile extends Component {
 
   handleOpen = () => {
     this.setState({ status: 'open' });
+  }
+
+  handleClose = () => {
+    this.setState({ status: 'closed' });
   }
 
   imageUpload = (file) => { this.setState({ file }); }
@@ -75,7 +80,7 @@ class MyProfile extends Component {
     }
     return (
       <div className="profile-container">
-        <h1>
+        <h1 className="profile-title">
           <FormattedMessage
             id="Profil"
             defaultMessage="Profil"
@@ -87,10 +92,12 @@ class MyProfile extends Component {
           handleUpload={this.imageUpload}
           handleSubmit={this.handleSubmit}
           handleOpen={this.handleOpen}
+          handleClose={this.handleClose}
           status={status}
           file={file}
         />
         <UpdateMyInfos user={this.user} />
+        <FindUser />
       </div>
     );
   }

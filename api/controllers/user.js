@@ -113,15 +113,25 @@ export const postUpdateProfile = async (req, res, next) => {
 };
 
 /**
- * GET /profile/:id
+ * GET /profile/:email
  * Profile page.
  */
 export const getAccount = (req, res, next) => {
-  User.findById(req.params.id, (err, user) => {
+  console.log(req.params.email);
+  User.findOne({ email: req.params.email }, (err, existingUser) => {
     if (err) { return next(err); }
-    user.password = '';
-    return res.send({ error: '', user });
+    if (!existingUser) {
+      return res.send({ error: [{ param: 'email', msg: 'Account with that email address does not exist.' }] });
+    }
+    existingUser.password = '';
+    existingUser.email = '';
+    return res.send({ error: '', user: existingUser });
   });
+  // User.findById(req.params.id, (err, user) => {
+  //   if (err) { return next(err); }
+  //   user.password = '';
+  //   return res.send({ error: '', user });
+  // });
 };
 
 /**

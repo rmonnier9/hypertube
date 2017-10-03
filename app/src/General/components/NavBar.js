@@ -56,8 +56,5 @@ const mapDispatchToProps = dispatch => (
   { onLocaleChange: updateLocale({ dispatch }) }
 );
 
-// Use named export for unconnected component (for tests)
-export { NavBar };
-
 // Use default export for the connected component (for app)
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

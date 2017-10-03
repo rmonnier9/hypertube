@@ -3,7 +3,7 @@ import React from 'react';
 const SubmitForm = props => (
   <input
     type="submit"
-    className="btn btn-default"
+    className={props.className}
     value={props.value}
   />
 );
