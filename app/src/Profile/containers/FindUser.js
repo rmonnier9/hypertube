@@ -13,22 +13,27 @@ class FindUser extends Component {
   }
 
   componentDidMount = () => {
-    if (this.state.userName || this.props.location.search.split('=').pop()) {
-      this.showUsers();
+    const search = this.state.userName || this.props.location.search.split('=').pop();
+    if (search) {
+      this.showUsers(search);
     }
   }
 
-  showUsers = () => {
-    const search = this.state.userName || this.props.location.search.split('=').pop();
+  componentWillReceiveProps = (nextProps) => {
+    if (!nextProps.location.search.split('=').pop()) {
+      this.setState({ error: [], users: [] });
+    } else {
+      this.showUsers(nextProps.location.search.split('=').pop());
+    }
+  }
+
+  showUsers = (search) => {
     const url = `/api/profile/${search}`;
     axios({ url, method: 'GET' })
     .then(({ data: { error, users } }) => {
       if (error) {
         this.setState({ error, users: [] });
       } else {
-        const { pathname } = this.props.location;
-        const newUrl = `${pathname}?name=${search}`;
-        this.props.history.push(newUrl);
         this.setState({ error: '', users });
       }
     });
@@ -36,7 +41,11 @@ class FindUser extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault(event);
-    this.showUsers();
+    const { pathname } = this.props.location;
+    const search = this.state.userName || this.props.location.search.split('=').pop();
+    const newUrl = `${pathname}?name=${search}`;
+    this.props.history.push(newUrl);
+    this.showUsers(search);
   }
 
   saveState = (name, value) => {
