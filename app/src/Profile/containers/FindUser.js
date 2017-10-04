@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import TextInput from '../../General/components/TextInput.js';
 import SubmitForm from '../../General/components/SubmitForm.js';
@@ -13,17 +14,19 @@ class FindUser extends Component {
   }
 
   componentDidMount = () => {
-    const search = this.state.userName || this.props.location.search.split('=').pop();
+    const parsed = queryString.parse(this.props.location.search);
+    const search = this.state.userName || parsed.name;
     if (search) {
       this.showUsers(search);
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
-    if (!nextProps.location.search.split('=').pop()) {
+    const parsed = queryString.parse(nextProps.location.search);
+    if (!parsed.name) {
       this.setState({ error: [], users: [] });
     } else {
-      this.showUsers(nextProps.location.search.split('=').pop());
+      this.showUsers(parsed.name);
     }
   }
 

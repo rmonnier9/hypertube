@@ -25,8 +25,6 @@ const showGenreTableTrad = async () => {
     { $group: { _id: '$genres.fr', sum: { $sum: 1 } } },
     { $sort: { sum: 1 } },
   );
-  console.log('fr', resultFr);
-  console.log('EeN', resultEn);
 };
 
 const sortAndCreateGenreTable = async () => {
@@ -40,8 +38,6 @@ const sortAndCreateGenreTable = async () => {
     { $group: { _id: '$genres.fr', sum: { $sum: 1 } } },
     { $sort: { sum: 1 } },
   );
-  // console.log('fr', resultFr);
-  // console.log('EeN', resultEn);
   const final = [];
   for (let i = 0; i < resultEn.length; i += 1) {
     final[i] = { en: resultEn[i]._id, fr: resultFr[i]._id, sum: resultEn[i].sum };
@@ -54,7 +50,7 @@ const sortAndCreateGenreTable = async () => {
     })
   ));
   const end = await Genre.insertMany(genres);
-  console.log('end', end);
+  console.log(end);
 };
 
 export const operateOnGenreTable = async (req, res) => {
@@ -68,7 +64,6 @@ export const operateOnGenreTable = async (req, res) => {
 };
 
 export const getGenreTable = async (req, res) => {
-  const genre = await Genre.find({});
-  console.log('genreTable', genre);
-  return res.send({ error: '', genre });
+  const genres = await Genre.find({});
+  return res.send({ error: '', genres });
 };

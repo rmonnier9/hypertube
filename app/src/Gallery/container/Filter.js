@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import SubmitForm from '../../General/components/SubmitForm.js';
 import Selectors from '../components/Selectors.js';
 
@@ -8,16 +8,16 @@ class Filter extends Component {
   state = {
     genre: 'all',
     rating: 0,
-    orderBy: 'latest',
+    sort: 'latest',
     genres: [],
   }
 
   componentDidMount() {
-    // const url = '/api/getGenres';
-    // axios({ url, method: 'GET' })
-    // .then(({ data: { genres } }) => {
-    //   this.setState({ genres });
-    // });
+    const url = '/api/genres';
+    axios({ url, method: 'GET' })
+    .then(({ data: { genres } }) => {
+      this.setState({ genres });
+    });
   }
 
   saveState = (name, value) => {
@@ -27,18 +27,20 @@ class Filter extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const { genre, rating, orderBy } = this.state;
-    const search = Object.assign({ genre }, { rating }, { orderBy });
+    const { genre, rating, sort } = this.state;
+    const search = Object.assign({ genre }, { rating }, { sort });
     this.props.onFilter(search);
   }
 
   render() {
     const { genres } = this.state;
+    const filter = { ...this.state };
 
     return (
       <form className="selects-container" id="user-form" onSubmit={this.handleSubmit}>
         <Selectors
           genres={genres}
+          filter={filter}
           onSelect={this.saveState}
         />
         <SubmitForm

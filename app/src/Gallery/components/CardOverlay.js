@@ -10,10 +10,10 @@ class CardOverlay extends Component {
     return (
       <div className="card-overlay">
         <i className="glyphicon glyphicon-star card-star-icon" />
-        <div className="card-overlay-infos">{`${rating} / 10`} </div>
+        <div className="card-overlay-infos">{`${rating} / 10`}</div>
         <br />
         <div className="card-button-container">
-          <Link className="card-button"to={link}>View details</Link>
+          <Link className="card-button" to={link}>View details</Link>
         </div>
         <div className="card-overlay-infos">{year}</div>
       </div>

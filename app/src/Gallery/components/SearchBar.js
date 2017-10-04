@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import queryString from 'query-string';
 import TextInput from '../../General/components/TextInput';
 
 class SearchBar extends Component {
@@ -17,7 +18,8 @@ class SearchBar extends Component {
   }
 
   render() {
-    const search = this.state.search || this.props.location.search.split('=').pop();
+    const parsed = queryString.parse(this.props.location.search);
+    const search = this.state.search || parsed.name;
 
     return (
       <form className="" onSubmit={this.handleSubmit}>

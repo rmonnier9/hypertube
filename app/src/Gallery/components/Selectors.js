@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+const lang = 'en';
+
 class Selectors extends Component {
 
   handleSelect = (event) => {
@@ -9,7 +11,14 @@ class Selectors extends Component {
   }
 
   render() {
-    const { genres, genre, rating, orderBy } = this.props;
+    const { genres, filter } = this.props;
+    const genreOptions = genres
+    .sort((a, b) => { if (a[lang] > b[lang]) return 1; return -1; })
+    .map((movieGenre) => {
+      const value = movieGenre.en;
+      const { _id: id } = movieGenre;
+      return <option key={id} value={value}>{movieGenre[lang]}</option>;
+    });
 
     return (
       <div className="all-selectors">
@@ -19,10 +28,10 @@ class Selectors extends Component {
             name="genre"
             className="selector-box"
             onChange={this.handleSelect}
-            value={genre}
+            value={filter.genre}
           >
             <option value="all">All</option>
-            <option value="action">Action</option>
+            {genreOptions}
           </select>
         </div>
         <div className="one-selector">
@@ -31,7 +40,7 @@ class Selectors extends Component {
             name="rating"
             className="selector-box"
             onChange={this.handleSelect}
-            value={rating}
+            value={filter.rating}
           >
             <option value="0">All</option>
             <option value="9">9+</option>
@@ -48,10 +57,10 @@ class Selectors extends Component {
         <div className="one-selector">
           <div>Order By:</div>
           <select
-            name="orderBy"
+            name="sort"
             className="selector-box"
             onChange={this.handleSelect}
-            value={orderBy}
+            value={filter.sort}
           >
             <option value="latest">Latest</option>
             <option value="oldest">Oldest</option>

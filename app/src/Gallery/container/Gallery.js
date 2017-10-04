@@ -7,8 +7,6 @@ import SearchBar from '../components/SearchBar.js';
 import Filter from './Filter.js';
 import '../css/gallery.css';
 
-// const CancelToken = axios.CancelToken;
-
 class Gallery extends Component {
 
   constructor(props) {
@@ -67,11 +65,12 @@ class Gallery extends Component {
 
   filter = (search) => {
     const { pathname } = this.props.location;
-    const { genre, rating, orderBy } = search;
-    const newUrl = `${pathname}?genre=${genre}&rating=${rating}&order=${orderBy}`;
+    const { genre, rating, sort } = search;
+    const newUrl = `${pathname}?genre=${genre}&rating=${rating}&sort=${sort}`;
     this.props.history.push(newUrl);
     this.setState({
       search,
+      movies: [],
       loadStarted: true,
       hasMoreItems: true,
       nextHref: null,
@@ -83,7 +82,6 @@ class Gallery extends Component {
       movies,
       hasMoreItems,
     } = this.state;
-    // console.log(movies);
     const loader = <Loading />;
     return (
       <div>
