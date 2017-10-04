@@ -45,6 +45,7 @@
     "passport-google-oauth": "^1.0.0",
     "passport-jwt": "^3.0.0",
     "passport-local": "^1.0.0",
+    "ptn": "^0.2.0",
     "query-string": "^5.0.0",
     "sharp": "^0.18.2",
     "throttle": "^1.0.3",

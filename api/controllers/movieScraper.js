@@ -1,96 +1,147 @@
 import axios from 'axios';
 import { RateLimiter } from 'limiter';
 import moment from 'moment';
-import fetchMovieInfos from './fetchMovieInfos';
-import Movie from '../models/Movie';
+
+import { fetchMovieInfosYifi, fetchMovieInfosEztv, parseTorrentEztv } from './fetchMovieInfos';
+import { Movie } from '../models/Movie';
 
 const urlYify = 'https://yts.ag/api/v2/list_movies.json?sort=seeds&limit=50';
-const urlEztv = 'https://eztv.ag/api/get-torrents'
+const urlEztv = 'https://eztv.ag/api/get-torrents?limit=100';
 
-async function movieScraperYify(page, max, buffer, old) {
-  if (page === max) return buffer;
+const addToDb = async (movie) => {
+  console.log('add', movie.imdb_code);
+  const newTorrent = parseTorrentEztv(movie.torrents);
+  const idImdb = movie.imdb_code;
+  try {
+    Movie.update(
+      { idImdb },
+      { $push: { torrents: { $each: newTorrent } } });
+  } catch (e) {
+    console.log('torrent dup');
+  }
+};
+
+const cleanForYifi = async (movies) => {
+  const newMovies = await Promise.all(movies.map(async (movie) => {
+    const existingMovie = await Movie.findOne({ idImdb: movie.imdb_code });
+    return new Promise((resolve, reject) => {
+      if (!existingMovie) resolve(movie);
+      else reject('doublon', movie.imdb_code);
+    }).catch(err => console.log(err));
+  }));
+  const cleaned = newMovies.filter(Boolean);
+  return cleaned;
+};
+
+const cleanForEztv = async (torrents) => {
+  const relevantTorrent = torrents.map((torrent) => {
+    const { imdb_id: idImdb, seeds } = torrent;
+    if (idImdb !== '' && seeds >= 8) {
+      return { imdb_code: `tt${idImdb}`, torrents: [torrent] };
+    }
+    return null;
+  });
+  const notCleaned = relevantTorrent.filter(Boolean);
+  if (!notCleaned.length) return notCleaned;
+  const consolidated = [];
+  for (let i = 0; i < notCleaned.length; i += 1) {
+    const index = consolidated.findIndex(x => x.imdb_code === notCleaned[i].imdb_code);
+    if (index === -1) {
+      consolidated.push(notCleaned[i]);
+    } else {
+      consolidated[index].torrents.push(notCleaned[i].torrents[0]);
+    }
+  }
+  const newMovies = await Promise.all(consolidated.map(async (movie) => {
+    const existingMovie = await Movie.findOne({ idImdb: movie.imdb_code });
+    return new Promise((resolve, reject) => {
+      if (!existingMovie) resolve(movie);
+      else {
+        addToDb(movie);
+        reject('add torrent');
+      }
+    }).catch(err => console.log(err));
+  }));
+  const cleaned = newMovies.filter(Boolean);
+  return cleaned;
+};
+
+async function movieScraperYify(page, max, old) {
+  if (page === max) return 'ok';
   const url = `${urlYify}&page=${page}`;
-  const toRemove = [];
   return axios.get(url)
     .then(async ({ data: { data: { movies } } }) => {
       const limiter = new RateLimiter(1, 600);
-      const results = await Promise.all(movies.map((movie) => {
-        return new Promise((resolve) => {
+      const newMovies = await cleanForYifi(movies);
+      if (!newMovies.length) return movieScraperYify(page + 1, max, old);
+      const results = await Promise.all(newMovies.map(movie => (
+        new Promise((resolve) => {
           limiter.removeTokens(1, () => {
-            resolve(fetchMovieInfos(movie));
+            resolve(fetchMovieInfosYifi(movie));
           });
-        });
-      }));
-      results.forEach((result) => { buffer.push(result); });
-      console.log('completion: ', page * 50, ' / ', max * 50);
-      console.log('buffer is ', buffer);
+        })
+      )));
+      Movie.insertMany(results, { ordered: false });
       const now = moment();
-      console.log('last batch took', (now - old) / 1000, ' seconds');
-      return movieScraperYify(page + 1, max, buffer, now);
+      console.log('completion: ', page * 50, ' / ', max * 50);
+      console.log('elapsed time: ', (now - old) / 1000 / 60, ' minutes');
+      return movieScraperYify(page + 1, max, old);
     });
 }
 
-//
-// movies.forEach((movie) => {
-//   const { torrents } = movie;
-//   let { seeds } = torrents[0];
-//   torrents.forEach((torrent) => {
-//     if (torrent.seeds > seeds) { seeds = torrent.seeds; }
-//   });
-//   if (seeds < 5) {
-//     toRemove.push(movie.imdb_code);
-//   }
-// });
+async function movieScraperEztv(page, max, old) {
+  console.log('call page', page);
+  if (page === max) return 'ok';
+  const url = `${urlEztv}&page=${page}`;
+  return axios.get(url)
+    .then(async ({ data: { torrents } }) => {
+      const newMovies = await cleanForEztv(torrents);
+      if (!newMovies.length) return movieScraperEztv(page + 1, max, old);
+      console.log(`search for ${newMovies.length} movies`);
+      const limiter = new RateLimiter(1, 50);
+      const results = await Promise.all(newMovies.map(movie => (
+        new Promise((resolve) => {
+          limiter.removeTokens(1, () => {
+            resolve(fetchMovieInfosEztv(movie));
+          });
+        })
+      )));
+      Movie.insertMany(results, { ordered: false });
+      const now = moment();
+      console.log('completion: ', page * 50, ' / ', max * 50);
+      console.log('elapsed time: ', (now - old) / 1000 / 60, ' minutes');
+      return movieScraperEztv(page + 1, max, old);
+    });
+}
 
-// async function movieScraperEztv() {
-//   const { data: { data } } = await axios.get(urlEztv);
-//   const { torrents_count: torrentsCount } = data;
-//
-//   const limit = 50;
-//   const max = Math.ceil(torrentsCount / limit);
-//   for (let page = 1; page <= 1; page += 1) {
-//     const url = `${urlEztv}?limit=${limit}&page=${page}`;
-//     axios.get(url).then(({ data: { torrents } }) => {
-//       console.log('torrents', torrents);
-//       torrents.forEach((movie) => {
-//         console.log('movie', movie);
-//         if (movie.episode === 0) {
-//           const { imdb_id: imdbId } = movie;
-//           const torrents = {
-//             url: movie.torrent_url,
-//             magnet: movie.magnet_url,
-//             peers: movie.peers,
-//             seeds: movie.seeds,
-//           };
-//           fetchMovieInfos(torrents, imdbId);
-//         }
-//       });
-//     });
-//   }
-// };
-
-
-async function movieScraper() {
+const ScraperYifiInit = async () => {
   const { data: { data } } = await axios.get(urlYify);
   const { movie_count: movieCount } = data;
   const max = Math.ceil(movieCount / 50);
-  const buffer = [];
-  console.log('Current number of movie to proccess', max * 50, ' movies');
-  console.log('We currently can make 40 requests per 10 seconds on The Movie DB or 240 per minutes');
-  console.log('To be sure not to pass the limit we do 33.33 requests per 10 second or 200 per minutes');
-  console.log('A movie needs two requests so it makes 100 per minutes');
-  console.log('So is should take', parseInt((max * 0.6 * 50) / 60, 10), 'minutes........., go relax =)');
   const now = moment();
-  const results = await movieScraperYify(1, 2, buffer, now);
+  const results = await movieScraperYify(1, max, now);
   console.log('end', results);
-  Movie.insertMany(results)
-    .then((results) => {
-      console.log('db insert success of ', results.length);
-    })
-    .catch((err) => {
-      console.log('db err', err);
-    });
-  // // await movieScraperEztv();
+};
+
+const ScraperEztvInit = async () => {
+  // try {
+  //   await Movie.deleteMany({ 'torrents.source': 'eztv' });
+  // } catch (e) {
+  //   console.log('delete error', e);
+  // }
+  const { data } = await axios.get(`${urlEztv}&page=1`);
+  console.log('dat', data);
+  const { torrents_count: torrentsCount } = data;
+  const max = Math.ceil(torrentsCount / 100);
+  const now = moment();
+  const eztvResults = await movieScraperEztv(1, max, now);
+  console.log('end', eztvResults);
+};
+
+
+async function movieScraper() {
+  // ScraperYifiInit();
+  ScraperEztvInit();
 }
 
 export default movieScraper;

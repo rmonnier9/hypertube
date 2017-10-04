@@ -1,4 +1,5 @@
 import axios from 'axios';
+import ptn from 'parse-torrent-name';
 import parseGenre from './genre';
 import { Movie, Torrent } from '../models/Movie';
 
@@ -12,7 +13,15 @@ const urlImdbApi = idImdb => (
   `http://www.theimdbapi.org/api/movie?movie_id=${idImdb}`
 );
 
-const parseTorrent = (torrents, title) => (
+
+const bytesToSize = (bytes) => {
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  if (bytes === 0) return 'n/a';
+  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+  return `${Math.round(bytes / Math.pow(1024, i), 2)} ${sizes[i]}`;
+};
+
+const parseTorrentYifi = (torrents, title) => (
   torrents.map(torrent => (
     new Torrent({
       url: torrent.url,
@@ -31,7 +40,7 @@ const parseTorrent = (torrents, title) => (
   ))
 );
 
-const parseMovie = (idImdb, torrents, movieDb, imdbApi) => {
+const parseMovieYifi = (idImdb, torrents, movieDb, imdbApi) => {
   const title = { en: movieDb.en.title || '', fr: movieDb.fr.title || '' };
   const overview = { en: movieDb.en.overview || 'Unavailable', fr: movieDb.fr.overview || 'Non disponible' };
   const genres = parseGenre(movieDb.en.genre_ids, movieDb.fr.genre_ids);
@@ -40,7 +49,7 @@ const parseMovie = (idImdb, torrents, movieDb, imdbApi) => {
     title,
     genres,
     overview,
-    torrents: parseTorrent(torrents, title),
+    torrents: parseTorrentYifi(torrents, title),
     runtime: parseInt(imdbApi.length, 10),
     director: imdbApi.director,
     stars: imdbApi.stars,
@@ -52,13 +61,59 @@ const parseMovie = (idImdb, torrents, movieDb, imdbApi) => {
   return newMovie;
 };
 
-const FetchTheMovieDBInfo = async (idImdb, lang) => (
+export const parseTorrentEztv = torrents => (
+  torrents.map((torrent) => {
+    const info = ptn(torrent.title);
+    return new Torrent({
+      hash: torrent.hash,
+      url: torrent.torrent_url,
+      magnet: torrent.magnet_url,
+      title: {
+        en: torrent.title,
+        fr: torrent.title,
+      },
+      episode: torrent.episode,
+      season: torrent.season,
+      quality: info.resolution,
+      size: bytesToSize(torrent.size_bytes),
+      seeds: torrent.seeds,
+      peers: torrent.peers,
+      source: 'eztv',
+    });
+  })
+);
+
+
+const parseMovieEztv = (idImdb, torrents, imdbApi) => {
+  const { description, title: oldtitle, genre } = imdbApi;
+  const overview = { en: description, fr: description };
+  const newTitle = { en: oldtitle, fr: oldtitle };
+  const genres = genre.map(el => ({ en: el, fr: el }));
+  const newTorrents = parseTorrentEztv(torrents);
+  const newMovie = new Movie({
+    idImdb,
+    title: newTitle,
+    genres,
+    overview,
+    torrents: newTorrents,
+    runtime: parseInt(imdbApi.length, 10),
+    director: imdbApi.director,
+    stars: imdbApi.stars,
+    rating: parseFloat(imdbApi.rating) || 0,
+    posterLarge: imdbApi.poster.large,
+    thumb: imdbApi.poster.thumb,
+    year: parseInt(imdbApi.year, 10),
+  });
+  return newMovie;
+};
+
+const FetchTheMovieDBInfo = async (idImdb, lang) => {
   axios.get(urlMovieDb(idImdb, lang))
     .then(({ data }) => (
       data.movie_results[0]
     ))
-    .catch(err => console.error('FetchTheMovieDBInfo err', err.response))
-);
+    .catch(err => console.error('FetchTheMovieDBInfo err', err.response));
+};
 
 const FetchImdbApiInfo = async idImdb => (
   axios.get(urlImdbApi(idImdb))
@@ -66,16 +121,22 @@ const FetchImdbApiInfo = async idImdb => (
     .catch(err => console.error('FetchImdbApiInfo err', err))
 );
 
-const fetchMovieInfo = async ({ torrents, imdb_code: idImdb }) => (
+export const fetchMovieInfoYifi = async ({ torrents, imdb_code: idImdb }) => (
   axios.all([
     FetchTheMovieDBInfo(idImdb, 'en'),
     FetchTheMovieDBInfo(idImdb, 'fr'),
     FetchImdbApiInfo(idImdb),
   ])
     .then(axios.spread((movieDbEn, movieDbFr, imdbApi) => (
-      parseMovie(idImdb, torrents, { en: movieDbEn, fr: movieDbFr }, imdbApi)
+      parseMovieYifi(idImdb, torrents, { en: movieDbEn, fr: movieDbFr }, imdbApi)
     )))
     .catch(err => console.error('fetchMovieInfo err', err))
 );
 
-export default fetchMovieInfo;
+export const fetchMovieInfosEztv = async ({ torrents, imdb_code: idImdb }) => (
+  FetchImdbApiInfo(idImdb)
+    .then(imdbApi => (
+      parseMovieEztv(idImdb, torrents, imdbApi)
+    ))
+    .catch(err => console.error('fetchMovieInfo err', err))
+);

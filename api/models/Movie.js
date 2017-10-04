@@ -9,6 +9,8 @@ const torrentSchema = new mongoose.Schema({
     fr: String,
   },
   quality: String,
+  episode: String,
+  season: String,
   size: String,
   seeds: Number,
   peers: Number,
