@@ -16,6 +16,7 @@ class Movie extends Component {
 
   state = {
     loaded: false,
+    error: null,
   }
 
   componentDidMount() {
@@ -27,7 +28,7 @@ class Movie extends Component {
   componentWillReceiveProps(nextProps) {
     const { pathname } = nextProps.location;
     const idImdb = pathname.split('/').pop();
-    this.setState({ loaded: false });
+    this.setState({ loaded: false, error: null });
     this.getMovie(idImdb);
   }
 
@@ -41,21 +42,21 @@ class Movie extends Component {
     })
     .then(({ data: { error, movie } }) => {
       if (error) {
-        this.setState({ error });
+        this.setState({ error, loaded: true });
       } else {
         this.movie = movie;
         this.setState({
           loaded: true,
-          // movie,
         });
       }
     });
   }
 
   render() {
-    const { loaded } = this.state;
+    const { loaded, error } = this.state;
     const movie = this.movie;
     if (loaded === false) { return <Loading />; }
+    if (error) { return <h2>{error}</h2>; }
     const genres = movie.genres.map((genre, index, array) => {
       if (index === array.length - 1) {
         return (<span key={genre[lang]}>{genre[lang]}</span>);
