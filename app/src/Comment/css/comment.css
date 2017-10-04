@@ -1,0 +1,11 @@
+.comment-block {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 4px 8px;
+  background-color: #1d1d1d;
+}
+
+.comment-input {
+  background-color: #000000;
+  color: white;
+}

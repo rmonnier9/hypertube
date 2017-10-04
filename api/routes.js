@@ -3,6 +3,8 @@ import * as movie from './controllers/movie';
 import * as connect from './controllers/connect'; // signup signin
 import * as picture from './controllers/picture';
 import * as search from './controllers/search';
+import * as comment from './controllers/comment';
+import * as genre from './controllers/genreCount';
 import getStream from './controllers/stream/streamer';
 
 const routes = async (app, passport, upload) => {
@@ -29,6 +31,9 @@ const routes = async (app, passport, upload) => {
   app.get('/api/profile/:name', user.getAccount);
   app.get('/api/profile/id/:id', user.getAccountById);
   app.get('/api/movie/info/:idImdb', movie.getInfos);
+  app.post('/api/comment/:idImdb', comment.addComment);
+
+  app.get('/api/genres', genre.getGenreTable);
 
   // not implemented
   app.get('/api/gallery/search', search.getSearch);

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import Loading from '../../General/components/Loading';
 import TorrentTable from '../components/TorrentTable';
+import CommentTable from '../../Comment/container/CommentTable';
 import '../css/movie.css';
 
 const lang = 'fr';
@@ -38,7 +39,6 @@ class Movie extends Component {
     axios({
       url,
       method: 'GET',
-      headers: { 'x-access-token': localStorage.getItem('x-access-token') },
     })
     .then(({ data: { error, movie } }) => {
       if (error) {
@@ -106,6 +106,7 @@ class Movie extends Component {
             </div>
           </div>
           <TorrentTable movie={movie} lang={lang} />
+          <CommentTable origin="video" originId={movie.idImdb} />
         </div>
       </div>
     );
