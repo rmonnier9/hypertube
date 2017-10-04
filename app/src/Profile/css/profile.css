@@ -2,8 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px;
-  margin-left: 20px;
+  margin: auto;
   max-width: 500px;
   border: 1px green solid;
 }

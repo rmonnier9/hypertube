@@ -150,7 +150,7 @@ export const getAccount = (req, res, next) => {
   }
   User.find(matchObj, (err, existingUsers) => {
     if (err) { return next(err); }
-    if (!existingUsers) {
+    if (existingUsers.length === 0) {
       return res.send({ error: [{ param: 'userName', msg: 'No account with that name.' }] });
     }
     existingUsers.forEach((user) => {
@@ -167,8 +167,9 @@ export const getAccount = (req, res, next) => {
  */
 export const getAccountById = (req, res, next) => {
   let objectId = req.params.id;
-  try { objectId = mongoose.Types.ObjectId(req.params.id) }
-  catch (err) { return res.send({ error: 'Wrong Id.' }); }
+  try {
+    objectId = mongoose.Types.ObjectId(req.params.id);
+  } catch (err) { return res.send({ error: 'Cannot find a user.' }); }
   User.findById(objectId, (err, user) => {
     if (err) { return next(err); }
     if (!user) {

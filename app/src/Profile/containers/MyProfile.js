@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import UpdateMyInfos from './UpdateMyInfos.js';
 import FindUser from './FindUser.js';
 import ProfilePic from '../components/ProfilePic.js';
+import Loading from '../../General/components/Loading';
 import '../css/profile.css';
 
 class MyProfile extends Component {
@@ -76,9 +77,9 @@ class MyProfile extends Component {
       file,
     } = this.state;
 
-    if (error || !profileLoaded) {
-      return (<div><h1>{error || 'Loading...'}</h1></div>);
-    }
+    if (error) { return (<div>{error}</div>); }
+    if (!profileLoaded) { return <Loading />; }
+
     return (
       <div className="profile-container">
         <h1 className="profile-title">
@@ -98,7 +99,10 @@ class MyProfile extends Component {
           file={file}
         />
         <UpdateMyInfos user={this.user} />
-        <FindUser handleSearch={this.handleSearch} />
+        <FindUser
+          location={this.props.location}
+          history={this.props.history}
+        />
       </div>
     );
   }

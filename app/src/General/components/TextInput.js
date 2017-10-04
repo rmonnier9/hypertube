@@ -12,6 +12,7 @@ class TextInput extends Component {
   render() {
     const { currentValue, name, type, text } = this.props;
     const className = this.props.className || '';
+    const autocomplete = this.props.autocomplete || '';
     const classNameInput = `form-control ${className}`;
 
     return (
@@ -23,6 +24,7 @@ class TextInput extends Component {
           name={name}
           type={type}
           onChange={this.handleChange}
+          autoComplete={autocomplete}
         />
       </div>
     );

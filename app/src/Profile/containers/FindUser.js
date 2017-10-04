@@ -12,19 +12,31 @@ class FindUser extends Component {
     users: [],
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault(event);
-    const { userName } = this.state;
-    const url = `/api/profile/${userName}`;
+  componentDidMount = () => {
+    if (this.state.userName || this.props.location.search.split('=').pop()) {
+      this.showUsers();
+    }
+  }
+
+  showUsers = () => {
+    const search = this.state.userName || this.props.location.search.split('=').pop();
+    const url = `/api/profile/${search}`;
     axios({ url, method: 'GET' })
     .then(({ data: { error, users } }) => {
       if (error) {
-        this.setState({ error });
+        this.setState({ error, users: [] });
       } else {
+        const { pathname } = this.props.location;
+        const newUrl = `${pathname}?name=${search}`;
+        this.props.history.push(newUrl);
         this.setState({ error: '', users });
-        console.log(users);
       }
     });
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault(event);
+    this.showUsers();
   }
 
   saveState = (name, value) => {
@@ -34,6 +46,7 @@ class FindUser extends Component {
   render() {
     const { error, users } = this.state;
     const errorMessage = error.length === 0 ? '' : error[0].msg;
+    const search = this.state.userName || this.props.location.search.split('=').pop();
     let usersDisplay = '';
     if (users) {
       usersDisplay = users.map(user => (
@@ -53,11 +66,13 @@ class FindUser extends Component {
       <div className="search-user-container">
         <form id="user-form" onSubmit={this.handleSubmit}>
           <TextInput
+            currentValue={search}
             name="userName"
             type="text"
             text="Enter a name to find another user"
             className="search-user-input"
             onChange={this.saveState}
+            autocomplete="off"
           />
         </form>
         <SubmitForm

@@ -31,7 +31,6 @@ class Gallery extends Component {
   loadItems = () => {
     const { nextHref, source } = this.state;
     const url = nextHref || this.getSearchURL();
-    console.log('url ', url);
     axios({
       url,
       method: 'GET',

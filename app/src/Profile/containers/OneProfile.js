@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { FormattedMessage } from 'react-intl';
-// import ProfilePic from '../components/ProfilePic.js';
+import Loading from '../../General/components/Loading';
 import '../css/profile.css';
 
 class OneProfile extends Component {
@@ -33,9 +33,8 @@ class OneProfile extends Component {
       profileLoaded,
       error,
     } = this.state;
-    if (error || !profileLoaded) {
-      return (<div><h1>{error || 'Loading...'}</h1></div>);
-    }
+    if (error) { return (<div>{error}</div>); }
+    if (!profileLoaded) { return <Loading />; }
 
     const {
       firstName,
