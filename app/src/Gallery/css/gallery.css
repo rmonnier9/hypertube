@@ -20,3 +20,30 @@
   width: 95%;
   border-radius: 12px;
 }
+
+.selects-container {
+  display: flex;
+  align-items: flex-end;
+}
+
+.all-selectors {
+  display: flex;
+  flex-direction: row;
+}
+
+.one-selector {
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.selector-box {
+  color: #101010;
+  width: 100px;
+}
+
+.gallery-search-button {
+  height: 40px;
+  width: 100px;
+  margin-left: 20px;
+}

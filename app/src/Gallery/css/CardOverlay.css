@@ -17,16 +17,24 @@
 }
 
 .card-button {
-  background: #34d95a;
-  border-radius: 28px;
-  color: #ffffff;
-  font-size: 1.6em;
-  padding: 10px 20px 10px 20px;
+  background-color: green;
+  /*border-radius: 28px;*/
+  border-radius: 12px;
+  color: #F5F5F5;
+  font-size: 1.4em;
+  padding: 15px 30px 15px 30px;
   text-decoration: none;
+}
+
+.card-button:hover {
+  background-color: #009900;
+  color: #F5F5F5;
+  transition: all 300ms ease;
 }
 
 .card-button-container {
   margin-top: 55px;
+  margin-bottom: 55px;
 }
 
 .card-overlay {
@@ -38,11 +46,13 @@
   padding: 50px 20px 20px 20px;
   height: 100%;
   width: 100%;
-  color: white;
   text-align: center;
 }
 
-.card-star-icon {
-  font-size: 40px;
-  color: #42f44b;
+.glyphicon-star.card-star-icon {
+  font-size: 2em;
+}
+
+.card-overlay-infos {
+  font-size: 1.5em;
 }

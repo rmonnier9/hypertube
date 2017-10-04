@@ -40,9 +40,9 @@ class FindUser extends Component {
   }
 
   handleSubmit = (event) => {
-    event.preventDefault(event);
+    event.preventDefault();
     const { pathname } = this.props.location;
-    const search = this.state.userName || this.props.location.search.split('=').pop();
+    const search = this.state.userName;
     const newUrl = `${pathname}?name=${search}`;
     this.props.history.push(newUrl);
     this.showUsers(search);

@@ -28,6 +28,8 @@ class SearchBar extends Component {
           text=""
           className="searchBar-container"
           onChange={this.handleChange}
+          autocomplete="off"
+          placeholder="Search title, actor, director..."
         />
       </form>
     );

@@ -13,6 +13,7 @@ const getSortObj = (sort) => {
 
 export const getSearch = async (req, res) => {
   const { query } = req;
+  console.log(query);
   let matchObj = {};
 
   if (query.name) {
