@@ -14,8 +14,8 @@ export default class ProfileProfile extends Component {
     `/static/uploads/${this.props.user.profile.picture}`;
     return (
       <div>
-        <div className="profile-pic">
-          <img src={path} alt="" />
+        <div>
+          <img className="profile-pic" src={path} alt="profile-pic" />
         </div>
         <div className="upload-new-pic">
           <span>Upload a new profile picture</span>
@@ -30,6 +30,7 @@ export default class ProfileProfile extends Component {
           preview={this.props.preview}
           handleUpload={this.props.handleUpload}
           handleSubmit={this.props.handleSubmit}
+          handleClose={this.props.handleClose}
           error={this.props.errorPic}
           status={this.props.status}
           file={this.props.file}

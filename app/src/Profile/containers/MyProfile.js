@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { FormattedMessage } from 'react-intl';
 import UpdateMyInfos from './UpdateMyInfos.js';
+import FindUser from './FindUser.js';
 import ProfilePic from '../components/ProfilePic.js';
+import Loading from '../../General/components/Loading';
 import '../css/profile.css';
 
 class MyProfile extends Component {
@@ -13,6 +15,7 @@ class MyProfile extends Component {
     status: 'closed',
     file: {},
     picture: '',
+    otherUser: {},
   }
 
   componentDidMount() {
@@ -32,6 +35,10 @@ class MyProfile extends Component {
 
   handleOpen = () => {
     this.setState({ status: 'open' });
+  }
+
+  handleClose = () => {
+    this.setState({ status: 'closed' });
   }
 
   imageUpload = (file) => { this.setState({ file }); }
@@ -70,12 +77,12 @@ class MyProfile extends Component {
       file,
     } = this.state;
 
-    if (error || !profileLoaded) {
-      return (<div><h1>{error || 'Loading...'}</h1></div>);
-    }
+    if (error) { return (<div>{error}</div>); }
+    if (!profileLoaded) { return <Loading />; }
+
     return (
       <div className="profile-container">
-        <h1>
+        <h1 className="profile-title">
           <FormattedMessage
             id="Profil"
             defaultMessage="Profil"
@@ -87,10 +94,15 @@ class MyProfile extends Component {
           handleUpload={this.imageUpload}
           handleSubmit={this.handleSubmit}
           handleOpen={this.handleOpen}
+          handleClose={this.handleClose}
           status={status}
           file={file}
         />
         <UpdateMyInfos user={this.user} />
+        <FindUser
+          location={this.props.location}
+          history={this.props.history}
+        />
       </div>
     );
   }

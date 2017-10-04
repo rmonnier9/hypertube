@@ -10,7 +10,6 @@ class UpdateMyInfos extends Component {
     lastName: '',
     password: '',
     confirmPassword: '',
-    forms: { email: false, name: false, password: false },
     change: { email: '', firstName: '', lastName: '' },
     error: [{ param: '', msg: '', value: '' }],
   }
@@ -40,16 +39,14 @@ class UpdateMyInfos extends Component {
     .then(({ data }) => {
       const { error, user } = data;
       if (error.length !== 0) {
-        this.setState({ error, forms: { email: false, name: false, password: false } });
+        this.setState({ error });
       } else if (id === 'password-form') {
         this.setState({
           error: [{ param: '', msg: '', value: '' }],
-          forms: { email: false, name: false, password: false },
         });
       } else {
         this.setState({
           error: [{ param: '', msg: '', value: '' }],
-          forms: { email: false, name: false, password: false },
           change: {
             email: user.email,
             firstName: user.profile.firstName,

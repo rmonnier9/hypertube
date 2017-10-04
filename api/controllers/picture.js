@@ -22,7 +22,6 @@ export const postSignupPicture = async (req, res, next) => {
       interpolator: sharp.interpolator.nohalo,
     })
     .toFile(newPath);
-  // CBE: to avoid crash if file doesn't exist
   if (fs.existsSync(oldPath)) {
     fs.unlinkSync(oldPath);
   }

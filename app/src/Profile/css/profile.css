@@ -1,18 +1,31 @@
 .profile-container {
-  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  max-width: 500px;
+  border: 1px green solid;
+}
+
+.profile-title {
+  text-align: center;
+  border-bottom: 1px green solid;
+  width: 250px;
+  padding-bottom: 20px;
 }
 
 .profile-pic {
   margin-top: 30px;
-  width: 240px;
-  height: 240px;
+  margin-bottom: 5px;
+  object-fit: cover;
+  width: 250px;
+  height: 250px;
 }
 
 .upload-new-pic {
   display: flex;
   align-items: center;
   color: grey;
-
 }
 
 button.camera-icon, button.glyphicon-pencil {
@@ -20,7 +33,7 @@ button.camera-icon, button.glyphicon-pencil {
   background-color: transparent;
   border: none;
   outline: none;
-  margin-left: 5px;
+  margin-left: 7px;
 }
 
 button.camera-icon:hover, button.glyphicon-pencil:hover {
@@ -29,7 +42,7 @@ button.camera-icon:hover, button.glyphicon-pencil:hover {
 
 .infos-container {
   margin-top: 20px;
-  width: 240px;
+  min-width: 250px;
   display: inline-block;
 }
 
@@ -41,4 +54,67 @@ button.camera-icon:hover, button.glyphicon-pencil:hover {
 
 .infos-password {
   color: grey;
+}
+
+.infos-form {
+  margin-top: 30px;
+  padding: 15px;
+  border: 2px solid green;
+  position: relative;
+}
+
+.infos-form:before {
+  content: '';
+  position: absolute;
+  border: 1px solid green;
+}
+
+.infos-form.top:before {
+  border-color: green transparent;
+  border-width: 0 13px 11px 13px;
+  top: -13px;
+  left: 45%;
+}
+
+.submit-button {
+  margin-top: 10px;
+}
+
+.search-user-container {
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px green solid;
+  width: 240px;
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px green solid;
+}
+
+.search-user-input {
+  width: 240px;
+}
+
+.profile-pic-search {
+  object-fit: cover;
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
+}
+
+.one-user-search-display {
+  margin-top: 5px;
+}
+
+a.one-user-search-display {
+  color: #F5F5F5;
+}
+
+.users-search-display {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.one-user-profile {
+  margin-bottom: 20px;
 }

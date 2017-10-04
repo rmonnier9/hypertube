@@ -31,8 +31,5 @@ const mapStateToProps = ({
   isAuthenticated,
 });
 
-// Use named export for unconnected component (for tests)
-// export { Header };
-
 // Use default export for the connected component (for app)
 export default connect(mapStateToProps)(Header);

@@ -4,12 +4,13 @@ import FormClass from './FormClass';
 class MyInfosForms extends Component {
 
   state = {
-    form: {},
+    form: { formId: null },
   }
 
   handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault(event);
     const id = event.target.id;
+    this.setState({ form: { formId: null } });
     this.props.onSubmit(id);
   }
 
@@ -21,14 +22,12 @@ class MyInfosForms extends Component {
     event.preventDefault();
     const id = event.target.id;
     const form = this.getForm(id);
-    this.setState({ form });
-    // if (id === 'email') {
-    //   this.props.onChange('forms', { email: true, name: false, password: false });
-    // } else if (id === 'name') {
-    //   this.props.onChange('forms', { email: false, name: true, password: false });
-    // } else if (id === 'password') {
-    //   this.props.onChange('forms', { email: false, name: false, password: true });
-    // }
+    this.setState((prevState) => {
+      const newState = {};
+      if (prevState.form.formId === `${id}-form`) newState.form = { formId: null };
+      else newState.form = form;
+      return newState;
+    });
     this.props.onChange('error', [{ param: '', msg: '', value: '' }]);
   }
 
@@ -63,19 +62,33 @@ class MyInfosForms extends Component {
     return forms[id];
   }
 
-
   render() {
     const { error, change, user } = this.props;
     const { form } = this.state;
-    console.log(form);
     const errorMessage = error[0].msg;
     const email = change.email !== '' ? change.email : user.email;
     const firstName = change.firstName !== '' ? change.firstName : user.profile.firstName;
     const lastName = change.lastName !== '' ? change.lastName : user.profile.lastName;
+    const data = Object.assign(
+      form,
+      { onChange: this.passChange },
+      { onSubmit: this.handleSubmit },
+    );
+    const displayForm = form.formId === null ? null : (
+      <div className="infos-form top">
+        <FormClass
+          data={data}
+        />
+      </div>
+    );
 
     return (
       <div className="infos-container">
         <div>
+          <div>
+            <span className="infos-password">Change my password</span>
+            <button id="password" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
+          </div>
           <span className="infos-title"><b>Name</b></span>
           <span>{firstName} {lastName}</span>
           <button id="name" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
@@ -85,11 +98,7 @@ class MyInfosForms extends Component {
           <span>{email}</span>
           <button id="email" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
         </div>
-        <div>
-          <span className="infos-password">Change my password</span>
-          <button id="password" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
-        </div>
-        {form !== {} ? <FormClass data={form} /> : null}
+        {displayForm}
         <div style={{ color: 'red' }}>{errorMessage}</div>
       </div>
     );

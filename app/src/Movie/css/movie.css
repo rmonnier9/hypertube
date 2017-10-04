@@ -5,10 +5,11 @@
 }
 
 .movie-poster {
-  height: 100vh;
+  height: 90vh;
 }
 
 .movie-infos {
+  min-width: 700px;
   max-width: 900px;
   padding-left: 20px;
 }
