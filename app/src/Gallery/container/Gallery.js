@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-// import queryString from 'query-string';
+import queryString from 'query-string';
 import InfiniteScroll from 'react-infinite-scroller';
 import Loading from '../../General/components/Loading';
 import MovieList from '../components/MovieList.js';
@@ -15,6 +15,7 @@ class Gallery extends Component {
   constructor(props) {
     super(props);
     const { search } = this.props.location;
+    this.mounted = true;
     this.state = {
       search,
       movies: [],
@@ -36,6 +37,21 @@ class Gallery extends Component {
     });
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const { search } = nextState;
+    if (search || (!search && this.state.search)) return true;
+    const { nextHref } = nextState;
+    const { nextHref: oldHref } = this.state;
+    const nextstart = !nextHref ? 0 : nextHref.split('=').pop();
+    const oldstart = !oldHref ? 0 : oldHref.split('=').pop();
+    if (nextstart <= oldstart) return false;
+    return true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   getSearchURL = () => {
     const { search } = this.props.location;
     return (`/api/gallery/search${search}`);
@@ -47,7 +63,7 @@ class Gallery extends Component {
     axios({ url, method: 'GET', cancelToken: source.token })
     .then(({ data }) => {
       const movies = [...this.state.movies, ...data.movies];
-
+      if (!this.mounted) return;
       if (data.nextHref) {
         this.setState({
           movies,
@@ -113,6 +129,7 @@ class Gallery extends Component {
       hasMoreItems,
     } = this.state;
     const loader = <Loading />;
+    if (!this.mounted) return null;
     return (
       <div>
         <Filter

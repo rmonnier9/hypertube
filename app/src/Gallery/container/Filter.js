@@ -22,7 +22,6 @@ class Filter extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    console.log(nextProps);
     const parsed = queryString.parse(nextProps.location.search);
     if (parsed.genre === undefined) {
       this.setState({ genre: 'all', rating: 0, sort: 'latest' });
