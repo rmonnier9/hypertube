@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CommentBlock from './CommentBlock';
+import { CommentBlock } from './CommentList';
 import TextInput from '../../General/components/TextInput';
 import '../css/comment.css';
 

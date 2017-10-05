@@ -31,6 +31,8 @@ const routes = async (app, passport, upload) => {
   app.get('/api/profile/:name', user.getAccount);
   app.get('/api/profile/id/:id', user.getAccountById);
   app.get('/api/movie/info/:idImdb', movie.getInfos);
+
+  app.get('/api/comment/:idImdb', comment.getComment);
   app.post('/api/comment/:idImdb', comment.addComment);
 
   app.get('/api/genres', genre.getGenreTable);

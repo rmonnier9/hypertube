@@ -106,7 +106,7 @@ class Movie extends Component {
             </div>
           </div>
           <TorrentTable movie={movie} lang={lang} />
-          <CommentTable origin="video" originId={movie.idImdb} />
+          <CommentTable originId={movie.idImdb} />
         </div>
       </div>
     );

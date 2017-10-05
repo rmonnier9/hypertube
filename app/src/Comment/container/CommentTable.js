@@ -7,32 +7,22 @@ class CommentTable extends Component {
 
   constructor(props) {
     super(props);
-    this.target = props.origin;
     this.targetId = props.originId;
-    this.state = { loaded: false };
+    this.state = { loaded: false, open: false };
   }
 
   componentDidMount() {
-    // this.getComment(this.state.target);
-    this.getGenreTable();
+    this.getComment(this.targetId);
   }
 
-  getGenreTable = () => {
-    const url = '/api/genres';
-    axios({
-      url,
-      method: 'GET',
-    })
-    .then(({ data: { genre } }) => {
-      console.log('genreTable', genre);
-    });
+  handleOpen = (e) => {
+    e.preventDefault();
+    this.setState({ open: !this.state.open });
   }
 
-  getComment = (target) => {
-    const url = `/api/comment/${target}`;
-    axios.get({
-      url,
-    })
+  getComment = (targetId) => {
+    const url = `/api/comment/${targetId}`;
+    axios.get(url)
     .then(({ data: { error, comments } }) => {
       if (error) {
         this.setState({ error, loaded: true });
@@ -46,14 +36,9 @@ class CommentTable extends Component {
   }
 
   addComment = (comment) => {
-    const url = `/api/comment/${this.originId}`;
-    const payload = { comment };
-    console.log(comment);
-    axios.post({
-      url,
-      payload,
-    })
-    .then(({ error, comments }) => {
+    const url = `/api/comment/${this.targetId}`;
+    axios.post(url, { comment })
+    .then(({ data: { error, comments } }) => {
       if (error) {
         this.setState({ error });
       } else {
@@ -63,11 +48,23 @@ class CommentTable extends Component {
   }
 
   render() {
-    const { comments } = this.state;
+    const { comments, open, loaded } = this.state;
+    if (!loaded) return null;
     return (
-      <div>
-        <CommentList comments={comments} />
-        <CommentInput onAdd={this.addComment} />
+      <div className="comment-container">
+        <h4>
+          <i className="glyphicon glyphicon-comment comment-icon" />
+          <a className="comment-count" href="" onClick={this.handleOpen}>
+            {`${comments.length} ` }
+            { comments.length > 1 ? 'comments' : 'comment' }
+          </a>
+        </h4>
+        { !open ? null :
+        <div>
+          <CommentList comments={comments} />
+          <CommentInput onAdd={this.addComment} />
+        </div>
+        }
       </div>
     );
   }

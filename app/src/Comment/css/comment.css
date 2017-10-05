@@ -1,11 +1,45 @@
+.comment-container {
+  margin-top: 15px;
+}
+
 .comment-block {
   width: 100%;
   margin-bottom: 6px;
-  padding: 4px 8px;
+  padding: 7px 7px;
   background-color: #1d1d1d;
 }
 
 .comment-input {
   background-color: #000000;
-  color: white;
+  color: #F5F5F5;
+}
+
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: block;
+  float: left;
+}
+
+.comment-text-container {
+  margin-left: 55px;
+  font-size: .9em;
+}
+
+.comment-info {
+  color: green;
+}
+
+.comment-text {
+  margin-top: 3px;
+}
+
+.comment-icon {
+  color: green;
+  margin-right: 10px;
+}
+
+.comment-count {
+  color: #F5F5F5;
 }

@@ -1,36 +1,68 @@
-import Comment from '../models/Comment';
+import moment from 'moment';
+import { Comment, ListComment } from '../models/Comment';
+import User from '../models/User';
 
-//
-// const commentSchema = new mongoose.Schema({
-//   idImdb: String,
-//   idUser: String,
-//   date: { type: Date, default: Date.now },
-//   text: String,
-//   userPhoto: String,
-//   userFirstName: String,
-//   userLastName: String,
-// });
-
-export const addComment = async (req, res, next) => {
-  const { payload } = req.body;
-  const idImdb = req.params;
-  console.log('id', idImdb);
-  console.log('payload', payload);
-  return res.send({ error: 'ok' });
+const createCommentObject = async ({ comment }, idUser) => {
+  const newComment = new Comment({
+    idUser,
+    date: moment(),
+    text: comment,
+  });
+  return newComment;
 };
-  // req.checkBody('text', 'Comments can\'t be more than 40 letters long').len({ max: 40 });
-  // const validationObj = await req.getValidationResult();
-  // const error = validationObj.array();
-  // if (error.length) {
-  //     return res.send({ error });
-  //   }
-  //   const comment = new Comment({
-  //
-  //   });
-  // Comment.save((err) => {
-  //   if (err) { return next(err);
-  //     return res.send({ error: '', user });
-  //       });
-  //     });
-  //     break;
-  //   }
+
+// originaly i tried to do with this function which did not work for an unknown reason
+// the result of object2 are not comprehensible
+
+// const addUserProps2 = async ({ comments }) => (
+//   Promise.all(comments.map(async (comment) => {
+//     const { profile } = await User.findOne({ _id: comment.idUser });
+//     console.log('profile', profile);
+//     console.log('comment', comment);
+//     const object = Object.assign(comment, profile);
+//     const object2 = Object.assign({}, comment, profile);
+//     console.log('new comment', comment);
+//     console.log('object', object); // object doesnt have profile property
+//     console.log('object2', object2); // object2 has mangoose cursor stuff !
+//     return object;
+//   }))
+// );
+
+
+const addUserProps = async ({ comments }) => (
+  Promise.all(comments.map(async (comment) => {
+    const { profile } = await User.findOne({ _id: comment.idUser });
+    const object = {
+      id: comment._id,
+      idUser: comment.idUser,
+      date: comment.date,
+      text: comment.text,
+      picture: profile.picture,
+      lastName: profile.lastName,
+      firstName: profile.firstName,
+    };
+    return object;
+  }))
+);
+
+export const addComment = async (req, res) => {
+  const { idImdb } = req.params;
+  const newComment = await createCommentObject(req.body, req.user.id);
+  const list = await ListComment.findOneAndUpdate(
+    { idImdb },
+    { $push: { comments: newComment } },
+    { upsert: true,
+      new: true,
+    },
+  );
+  const results = await addUserProps(list);
+  return res.send({ error: '', comments: results });
+};
+
+export const getComment = async (req, res) => {
+  const { idImdb } = req.params;
+  const list = await ListComment.findOne({ idImdb });
+  if (!list) return res.send({ error: '', comments: [] });
+  const result = await addUserProps(list);
+  return res.send({ error: '', comments: result });
+};

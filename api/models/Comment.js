@@ -1,15 +1,16 @@
 import mongoose from 'mongoose';
 
 const commentSchema = new mongoose.Schema({
-  idImdb: String,
   idUser: String,
-  date: { type: Date, default: Date.now },
+  date: Date,
   text: String,
-  userPhoto: String,
-  userFirstName: String,
-  userLastName: String,
 });
 
-const Comment = mongoose.model('Comment', commentSchema);
+export const Comment = mongoose.model('Comment', commentSchema);
 
-export default Comment;
+const ListCommentSchema = new mongoose.Schema({
+  idImdb: { type: String, unique: true },
+  comments: [commentSchema],
+});
+
+export const ListComment = mongoose.model('ListComment', ListCommentSchema);

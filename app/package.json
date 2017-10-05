@@ -17,6 +17,7 @@
     "browser-cookies": "^1.1.0",
     "find-cache-dir": "^1.0.0",
     "material-ui": "^0.19.1",
+    "moment": "^2.18.1",
     "prop-types": "^15.5.9",
     "query-string": "^5.0.0",
     "react": "^15.6.1",
