@@ -8,6 +8,22 @@ class SearchBar extends Component {
     search: '',
   }
 
+  componentDidMount = () => {
+    const parsed = queryString.parse(this.props.location.search);
+    if (parsed.name) {
+      this.setState({ search: parsed.name });
+    }
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    const parsed = queryString.parse(nextProps.location.search);
+    if (parsed.name) {
+      this.setState({ search: parsed.name });
+    } else {
+      this.setState({ search: '' });
+    }
+  }
+
   handleChange = (name, value) => {
     this.setState({ [name]: value });
   }
@@ -18,8 +34,7 @@ class SearchBar extends Component {
   }
 
   render() {
-    const parsed = queryString.parse(this.props.location.search);
-    const search = this.state.search || parsed.name;
+    const search = this.state.search;
 
     return (
       <form className="" onSubmit={this.handleSubmit}>

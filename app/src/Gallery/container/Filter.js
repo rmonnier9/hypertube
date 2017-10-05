@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import queryString from 'query-string';
 import SubmitForm from '../../General/components/SubmitForm.js';
 import Selectors from '../components/Selectors.js';
 
@@ -20,10 +21,19 @@ class Filter extends Component {
     });
   }
 
+  componentWillReceiveProps = (nextProps) => {
+    console.log(nextProps);
+    const parsed = queryString.parse(nextProps.location.search);
+    if (parsed.genre === undefined) {
+      this.setState({ genre: 'all', rating: 0, sort: 'latest' });
+    } else {
+      this.setState({ ...parsed });
+    }
+  }
+
   saveState = (name, value) => {
     this.setState({ [name]: value });
   }
-
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -33,13 +43,11 @@ class Filter extends Component {
   }
 
   render() {
-    const { genres } = this.state;
     const filter = { ...this.state };
 
     return (
       <form className="selects-container" id="user-form" onSubmit={this.handleSubmit}>
         <Selectors
-          genres={genres}
           filter={filter}
           onSelect={this.saveState}
         />

@@ -11,8 +11,8 @@ class Selectors extends Component {
   }
 
   render() {
-    const { genres, filter } = this.props;
-    const genreOptions = genres
+    const { filter } = this.props;
+    const genreOptions = filter.genres
     .sort((a, b) => { if (a[lang] > b[lang]) return 1; return -1; })
     .map((movieGenre) => {
       const value = movieGenre.en;

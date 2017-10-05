@@ -4,7 +4,9 @@ import Card from './Card.js';
 
 const MovieList = ({ movies }) => {
   if (!movies) { return null; }
-  const Cards = movies.filter(movie => movie.idImdb)
+
+  const Cards = movies
+  .filter(movie => movie.idImdb)
   .map(movie => (
     <Card key={movie.idImdb} movie={movie} />
   ));

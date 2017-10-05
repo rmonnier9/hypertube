@@ -15,18 +15,19 @@ class FindUser extends Component {
 
   componentDidMount = () => {
     const parsed = queryString.parse(this.props.location.search);
-    const search = this.state.userName || parsed.name;
-    if (search) {
-      this.showUsers(search);
+    if (parsed.name) {
+      this.setState({ userName: parsed.name });
+      this.showUsers(parsed.name);
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
     const parsed = queryString.parse(nextProps.location.search);
-    if (!parsed.name) {
-      this.setState({ error: [], users: [] });
-    } else {
+    if (parsed.name) {
+      this.setState({ userName: parsed.name });
       this.showUsers(parsed.name);
+    } else {
+      this.setState({ userName: '', error: [], users: [] });
     }
   }
 
@@ -44,8 +45,8 @@ class FindUser extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const { pathname } = this.props.location;
     const search = this.state.userName;
+    const { pathname } = this.props.location;
     const newUrl = `${pathname}?name=${search}`;
     this.props.history.push(newUrl);
     this.showUsers(search);
@@ -58,20 +59,24 @@ class FindUser extends Component {
   render() {
     const { error, users } = this.state;
     const errorMessage = error.length === 0 ? '' : error[0].msg;
-    const search = this.state.userName || this.props.location.search.split('=').pop();
+    const search = this.state.userName;
+
     let usersDisplay = '';
     if (users) {
-      usersDisplay = users.map(user => (
-        <Link to={`/profile/${user._id}`} className="one-user-search-display" key={user._id}>
-          <img
-            className="profile-pic-search"
-            src={`/static/uploads/${user.profile.picture}`}
-            alt="profile-pic"
-          />
-          <span>{user.profile.firstName} </span>
-          <span>{user.profile.lastName}</span>
-        </Link>
-      ));
+      usersDisplay = users.map((user) => {
+        const { _id: id } = user;
+        return (
+          <Link to={`/profile/${id}`} className="one-user-search-display" key={id}>
+            <img
+              className="profile-pic-search"
+              src={`/static/uploads/${user.profile.picture}`}
+              alt="profile-pic"
+            />
+            <span>{user.profile.firstName} </span>
+            <span>{user.profile.lastName}</span>
+          </Link>
+        );
+      });
     }
 
     return (
