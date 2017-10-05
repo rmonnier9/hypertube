@@ -22,7 +22,6 @@ class Filter extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    console.log(nextProps);
     const parsed = queryString.parse(nextProps.location.search);
     if (parsed.genre === undefined) {
       this.setState({ genre: 'all', rating: 0, sort: 'latest' });
@@ -53,7 +52,7 @@ class Filter extends Component {
         />
         <SubmitForm
           className="btn btn-default gallery-search-button"
-          value="Search"
+          value="Filter"
         />
       </form>
     );

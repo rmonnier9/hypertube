@@ -21,6 +21,15 @@ const getSortObj = (sort) => {
       sortObj = { 'torrents.seeds': -1 };
       break;
 
+    // sort by name when user do an open research
+    case 'name-en':
+      sortObj = { 'title.en': 1 };
+      break;
+
+    case 'name-fr':
+      sortObj = { 'title.fr': 1 };
+      break;
+
     default:
       sortObj = { year: -1 };
   }
@@ -43,8 +52,10 @@ export const getSearch = async (req, res) => {
       ],
     };
   } else if (query.genre === 'all') {
+    // no filtering by genre, only by rating
     matchObj = { rating: { $gte: query.rating } };
   } else if (query.genre) {
+    // filtering by genre and by rating
     matchObj = {
       $and: [
         { 'genres.en': query.genre },
