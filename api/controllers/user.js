@@ -283,6 +283,7 @@ export const postReset = async (req, res, next) => {
  * Create a random token, then the send user an email with a reset link.
  */
 export const postForgot = async (req, res, next) => {
+  console.log(req.body.email);
   req.checkBody('email', 'Please enter a valid email address.').isEmail();
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
@@ -302,7 +303,7 @@ export const postForgot = async (req, res, next) => {
       .findOne({ email: req.body.email })
       .then((user) => {
         if (!user) {
-          return res.send({ error: 'Account with that email address does not exist.' });
+          return res.send({ error: [{ param: 'email', msg: 'No account with that email.' }] });
         }
         user.passwordResetToken = token;
         user.passwordResetExpires = Date.now() + 3600000; // 1 hour
@@ -322,8 +323,8 @@ export const postForgot = async (req, res, next) => {
     });
     const mailOptions = {
       to: user.email,
-      from: 'hackathon@starter.com',
-      subject: 'Reset your password on Hackathon Starter',
+      from: 'api.hypertube@42.fr',
+      subject: 'Reset your password',
       text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
         Please click on the following link, or paste this into your browser to complete the process:\n\n
         http://${req.headers.host}/reset/${token}\n\n
@@ -331,7 +332,7 @@ export const postForgot = async (req, res, next) => {
     };
     return transporter.sendMail(mailOptions)
       .then(() => (
-        { error: '' }
+        { error: [] }
       ));
   };
 

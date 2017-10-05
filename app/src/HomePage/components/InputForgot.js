@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-const SigninComponent = (props) => {
+const InputForgot = (props) => {
   const error = {};
   props.error.forEach((field) => {
     error[field.param] = field.msg;
   });
+  // console.log('error', error);
 
   return (
     <div>
@@ -18,7 +19,7 @@ const SigninComponent = (props) => {
           onSubmit={props.handleSubmit}
           onChange={props.handleChange}
         >
-          <h2 className="homepage-title">Log in to your account</h2>
+          <h2 className="homepage-title">Forgot password</h2>
           <TextField
             hintText="Your email"
             name="email"
@@ -26,31 +27,13 @@ const SigninComponent = (props) => {
             floatingLabelText="Email"
           />
           <br />
-          <TextField
-            hintText="Your password"
-            type="password"
-            name="password"
-            errorText={error.password}
-            floatingLabelText="Password"
-          />
-          <br />
           <RaisedButton className="homepage-submit" type="submit" name="submit" label="Send" />
-          <br />
-          <a target="_new" href="/api/auth/google">GoogleAuth (in progress)</a>
-          <br />
-          <Link to="/forgot">Forgot password ?</Link>
-          <br /><br />
-          <Link to="/signup">Sign up ?</Link>
         </form>
+        <br />
+        <Link to="/signin">Back to sign in</Link>
       </div>
     </div>
   );
 };
 
-SigninComponent.PropTypes = {
-  error: PropTypes.array.required,
-  handleSubmit: PropTypes.func.required,
-  handleChange: PropTypes.func.required,
-};
-
-export default SigninComponent;
+export default InputForgot;
