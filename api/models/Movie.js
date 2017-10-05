@@ -15,6 +15,13 @@ const torrentSchema = new mongoose.Schema({
   seeds: Number,
   peers: Number,
   source: String, // yifi or eztv
+  data: {
+    torrentDate: Date,
+    path: String,
+    length: Number,
+    name: String,
+    downloaded: Boolean,
+  },
 });
 
 export const Torrent = mongoose.model('Torrent', torrentSchema);

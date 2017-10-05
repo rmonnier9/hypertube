@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 
 export default class App extends Component {
   render() {
-    const { hash } = this.props.match.params;
-    const url = `http://localhost:3000/api/movie/stream/${hash}`;
+    const { id, hash } = this.props.match.params;
+    const url = `http://localhost:3000/api/movie/stream/${id}/${hash}`;
 
     return (
       <video id="videoPlayer" controls>
