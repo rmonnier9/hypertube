@@ -1,3 +1,10 @@
+/*!
+* getFilePointer.js
+*
+* Copyright (c) 2017 Robin Monnier
+* Version 0.1
+*/
+
 import torrentStream from 'torrent-stream';
 
 /*

@@ -1,3 +1,10 @@
+/*!
+* streamer.js
+*
+* Copyright (c) 2017 Robin Monnier
+* Version 0.1
+*/
+
 import getFilePointer from './getFilePointer';
 
 export const getStream = async (req, res) => {

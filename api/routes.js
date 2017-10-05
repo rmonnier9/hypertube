@@ -3,7 +3,8 @@ import * as movie from './controllers/movie';
 import * as connect from './controllers/connect'; // signup signin
 import * as picture from './controllers/picture';
 import * as search from './controllers/search';
-import getStream from './controllers/stream/streamer';
+// import getStream from './controllers/stream/streamer';
+import spiderTorrent from './controllers/stream/spiderTorrent';
 
 const routes = async (app, passport, upload) => {
   /**
@@ -16,7 +17,7 @@ const routes = async (app, passport, upload) => {
   app.post('/api/forgot', user.postForgot); // not implemented front-end
   app.post('/api/reset/:token', user.postReset); // not implemented front-end
 
-  app.get('/api/movie/stream/:hash', getStream);
+  app.get('/api/movie/stream/:id/:hash', spiderTorrent);
 
   // Logged part  ====================
   app.use(passport.authenticate('jwt', { session: false }));
