@@ -52,7 +52,7 @@ class Filter extends Component {
         />
         <SubmitForm
           className="btn btn-default gallery-search-button"
-          value="Search"
+          value="Filter"
         />
       </form>
     );

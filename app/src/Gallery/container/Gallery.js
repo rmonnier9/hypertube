@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import queryString from 'query-string';
 import InfiniteScroll from 'react-infinite-scroller';
 import Loading from '../../General/components/Loading';
 import MovieList from '../components/MovieList.js';
@@ -9,6 +8,7 @@ import Filter from './Filter.js';
 import '../css/gallery.css';
 
 const CancelToken = axios.CancelToken;
+const lang = 'fr';
 
 class Gallery extends Component {
 
@@ -92,7 +92,7 @@ class Gallery extends Component {
     } = this.state;
     source.cancel('Request canceled by reloading.');
     const { pathname } = this.props.location;
-    const newUrl = `${pathname}?name=${search}`;
+    const newUrl = `${pathname}?name=${search}&sort=name-${lang}`;
     this.props.history.push(newUrl);
     this.setState({
       search,
