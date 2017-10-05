@@ -5,16 +5,17 @@ import '../css/CardOverlay.css';
 class CardOverlay extends Component {
 
   render() {
-    const { rating, idImdb } = this.props.movie;
+    const { rating, year, idImdb } = this.props.movie;
     const link = `/movie/${idImdb}`;
     return (
       <div className="card-overlay">
         <i className="glyphicon glyphicon-star card-star-icon" />
-        <h4>{rating || null} / 10</h4>
+        <div className="card-overlay-infos">{`${rating} / 10`}</div>
         <br />
         <div className="card-button-container">
-          <Link className="card-button"to={link}>View details</Link>
+          <Link className="card-button" to={link}>View details</Link>
         </div>
+        <div className="card-overlay-infos">{year}</div>
       </div>
     );
   }

@@ -8,7 +8,7 @@ class MyInfosForms extends Component {
   }
 
   handleSubmit = (event) => {
-    event.preventDefault(event);
+    event.preventDefault();
     const id = event.target.id;
     this.setState({ form: { formId: null } });
     this.props.onSubmit(id);

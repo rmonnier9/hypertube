@@ -5,6 +5,22 @@ import Movie from '../models/Movie';
 const getSortObj = (sort) => {
   let sortObj;
   switch (sort) {
+    case 'latest':
+      sortObj = { year: -1 };
+      break;
+
+    case 'oldest':
+      sortObj = { year: 1 };
+      break;
+
+    case 'rating':
+      sortObj = { rating: -1 };
+      break;
+
+    case 'seeds':
+      sortObj = { 'torrents.seeds': -1 };
+      break;
+
     default:
       sortObj = { year: -1 };
   }
@@ -24,6 +40,15 @@ export const getSearch = async (req, res) => {
         { 'title.en': regex },
         { director: regex },
         { stars: regex },
+      ],
+    };
+  } else if (query.genre === 'all') {
+    matchObj = { rating: { $gte: query.rating } };
+  } else if (query.genre) {
+    matchObj = {
+      $and: [
+        { 'genres.en': query.genre },
+        { rating: { $gte: query.rating } }
       ],
     };
   }

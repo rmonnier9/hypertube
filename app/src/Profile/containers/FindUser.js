@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import TextInput from '../../General/components/TextInput.js';
 import SubmitForm from '../../General/components/SubmitForm.js';
@@ -13,17 +14,20 @@ class FindUser extends Component {
   }
 
   componentDidMount = () => {
-    const search = this.state.userName || this.props.location.search.split('=').pop();
-    if (search) {
-      this.showUsers(search);
+    const parsed = queryString.parse(this.props.location.search);
+    if (parsed.name) {
+      this.setState({ userName: parsed.name });
+      this.showUsers(parsed.name);
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
-    if (!nextProps.location.search.split('=').pop()) {
-      this.setState({ error: [], users: [] });
+    const parsed = queryString.parse(nextProps.location.search);
+    if (parsed.name) {
+      this.setState({ userName: parsed.name });
+      this.showUsers(parsed.name);
     } else {
-      this.showUsers(nextProps.location.search.split('=').pop());
+      this.setState({ userName: '', error: [], users: [] });
     }
   }
 
@@ -40,9 +44,9 @@ class FindUser extends Component {
   }
 
   handleSubmit = (event) => {
-    event.preventDefault(event);
+    event.preventDefault();
+    const search = this.state.userName;
     const { pathname } = this.props.location;
-    const search = this.state.userName || this.props.location.search.split('=').pop();
     const newUrl = `${pathname}?name=${search}`;
     this.props.history.push(newUrl);
     this.showUsers(search);
@@ -55,20 +59,24 @@ class FindUser extends Component {
   render() {
     const { error, users } = this.state;
     const errorMessage = error.length === 0 ? '' : error[0].msg;
-    const search = this.state.userName || this.props.location.search.split('=').pop();
+    const search = this.state.userName;
+
     let usersDisplay = '';
     if (users) {
-      usersDisplay = users.map(user => (
-        <Link to={`/profile/${user._id}`} className="one-user-search-display" key={user._id}>
-          <img
-            className="profile-pic-search"
-            src={`/static/uploads/${user.profile.picture}`}
-            alt="profile-pic"
-          />
-          <span>{user.profile.firstName} </span>
-          <span>{user.profile.lastName}</span>
-        </Link>
-      ));
+      usersDisplay = users.map((user) => {
+        const { _id: id } = user;
+        return (
+          <Link to={`/profile/${id}`} className="one-user-search-display" key={id}>
+            <img
+              className="profile-pic-search"
+              src={`/static/uploads/${user.profile.picture}`}
+              alt="profile-pic"
+            />
+            <span>{user.profile.firstName} </span>
+            <span>{user.profile.lastName}</span>
+          </Link>
+        );
+      });
     }
 
     return (

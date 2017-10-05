@@ -13,6 +13,7 @@ class TextInput extends Component {
     const { currentValue, name, type, text } = this.props;
     const className = this.props.className || '';
     const autocomplete = this.props.autocomplete || '';
+    const placeholder = this.props.placeholder || '';
     const classNameInput = `form-control ${className}`;
 
     return (
@@ -20,11 +21,12 @@ class TextInput extends Component {
         <label htmlFor={name} className="input-label">{text}</label>
         <input
           className={classNameInput}
-          defaultValue={currentValue}
+          value={currentValue}
           name={name}
           type={type}
           onChange={this.handleChange}
           autoComplete={autocomplete}
+          placeholder={placeholder}
         />
       </div>
     );
