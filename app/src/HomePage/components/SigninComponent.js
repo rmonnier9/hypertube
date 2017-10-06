@@ -18,7 +18,10 @@ const SigninComponent = (props) => {
           onSubmit={props.handleSubmit}
           onChange={props.handleChange}
         >
-          <h2 className="homepage-title">Log in to your account</h2>
+          <h2 className="homepage-title">
+            Log in to
+            <span className="homepage-hypertube-title"> Hypertube</span>
+          </h2>
           <TextField
             hintText="Your email"
             name="email"
@@ -34,13 +37,13 @@ const SigninComponent = (props) => {
             floatingLabelText="Password"
           />
           <br />
-          <RaisedButton className="homepage-submit" type="submit" name="submit" label="Send" />
+          <RaisedButton className="homepage-submit" type="submit" name="submit" label="Enter" />
           <br />
           <a target="_new" href="/api/auth/google">GoogleAuth (in progress)</a>
           <br />
-          <Link to="/forgot">Forgot password ?</Link>
-          <br /><br />
-          <Link to="/signup">Sign up ?</Link>
+          <Link to="/forgot" className="homepage-linkto">Forgot password ?</Link>
+          <br />
+          <Link to="/signup" className="homepage-linkto">Sign up ?</Link>
         </form>
       </div>
     </div>

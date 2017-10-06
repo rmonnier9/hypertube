@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import '../css/comment.css';
 
-const dateFormat = 'MMMM Do YYYY, h:mm a';
+const dateFormat = 'MMM Do YYYY, h:mm a';
 
 const capFirst = string => (
   string.charAt(0).toUpperCase() + string.slice(1)
@@ -20,10 +20,10 @@ const Comment = ({ comment }) => (
       <img className="comment-avatar" src={`/static/uploads/${comment.picture}`} alt="" />
     </a>
     <div className="comment-text-container">
-      <span className="comment-info">
-        {`${capFirst(comment.firstName)} ${capFirst(comment.lastName)} : `}
-        { moment(comment.date).format(dateFormat) }
-      </span>
+      <div className="comment-info">
+        <div>{`${capFirst(comment.firstName)} ${capFirst(comment.lastName)} `}</div>
+        <div className="comment-date">{ moment(comment.date).format(dateFormat) }</div>
+      </div>
       <p className="comment-text">{comment.text}</p>
     </div>
   </div>

@@ -1,5 +1,5 @@
 .comment-container {
-  margin-top: 15px;
+  margin-top: 30px;
 }
 
 .comment-block {
@@ -29,6 +29,10 @@
 
 .comment-info {
   color: green;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .comment-text {
@@ -42,4 +46,14 @@
 
 .comment-count {
   color: #F5F5F5;
+}
+
+a.comment-count:hover, a.comment-count:focus {
+  color: #F5F5F5;
+  text-decoration: underline;
+  text-decoration-color: green;
+}
+
+.comment-date {
+  color: grey;
 }

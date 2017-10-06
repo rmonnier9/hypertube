@@ -30,7 +30,7 @@ const InputForgot = (props) => {
           <RaisedButton className="homepage-submit" type="submit" name="submit" label="Send" />
         </form>
         <br />
-        <Link to="/signin">Back to sign in</Link>
+        <Link to="/signin" className="homepage-linkto">Nevermind, I remember...</Link>
       </div>
     </div>
   );
