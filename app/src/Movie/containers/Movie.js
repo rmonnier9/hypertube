@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import Loading from '../../General/components/Loading';
 import TorrentTable from '../components/TorrentTable';
 import CommentTable from '../../Comment/container/CommentTable';
 import '../css/movie.css';
-
-const lang = 'fr';
 
 const timing = (length) => {
   const hours = Math.trunc(length / 60);
@@ -54,6 +53,7 @@ class Movie extends Component {
 
   render() {
     const { loaded, error } = this.state;
+    const lang = this.props.locale.split('-')[0];
     const movie = this.movie;
     if (loaded === false) { return <Loading />; }
     if (error) { return <h2>{error}</h2>; }
@@ -113,4 +113,8 @@ class Movie extends Component {
   }
 }
 
-export default Movie;
+const mapStateToProps = ({ i18n: { locale } }) => ({
+  locale,
+});
+
+export default connect(mapStateToProps)(Movie);

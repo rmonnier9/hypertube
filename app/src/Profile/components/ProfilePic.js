@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
 import Dialog from '../../HomePage/components/Dialog.js';
 
 export default class ProfileProfile extends Component {
@@ -18,7 +19,10 @@ export default class ProfileProfile extends Component {
           <img className="profile-pic" src={path} alt="profile-pic" />
         </div>
         <div className="upload-new-pic">
-          <span>Upload a new profile picture</span>
+          <FormattedMessage
+            id="profile.uploadPic"
+            defaultMessage="Upload a new profile picture"
+          />
           <button
             className="material-icons camera-icon"
             onClick={this.props.handleOpen}

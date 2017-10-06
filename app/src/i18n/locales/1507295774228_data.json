@@ -1,0 +1,12 @@
+{
+  "fr-fr": {
+    "profile.name": "Nom",
+    "profile.contact": "Contact",
+    "profil.profil": "Profil"
+  },
+  "en-en": {
+    "profile.name": "Name",
+    "profile.contact": "Contact",
+    "profil.profil": "Profile"
+  }
+}

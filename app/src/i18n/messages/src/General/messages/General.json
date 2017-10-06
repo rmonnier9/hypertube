@@ -1,0 +1,10 @@
+[
+  {
+    "id": "general.search",
+    "defaultMessage": "Search"
+  },
+  {
+    "id": "general.save",
+    "defaultMessage": "Save"
+  }
+]

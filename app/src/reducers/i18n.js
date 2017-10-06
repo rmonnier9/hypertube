@@ -39,7 +39,12 @@ const initialState = {
 };
 
 function i18nReducer(state = initialState, action) {
-  if (action.payload) localStorage.setItem('lang-user', action.payload);
+  console.log('reducer action.payload', action.payload);
+  console.log('in storage', localStorage.getItem('lang-user'));
+  if (action.payload) {
+    localStorage.setItem('lang-user', action.payload);
+    document.querySelector('html').setAttribute('lang', action.payload);
+  }
   return action.type === LOCALE_CHANGE
     ? {
       locale: action.payload,

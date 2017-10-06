@@ -1,12 +1,13 @@
+
+
 {
   "fr-fr": {
-    "general.search": "Rechercher",
-    "general.save": "Sauvegarder",
     "profile.changePassword": "Changez votre mot de passe",
     "profile.name": "Nom",
     "profile.contact": "Contact",
     "profile.uploadPic": "Télécharger une nouvelle photo de profil",
     "profil.profil": "Profil",
+    "general.search": "Rechercher",
     "profile.searchMessage": "Inscrivez un nom pour le rechercher",
     "profile.firstName": "Prénom",
     "profile.lastName": "Nom de famille",
@@ -16,13 +17,12 @@
     "profile.confirmPassword": "Confirmez votre nouveau mot de passe"
   },
   "en-en": {
-    "general.search": "Search",
-    "general.save": "Save",
     "profile.changePassword": "Change my password",
     "profile.name": "Name",
     "profile.contact": "Contact",
     "profile.uploadPic": "Upload a new profile picture",
     "profil.profil": "Profile",
+    "general.search": "Search",
     "profile.searchMessage": "Enter a name to find another user",
     "profile.firstName": "First name",
     "profile.lastName": "Last Name",

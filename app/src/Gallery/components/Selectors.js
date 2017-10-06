@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-
-const lang = 'en';
+import { connect } from 'react-redux';
 
 class Selectors extends Component {
 
@@ -11,6 +10,7 @@ class Selectors extends Component {
   }
 
   render() {
+    const lang = this.props.locale.split('-')[0];
     const { filter } = this.props;
     const genreOptions = filter.genres
     .sort((a, b) => { if (a[lang] > b[lang]) return 1; return -1; })
@@ -73,4 +73,8 @@ class Selectors extends Component {
   }
 }
 
-export default Selectors;
+const mapStateToProps = ({ i18n: { locale } }) => ({
+  locale,
+});
+
+export default connect(mapStateToProps)(Selectors);

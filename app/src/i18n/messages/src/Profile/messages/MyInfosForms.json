@@ -1,0 +1,26 @@
+[
+  {
+    "id": "profile.firstName",
+    "defaultMessage": "First name"
+  },
+  {
+    "id": "profile.lastName",
+    "defaultMessage": "Last Name"
+  },
+  {
+    "id": "profile.newContact",
+    "defaultMessage": "New contact email"
+  },
+  {
+    "id": "profile.confirmChange",
+    "defaultMessage": "Confirm change with password"
+  },
+  {
+    "id": "profile.newPassword",
+    "defaultMessage": "New password"
+  },
+  {
+    "id": "profile.confirmPassword",
+    "defaultMessage": "Confirm new password"
+  }
+]

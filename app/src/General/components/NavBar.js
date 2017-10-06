@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { updateLocale } from '../../reducers/i18n';
@@ -23,10 +24,20 @@ class NavBar extends Component {
           </div>
           <ul className="nav navbar-nav">
             <li className="nav-link">
-              <Link to="/myprofile">My profile</Link>
+              <Link to="/myprofile">
+                <FormattedMessage
+                  id="nav.myprofile"
+                  defaultMessage="My profile"
+                />
+              </Link>
             </li>
             <li className="nav-link">
-              <Link to="/">Gallery</Link>
+              <Link to="/">
+                <FormattedMessage
+                  id="nav.gallery"
+                  defaultMessage="Gallery"
+                />
+              </Link>
             </li>
           </ul>
           <ul className="nav navbar-nav navbar-right">
