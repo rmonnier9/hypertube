@@ -25,8 +25,11 @@ export const postSignin = async (req, res, next) => {
       return res.send({ error: info });
     }
     const token = jwt.sign({ _id: user._id, email: user.email, provider: 'local' }, process.env.SESSION_SECRET);
+    console.log('user', user);
+    const { lang } = user.profile;
     res.set('Access-Control-Expose-Headers', 'x-access-token');
     res.set('x-access-token', token);
+    res.set('lang-user', lang);
     res.send({ error: '' });
   })(req, res, next);
 };

@@ -46,8 +46,8 @@ class OneProfile extends Component {
       <div className="profile-container">
         <h1 className="profile-title">
           <FormattedMessage
-            id="Profil"
-            defaultMessage="Profil"
+            id="profil.profil"
+            defaultMessage="Profile"
           />
         </h1>
         <div>

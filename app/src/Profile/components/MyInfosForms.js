@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
 import FormClass from './FormClass';
 
 class MyInfosForms extends Component {
@@ -89,12 +90,24 @@ class MyInfosForms extends Component {
             <span className="infos-password">Change my password</span>
             <button id="password" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
           </div>
-          <span className="infos-title"><b>Name</b></span>
+          <span className="infos-title"><b>
+            <FormattedMessage
+              id="profile.name"
+              defaultMessage="Name"
+            />
+          </b></span>
           <span>{firstName} {lastName}</span>
           <button id="name" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
         </div>
         <div>
-          <span className="infos-title"><b>Contact</b></span>
+          <span className="infos-title">
+            <b>
+              <FormattedMessage
+                id="profile.contact"
+                defaultMessage="Contact"
+              />
+            </b>
+          </span>
           <span>{email}</span>
           <button id="email" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
         </div>

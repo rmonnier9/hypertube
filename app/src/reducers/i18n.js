@@ -4,9 +4,7 @@ import localeData from '../i18n/locales/data.json';
 // Define user's language. Different browsers have the user locale defined
 // on different fields on the `navigator` object, so we make sure to account
 // for these different by checking all of them
-const defaultLanguage = (
-  navigator.languages && navigator.languages[0]) ||
-  navigator.language || navigator.userLanguage;
+const defaultLanguage = localStorage.getItem('lang-user') || 'en-en';
 
 const langWithoutRegionCode = language => language.toLowerCase().split(/[_-]+/)[0];
 
@@ -40,7 +38,8 @@ const initialState = {
   messages: localeData[defaultLanguage] || localeData[langWithoutRegionCode(defaultLanguage)] || localeData['en-en'],
 };
 
-export default function i18nReducer(state = initialState, action) {
+function i18nReducer(state = initialState, action) {
+  if (action.payload) localStorage.setItem('lang-user', action.payload);
   return action.type === LOCALE_CHANGE
     ? {
       locale: action.payload,
@@ -50,3 +49,5 @@ export default function i18nReducer(state = initialState, action) {
     }
     : state;
 }
+
+export default i18nReducer;
