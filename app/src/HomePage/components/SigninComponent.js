@@ -41,9 +41,9 @@ const SigninComponent = (props) => {
           <br />
           <a target="_new" href="/api/auth/google">GoogleAuth (in progress)</a>
           <br />
-          <Link to="/forgot" className="homepage-linkto">Forgot password ?</Link>
+          <Link to="/forgot" className="homepage-linkto">Forgot password?</Link>
           <br />
-          <Link to="/signup" className="homepage-linkto">Sign up ?</Link>
+          <Link to="/signup" className="homepage-linkto">Sign up?</Link>
         </form>
       </div>
     </div>
