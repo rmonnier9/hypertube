@@ -19,6 +19,7 @@
     "lodash": "^4.17.4",
     "material-ui": "^0.19.1",
     "moment": "^2.18.1",
+    "node": "^8.3.0",
     "prop-types": "^15.5.9",
     "query-string": "^5.0.0",
     "react": "^15.6.1",
@@ -77,8 +78,8 @@
     }
   },
   "scripts": {
-    "geni18n": "better-npm-run geni18n",
-    "buildi18n": "rm -rf ./src/i18n/messages && BABEL_ENV=i18n ./node_modules/babel-cli/bin/babel.js --quiet src > /dev/null",
+    "generate-locale": "better-npm-run geni18n",
+    "build-message": "rm -rf ./src/i18n/messages && BABEL_ENV=i18n ./node_modules/babel-cli/bin/babel.js --quiet src > /dev/null",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

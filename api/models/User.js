@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
   tokens: Array,
 
   profile: {
+    lang: String,
     firstName: String,
     lastName: String,
     gender: String,

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "profile.name",
+    "defaultMessage": "Name"
+  },
+  {
+    "id": "profile.contact",
+    "defaultMessage": "Contact"
+  }
+]
