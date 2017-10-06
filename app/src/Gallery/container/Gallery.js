@@ -128,7 +128,7 @@ class Gallery extends Component {
       movies,
       hasMoreItems,
     } = this.state;
-    const loader = <Loading />;
+    const loader = '';
     if (!this.mounted) return null;
     return (
       <div>

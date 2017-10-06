@@ -13,6 +13,7 @@ import Header from './General/components/Header';
 import MyProfile from './Profile/containers/MyProfile';
 import OneProfile from './Profile/containers/OneProfile';
 import Signin from './HomePage/containers/Signin';
+import Forgot from './HomePage/containers/Forgot';
 import Signup from './HomePage/containers/Signup';
 import Gallery from './Gallery/container/Gallery';
 import Video from './Video/components/Video';
@@ -29,6 +30,7 @@ const MatchaRouter = ({ isAuthenticated, locale }) => (
         <PrivateRoute exact path="/movie/:idImdb" isAuthenticated={isAuthenticated} component={Movie} />
         <PrivateRoute exact path="/video/:id/:hash" isAuthenticated={isAuthenticated} component={Video} />
         <Route path="/signin" component={Signin} />
+        <Route path="/forgot" component={Forgot} />
         <Route path="/signup" component={Signup} />
         <Route component={NotFound} />
       </Switch>

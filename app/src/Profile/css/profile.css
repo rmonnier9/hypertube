@@ -5,6 +5,7 @@
   margin: auto;
   max-width: 500px;
   border: 1px green solid;
+  animation: fadein 1s;
 }
 
 .profile-title {
@@ -20,6 +21,7 @@
   object-fit: cover;
   width: 250px;
   height: 250px;
+  border-radius: 50%;
 }
 
 .upload-new-pic {
@@ -61,6 +63,7 @@ button.camera-icon:hover, button.glyphicon-pencil:hover {
   padding: 15px;
   border: 2px solid green;
   position: relative;
+  animation: fadein 1s;
 }
 
 .infos-form:before {
@@ -99,6 +102,7 @@ button.camera-icon:hover, button.glyphicon-pencil:hover {
   width: 25px;
   height: 25px;
   margin-right: 5px;
+  border-radius: 50%;
 }
 
 .one-user-search-display {

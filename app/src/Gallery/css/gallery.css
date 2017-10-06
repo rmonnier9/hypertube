@@ -5,6 +5,7 @@
 
 .card-container {
   margin: 10px;
+    animation: fadein 1s;
 }
 
 .img-container {

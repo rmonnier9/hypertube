@@ -7,10 +7,6 @@ class CommentInput extends Component {
 
   state = { text: '' };
 
-  componentDidMount() {
-    document.getElementsByClassName('comment-input')[0].setAttribute('placeholder', 'Type your comment');
-  }
-
   saveInput = (name, value) => {
     this.setState({ text: value });
   }
@@ -33,6 +29,7 @@ class CommentInput extends Component {
             name="comment"
             type="text"
             onChange={this.saveInput}
+            placeholder="Type your comment"
           />
         </form>
       </CommentBlock>

@@ -38,7 +38,7 @@ export const postSignin = async (req, res, next) => {
  */
 export const postSignup = async (req, res, next) => {
   req.checkBody('email', 'Email is not valid').isEmail();
-  req.checkBody('password', 'Password must be at least 4 characters long').len({ max: 6 });
+  req.checkBody('password', 'Password must be between 4 and 12 characters').len({ min: 4, max: 12 });
   req.checkBody('password', 'Password must contain at least one uppercase, one lowercase and one digit.')
     .matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/);
   req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
