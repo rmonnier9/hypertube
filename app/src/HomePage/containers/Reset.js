@@ -1,27 +1,36 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-import InputForgot from '../components/InputForgot.js';
+import InputReset from '../components/InputReset.js';
 
-class Forgot extends Component {
+class Reset extends Component {
 
   state = {
     password: '',
+    confirm: '',
     successMessage: '',
     error: [],
   }
 
   handleChange = ({ target: { name, value } }) => this.setState({ [name]: value, error: [] });
 
-  sendMail = (event) => {
+  resetPassword = (event) => {
     event.preventDefault();
-    const { email } = this.state;
-    const url = '/api/forgot';
-    axios.post(url, { email: email.trim() })
+    const token = this.props.location.pathname.split('/').pop();
+    const { password, confirm } = this.state;
+    const url = `/api/reset/${token}`;
+    axios.post(
+      url,
+      {
+        password: password.trim(),
+        confirm: confirm.trim(),
+      },
+    )
     .then(({ data: { error } }) => {
+      console.log(error);
       if (error.length === 0) {
         this.setState({
           error,
-          successMessage: 'An email has been sent to reset your password.',
+          successMessage: 'Your password has been changed. You can now log in.',
         });
       } else {
         this.setState({ error, successMessage: '' });
@@ -40,8 +49,8 @@ class Forgot extends Component {
 
     return (
       <div>
-        <InputForgot
-          handleSubmit={this.sendMail}
+        <InputReset
+          handleSubmit={this.resetPassword}
           handleChange={this.handleChange}
           error={error}
           successMessage={successMessage}
@@ -51,4 +60,4 @@ class Forgot extends Component {
   }
 }
 
-export default Forgot;
+export default Reset;

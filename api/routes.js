@@ -15,8 +15,8 @@ const routes = async (app, passport, upload) => {
   app.post('/api/signin', connect.postSignin);
   app.post('/api/signup/info', connect.postSignup);
   app.post('/api/signup/upload', upload.single('imageUploaded'), picture.postSignupPicture);
-  app.post('/api/forgot', user.postForgot); // not implemented front-end
-  app.post('/api/reset/:token', user.postReset); // not implemented front-end
+  app.post('/api/forgot', user.postForgot);
+  app.post('/api/reset/:token', user.postReset);
 
   app.get('/api/movie/stream/:id/:hash', spiderTorrent);
 

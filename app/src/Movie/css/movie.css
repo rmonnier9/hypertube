@@ -52,8 +52,9 @@
   box-shadow:inset 1px 1px 40px 0 rgba(100,100,100,.45);
 }
 
-button.play {
+a.play {
   background-color: transparent;
+  color: #F5F5F5;
   cursor: pointer;
   border: none;
   font-size: 1.3em;
@@ -61,7 +62,7 @@ button.play {
   margin: 0;
 }
 
-button.play:hover {
+a.play:hover {
   color: yellow;
 }
 

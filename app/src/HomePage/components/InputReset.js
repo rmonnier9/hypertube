@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-const InputForgot = (props) => {
+const InputReset = (props) => {
   const error = {};
   props.error.forEach((field) => {
     error[field.param] = field.msg;
@@ -19,23 +19,33 @@ const InputForgot = (props) => {
           onSubmit={props.handleSubmit}
           onChange={props.handleChange}
         >
-          <h2 className="homepage-title">Forgot password</h2>
+          <h2 className="homepage-title">Change password</h2>
           <TextField
-            hintText="Your email"
-            name="email"
-            errorText={error.email}
-            floatingLabelText="Email"
+            hintText="Your new password"
+            type="password"
+            name="password"
+            errorText={error.password}
+            floatingLabelText="Password"
+          />
+          <br />
+          <TextField
+            hintText="Your new password"
+            type="password"
+            name="confirm"
+            errorText={error.confirm}
+            floatingLabelText="Confirm password"
           />
           <br />
           <RaisedButton className="homepage-submit" type="submit" name="submit" label="Send" />
         </form>
         <br />
         <div style={{ color: 'green' }}>{successMessage}</div>
+        <div style={{ color: 'red' }}>{error.token}</div>
         <br />
-        <Link to="/signin" className="homepage-linkto">Nevermind, I remember...</Link>
+        <Link to="/signin" className="homepage-linkto">Log in?</Link>
       </div>
     </div>
   );
 };
 
-export default InputForgot;
+export default InputReset;

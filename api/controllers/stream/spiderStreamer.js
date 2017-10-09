@@ -258,11 +258,6 @@ spiderStreamer.settings = (s) => {
   return spiderStreamer;
 };
 
-spiderStreamer.settings = function(s) {
-	for (var prop in s) { settings[prop] = s[prop]; }
-	return spiderStreamer;
-};
-
 const downloadHeader = (res, info) => {
   let code = 200;
   let header;

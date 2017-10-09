@@ -5,15 +5,13 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import PrivateRoute from './PrivateRoute';
 
-// Components
 import NotFound from './General/components/NotFound.js';
-
-// Containers
 import Header from './General/components/Header';
 import MyProfile from './Profile/containers/MyProfile';
 import OneProfile from './Profile/containers/OneProfile';
 import Signin from './HomePage/containers/Signin';
 import Forgot from './HomePage/containers/Forgot';
+import Reset from './HomePage/containers/Reset';
 import Signup from './HomePage/containers/Signup';
 import Gallery from './Gallery/container/Gallery';
 import Video from './Video/components/Video';

@@ -144,7 +144,6 @@ class Gallery extends Component {
           pageStart={0}
           loadMore={this.loadItems}
           hasMore={hasMoreItems}
-          loader={loader}
         >
           <MovieList
             movies={movies}

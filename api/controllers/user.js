@@ -1,7 +1,7 @@
 import bluebird from 'bluebird';
-import nodemailer from 'nodemailer';
 import mongoose from 'mongoose';
 import User from '../models/User';
+import mail from './mail';
 
 const crypto = bluebird.promisifyAll(require('crypto'));
 
@@ -238,43 +238,26 @@ export const postReset = async (req, res, next) => {
       .where('passwordResetExpires').gt(Date.now())
       .then((user) => {
         if (!user) {
-          return res.send({ error: 'Password reset token is invalid or has expired.' });
+          return res.send({ error: [{ param: 'token', msg: 'Password reset token is invalid or has expired.' }] });
         }
         user.password = req.body.password;
         user.passwordResetToken = undefined;
         user.passwordResetExpires = undefined;
-        return user.save().then(() => new Promise((resolve, reject) => {
-          req.logIn(user, (err) => {
-            if (err) { return reject(err); }
-            resolve(user);
-          });
-        }));
+        user = user.save();
+        return user;
       });
 
   const sendResetPasswordEmail = (user) => {
+    console.log('email', user.email);
     if (!user) { return; }
-    const transporter = nodemailer.createTransport({
-      service: 'SendGrid',
-      auth: {
-        user: process.env.SENDGRID_USER,
-        pass: process.env.SENDGRID_PASSWORD
-      }
-    });
-    const mailOptions = {
-      to: user.email,
-      from: 'hackathon@starter.com',
-      subject: 'Your Hackathon Starter password has been changed',
-      text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
-    };
-    return transporter.sendMail(mailOptions)
-      .then(() => (
-        res.send({ error: '' })
-      ));
+    const subject = 'Your Hypertube password has been changed';
+    const content = `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`;
+    mail(user.email, subject, content);
+    return res.send({ error: [] });
   };
 
   resetPassword()
     .then(sendResetPasswordEmail)
-    .then(() => { if (!res.finished) res.redirect('/'); })
     .catch(err => next(err));
 };
 
@@ -283,7 +266,6 @@ export const postReset = async (req, res, next) => {
  * Create a random token, then the send user an email with a reset link.
  */
 export const postForgot = async (req, res, next) => {
-  console.log(req.body.email);
   req.checkBody('email', 'Please enter a valid email address.').isEmail();
   req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
 
@@ -314,26 +296,10 @@ export const postForgot = async (req, res, next) => {
   const sendForgotPasswordEmail = (user) => {
     if (!user) { return; }
     const token = user.passwordResetToken;
-    const transporter = nodemailer.createTransport({
-      service: 'SendGrid',
-      auth: {
-        user: process.env.SENDGRID_USER,
-        pass: process.env.SENDGRID_PASSWORD
-      }
-    });
-    const mailOptions = {
-      to: user.email,
-      from: 'api.hypertube@42.fr',
-      subject: 'Reset your password',
-      text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
-        Please click on the following link, or paste this into your browser to complete the process:\n\n
-        http://${req.headers.host}/reset/${token}\n\n
-        If you did not request this, please ignore this email and your password will remain unchanged.\n`
-    };
-    return transporter.sendMail(mailOptions)
-      .then(() => (
-        { error: [] }
-      ));
+    const subject = 'Reset your Hypertube password';
+    const content = `Hello,\n\nPlease click on the following link, or paste this into your browser, to choose a new password: http://${req.headers['x-forwarded-host']}/reset/${token}`;
+    mail(user.email, subject, content);
+    return res.send({ error: [] });
   };
 
   createRandomToken
