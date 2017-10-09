@@ -1,7 +1,8 @@
 import bluebird from 'bluebird';
 import mongoose from 'mongoose';
 import User from '../models/User';
-import mail from './mail';
+import * as mail from './mail';
+import checkReq from './checkReq';
 
 const crypto = bluebird.promisifyAll(require('crypto'));
 
@@ -25,11 +26,7 @@ export const postUpdateProfile = async (req, res, next) => {
   const { id } = req.body;
   switch (id) {
     case 'name-form': {
-      req.checkBody('firstName', 'First name can\'t be more than 20 letters long').len({ max: 20 });
-      req.checkBody('lastName', 'Last name can\'t be more than 20 letters long').len({ max: 20 });
-
-      const validationObj = await req.getValidationResult();
-      const error = validationObj.array();
+      const error = await checkReq(req);
 
       if (error.length) {
         return res.send({ error });
@@ -53,12 +50,7 @@ export const postUpdateProfile = async (req, res, next) => {
     }
 
     case 'email-form': {
-      req.checkBody('email', 'Please enter a valid email address.').isEmail();
-      req.checkBody('password', 'Password cannot be blank').notEmpty();
-      req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
-
-      const validationObj = await req.getValidationResult();
-      const error = validationObj.array();
+      const error = await checkReq(req);
 
       if (error.length) {
         return res.send({ error });
@@ -88,11 +80,7 @@ export const postUpdateProfile = async (req, res, next) => {
     }
 
     case 'password-form': {
-      req.checkBody('password', 'Password must be at least 4 characters long').len(4);
-      req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
-
-      const validationObj = await req.getValidationResult();
-      const error = validationObj.array();
+      const error = await checkReq(req);
 
       if (error.length) {
         return res.send({ error });
@@ -100,12 +88,14 @@ export const postUpdateProfile = async (req, res, next) => {
 
       User.findById(req.user.id, (err, user) => {
         if (err) { return next(err); }
-        user.password = req.body.password;
+        user.password = req.body.newPassword;
         user.save((err) => {
           if (err) { return next(err); }
+          mail.sendResetPasswordEmail(user);
           return res.send({ error: '', user });
         });
       });
+
       break;
     }
     default:
@@ -182,31 +172,6 @@ export const getAccountById = (req, res, next) => {
 };
 
 /**
- * POST /me/password
- * Update current password.
- */
-export const postUpdatePassword = async (req, res, next) => {
-  req.checkBody('password', 'Password must be at least 4 characters long').len(4);
-  req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
-
-  const validationObj = await req.getValidationResult();
-  const error = validationObj.array();
-
-  if (error.length) {
-    return res.send({ error });
-  }
-
-  User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
-    user.password = req.body.password;
-    user.save((err) => {
-      if (err) { return next(err); }
-      return res.send({ error: '' });
-    });
-  });
-};
-
-/**
  * DELETE /me
  * Delete user account.
  */
@@ -222,42 +187,28 @@ export const deleteDeleteAccount = (req, res, next) => {
  * Process the reset password request.
  */
 export const postReset = async (req, res, next) => {
-  req.checkBody('password', 'Password must be at least 4 characters long.').len(4);
-  req.checkBody('confirm', 'Passwords must match.').equals(req.body.password);
-
-  const validationObj = await req.getValidationResult();
-  const error = validationObj.array();
+  const error = await checkReq(req);
 
   if (error.length) {
     return res.send({ error });
   }
 
-  const resetPassword = () =>
-    User
-      .findOne({ passwordResetToken: req.params.token })
-      .where('passwordResetExpires').gt(Date.now())
-      .then((user) => {
-        if (!user) {
-          return res.send({ error: [{ param: 'token', msg: 'Password reset token is invalid or has expired.' }] });
-        }
-        user.password = req.body.password;
-        user.passwordResetToken = undefined;
-        user.passwordResetExpires = undefined;
-        user = user.save();
-        return user;
+  User
+    .findOne({ passwordResetToken: req.params.token })
+    .where('passwordResetExpires').gt(Date.now())
+    .then((user) => {
+      if (!user) {
+        return res.send({ error: [{ param: 'token', msg: 'Password reset token is invalid or has expired.' }] });
+      }
+      user.password = req.body.password;
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      user.save((err) => {
+        if (err) { return next(err); }
+        mail.sendResetPasswordEmail(user);
+        return res.send({ error: [] });
       });
-
-  const sendResetPasswordEmail = (user) => {
-    console.log('email', user.email);
-    if (!user) { return; }
-    const subject = 'Your Hypertube password has been changed';
-    const content = `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`;
-    mail(user.email, subject, content);
-    return res.send({ error: [] });
-  };
-
-  resetPassword()
-    .then(sendResetPasswordEmail)
+    })
     .catch(err => next(err));
 };
 
@@ -266,11 +217,7 @@ export const postReset = async (req, res, next) => {
  * Create a random token, then the send user an email with a reset link.
  */
 export const postForgot = async (req, res, next) => {
-  req.checkBody('email', 'Please enter a valid email address.').isEmail();
-  req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
-
-  const validationObj = await req.getValidationResult();
-  const error = validationObj.array();
+  const error = await checkReq(req);
 
   if (error.length) {
     return res.send({ error });
@@ -280,7 +227,7 @@ export const postForgot = async (req, res, next) => {
     .randomBytesAsync(16)
     .then(buf => buf.toString('hex'));
 
-  const setRandomToken = token =>
+  const setRandomToken = (token) => {
     User
       .findOne({ email: req.body.email })
       .then((user) => {
@@ -289,21 +236,16 @@ export const postForgot = async (req, res, next) => {
         }
         user.passwordResetToken = token;
         user.passwordResetExpires = Date.now() + 3600000; // 1 hour
-        user = user.save();
-        return user;
+        user.save((err) => {
+          if (err) { return next(err); }
+          const header = req.headers['x-forwarded-host'];
+          mail.sendForgotPasswordEmail(user, header);
+          return res.send({ error: [] });
+        });
       });
-
-  const sendForgotPasswordEmail = (user) => {
-    if (!user) { return; }
-    const token = user.passwordResetToken;
-    const subject = 'Reset your Hypertube password';
-    const content = `Hello,\n\nPlease click on the following link, or paste this into your browser, to choose a new password: http://${req.headers['x-forwarded-host']}/reset/${token}`;
-    mail(user.email, subject, content);
-    return res.send({ error: [] });
   };
 
   createRandomToken
     .then(setRandomToken)
-    .then(sendForgotPasswordEmail)
-    .catch(next);
+    .catch(err => next(err));
 };

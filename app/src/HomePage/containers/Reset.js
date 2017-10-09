@@ -6,7 +6,7 @@ class Reset extends Component {
 
   state = {
     password: '',
-    confirm: '',
+    confirmPassword: '',
     successMessage: '',
     error: [],
   }
@@ -16,17 +16,16 @@ class Reset extends Component {
   resetPassword = (event) => {
     event.preventDefault();
     const token = this.props.location.pathname.split('/').pop();
-    const { password, confirm } = this.state;
+    const { password, confirmPassword } = this.state;
     const url = `/api/reset/${token}`;
     axios.post(
       url,
       {
-        password: password.trim(),
-        confirm: confirm.trim(),
+        newPassword: password.trim(),
+        confirmPassword: confirmPassword.trim(),
       },
     )
     .then(({ data: { error } }) => {
-      console.log(error);
       if (error.length === 0) {
         this.setState({
           error,

@@ -12,6 +12,7 @@ class UpdateMyInfos extends Component {
     confirmPassword: '',
     change: { email: '', firstName: '', lastName: '' },
     error: [{ param: '', msg: '', value: '' }],
+    success: false,
   }
 
   saveState = (name, value) => {
@@ -32,7 +33,7 @@ class UpdateMyInfos extends Component {
     } else if (id === 'email-form') {
       infos = { id, email, password };
     } else if (id === 'password-form') {
-      infos = { id, password, confirmPassword };
+      infos = { id, newPassword: password, confirmPassword };
     }
     const url = '/api/me';
     axios.post(url, infos)

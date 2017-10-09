@@ -11,7 +11,6 @@ const routes = async (app, passport, upload) => {
   /**
    * Primary app routes.
    */
-
   app.post('/api/signin', connect.postSignin);
   app.post('/api/signup/info', connect.postSignup);
   app.post('/api/signup/upload', upload.single('imageUploaded'), picture.postSignupPicture);
@@ -25,8 +24,8 @@ const routes = async (app, passport, upload) => {
 
   app.get('/api/me', user.getMyAccount);
   app.post('/api/me', user.postUpdateProfile);
-  app.delete('/api/me', user.deleteDeleteAccount);
-  app.post('/api/me/password', user.postUpdatePassword);
+  app.delete('/api/me', user.deleteDeleteAccount); // not implemented
+  // app.post('/api/me/password', user.postUpdatePassword);
   app.post('/api/profile_pic', upload.single('imageUploaded'), picture.newPicture);
   app.get('/api/profile/:name', user.getAccount);
   app.get('/api/profile/id/:id', user.getAccountById);
@@ -37,7 +36,6 @@ const routes = async (app, passport, upload) => {
 
   app.get('/api/genres', genre.getGenreTable);
 
-  // not implemented
   app.get('/api/gallery/search', search.getSearch);
 
   /**

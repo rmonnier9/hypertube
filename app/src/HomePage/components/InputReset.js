@@ -24,15 +24,15 @@ const InputReset = (props) => {
             hintText="Your new password"
             type="password"
             name="password"
-            errorText={error.password}
+            errorText={error.newPassword}
             floatingLabelText="Password"
           />
           <br />
           <TextField
             hintText="Your new password"
             type="password"
-            name="confirm"
-            errorText={error.confirm}
+            name="confirmPassword"
+            errorText={error.confirmPassword}
             floatingLabelText="Confirm password"
           />
           <br />
