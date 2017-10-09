@@ -5,7 +5,7 @@ class TextInput extends Component {
   handleChange = (event) => {
     event.preventDefault();
     const name = event.target.name;
-    const value = event.target.value.trim();
+    const value = event.target.value;
     this.props.onChange(name, value);
   }
 

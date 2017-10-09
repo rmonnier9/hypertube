@@ -3,7 +3,13 @@ import React from 'react';
 import Card from './Card.js';
 
 const MovieList = ({ movies }) => {
-  if (!movies) { return null; }
+  if (movies.length === 0) {
+    return (
+      <div className="no-movie">
+        No movies here for that search.
+      </div>
+    );
+  }
 
   const Cards = movies
   .filter(movie => movie.idImdb)

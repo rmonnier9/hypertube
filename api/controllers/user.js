@@ -1,5 +1,4 @@
 import bluebird from 'bluebird';
-import nodemailer from 'nodemailer';
 import mongoose from 'mongoose';
 import User from '../models/User';
 import mail from './mail';
