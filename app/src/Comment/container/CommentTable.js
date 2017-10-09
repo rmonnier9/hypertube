@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { FormattedPlural, injectIntl } from 'react-intl';
 import CommentList from '../components/CommentList';
 import CommentInput from '../components/CommentInput';
 
@@ -49,14 +50,19 @@ class CommentTable extends Component {
 
   render() {
     const { comments, open, loaded } = this.state;
+    const { formatMessage } = this.props.intl;
     if (!loaded) return null;
     return (
       <div className="comment-container">
         <h4>
           <i className="glyphicon glyphicon-comment comment-icon" />
           <a className="comment-count" href="" onClick={this.handleOpen}>
-            {`${comments.length} ` }
-            { comments.length > 1 ? 'comments' : 'comment' }
+            {` ${comments.length} `}
+            <FormattedPlural
+              value={comments.length}
+              one={formatMessage({ id: 'comments.comment' })}
+              other={formatMessage({ id: 'comments.comments' })}
+            />
           </a>
         </h4>
         { !open ? null :
@@ -70,4 +76,4 @@ class CommentTable extends Component {
   }
 }
 
-export default CommentTable;
+export default injectIntl(CommentTable);

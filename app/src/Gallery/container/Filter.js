@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import queryString from 'query-string';
 
 import SubmitForm from '../../General/components/SubmitForm.js';
@@ -44,20 +45,24 @@ class Filter extends Component {
 
   render() {
     const filter = { ...this.state };
-
     return (
       <form className="selects-container" id="user-form" onSubmit={this.handleSubmit}>
         <Selectors
+          locale={this.props.locale}
           filter={filter}
           onSelect={this.saveState}
         />
         <SubmitForm
           className="btn btn-default gallery-search-button"
-          value="Filter"
+          id="gallery.filter"
         />
       </form>
     );
   }
 }
 
-export default Filter;
+const mapStateToProps = ({ i18n: { locale } }) => ({
+  locale,
+});
+
+export default connect(mapStateToProps)(Filter);

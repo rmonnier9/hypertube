@@ -1,15 +1,20 @@
 import { defineMessages } from 'react-intl';
 
-export const searchObject = defineMessages({
+export const searchValue = defineMessages({
   search: {
     id: 'general.search',
     defaultMessage: 'Search',
   },
-});
-
-export const saveObject = defineMessages({
-  search: {
+  save: {
     id: 'general.save',
     defaultMessage: 'Save',
+  },
+  myprofile: {
+    id: 'nav.myprofile',
+    defaultMessage: 'MY PROFIL',
+  },
+  gallery: {
+    id: 'nav.gallery',
+    defaultMessage: 'GALLERY',
   },
 });

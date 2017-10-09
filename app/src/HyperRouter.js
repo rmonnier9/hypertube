@@ -22,17 +22,17 @@ import Movie from './Movie/containers/Movie';
 const MatchaRouter = ({ isAuthenticated, locale }) => (
   <Router>
     <div>
-      <Header />
+      <Header key={locale} />
       <Switch>
-        <PrivateRoute exact path="/" isAuthenticated={isAuthenticated} component={Gallery} />
-        <PrivateRoute exact path="/myprofile" isAuthenticated={isAuthenticated} component={MyProfile} />
-        <PrivateRoute exact path="/profile/:id" isAuthenticated={isAuthenticated} component={OneProfile} />
-        <PrivateRoute exact path="/movie/:idImdb" isAuthenticated={isAuthenticated} component={Movie} />
-        <PrivateRoute exact path="/video/:id/:hash" isAuthenticated={isAuthenticated} component={Video} />
-        <Route path="/signin" component={Signin} />
-        <Route path="/forgot" component={Forgot} />
-        <Route path="/signup" component={Signup} />
-        <Route component={NotFound} />
+        <PrivateRoute exact path="/" key={locale} isAuthenticated={isAuthenticated} component={Gallery} />
+        <PrivateRoute exact path="/myprofile" key={locale} isAuthenticated={isAuthenticated} component={MyProfile} />
+        <PrivateRoute exact path="/profile/:id" key={locale} isAuthenticated={isAuthenticated} component={OneProfile} />
+        <PrivateRoute exact path="/movie/:idImdb" key={locale} isAuthenticated={isAuthenticated} component={Movie} />
+        <PrivateRoute exact path="/video/:id/:hash" key={locale} isAuthenticated={isAuthenticated} component={Video} />
+        <Route path="/signin" key={locale} component={Signin} />
+        <Route path="/forgot" key={locale} component={Forgot} />
+        <Route path="/signup" key={locale} component={Signup} />
+        <Route key={locale} component={NotFound} />
       </Switch>
     </div>
   </Router>

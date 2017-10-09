@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { injectIntl } from 'react-intl';
 import moment from 'moment';
 import '../css/comment.css';
 
@@ -29,23 +30,28 @@ const Comment = ({ comment }) => (
   </div>
 );
 
-const CommentList = ({ comments }) => {
-  if (!comments || !comments.length) {
+class CommentList extends Component {
+
+  render() {
+    const ifOne = this.props.intl.formatMessage({ id: 'comments.ifOne' });
+    const { comments } = this.props;
+    if (!comments || !comments.length) {
+      return (
+        <CommentBlock>
+          { ifOne }
+        </CommentBlock>
+      );
+    }
     return (
-      <CommentBlock>
-        Be the first to comment this movie !
-      </CommentBlock>
+      <div>
+        {comments.map(comment => (
+          <CommentBlock key={comment.id}>
+            <Comment comment={comment} />
+          </CommentBlock>
+      ))}
+      </div>
     );
   }
-  return (
-    <div>
-      {comments.map(comment => (
-        <CommentBlock key={comment.id}>
-          <Comment comment={comment} />
-        </CommentBlock>
-    ))}
-    </div>
-  );
-};
+}
 
-export default CommentList;
+export default injectIntl(CommentList);

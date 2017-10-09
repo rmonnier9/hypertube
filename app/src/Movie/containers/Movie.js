@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import { injectIntl } from 'react-intl';
 import Loading from '../../General/components/Loading';
 import TorrentTable from '../components/TorrentTable';
 import CommentTable from '../../Comment/container/CommentTable';
@@ -72,6 +73,10 @@ class Movie extends Component {
     const timeObj = timing(movie.runtime);
     const time = `${timeObj.hours}h${timeObj.minutes}`;
 
+    const witho = this.props.intl.formatMessage({ id: 'movie.with' });
+    const director = this.props.intl.formatMessage({ id: 'movie.director' });
+    const genresValue = this.props.intl.formatMessage({ id: 'movie.genres' });
+
     return (
       <div className="movie-container">
         <img className="movie-poster" src={movie.posterLarge} alt="movie" />
@@ -93,15 +98,15 @@ class Movie extends Component {
           </div>
           <div className="movie-details">
             <div>
-              <span className="movie-details-text">With:</span>
+              <span className="movie-details-text">{witho}:</span>
               { actors }
             </div>
             <div>
-              <span className="movie-details-text">Director:</span>
+              <span className="movie-details-text">{director}:</span>
               { movie.director }
             </div>
             <div>
-              <span className="movie-details-text">Genres:</span>
+              <span className="movie-details-text">{genresValue}:</span>
               { genres }
             </div>
           </div>
@@ -117,4 +122,4 @@ const mapStateToProps = ({ i18n: { locale } }) => ({
   locale,
 });
 
-export default connect(mapStateToProps)(Movie);
+export default injectIntl(connect(mapStateToProps)(Movie));

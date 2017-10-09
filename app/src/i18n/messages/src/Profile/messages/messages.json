@@ -1,5 +1,9 @@
 [
   {
+    "id": "profile.searchMessage",
+    "defaultMessage": "Enter a name to find another user"
+  },
+  {
     "id": "profile.firstName",
     "defaultMessage": "First name"
   },
@@ -22,5 +26,17 @@
   {
     "id": "profile.confirmPassword",
     "defaultMessage": "Confirm new password"
+  },
+  {
+    "id": "profile.changePassword",
+    "defaultMessage": "Change your password"
+  },
+  {
+    "id": "profile.name",
+    "defaultMessage": "Name"
+  },
+  {
+    "id": "profile.contact",
+    "defaultMessage": "Contact"
   }
 ]
