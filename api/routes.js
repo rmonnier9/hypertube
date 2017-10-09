@@ -18,7 +18,7 @@ const routes = async (app, passport, upload) => {
   app.post('/api/forgot', user.postForgot);
   app.post('/api/reset/:token', user.postReset);
 
-  app.get('/api/movie/stream/:id/:hash', spiderTorrent);
+  app.get('/api/movie/stream/:idImdb/:hash', spiderTorrent);
 
   // Logged part  ====================
   app.use(passport.authenticate('jwt', { session: false }));

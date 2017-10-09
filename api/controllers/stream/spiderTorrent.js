@@ -22,7 +22,7 @@ const settings = {
 
 const engineHash = {};
 
-const setUpEngine = (engine, file, movie, torrent) => {
+const setUpEngine = (engine, file, torrent) => {
   engine.on('download', (pieceIndex) => {
     // if (pieceIndex % 10 == 0) {
     console.log('torrentStream Notice: Engine', engine.hashIndex, 'downloaded piece: Index:', pieceIndex, '(', engine.swarm.downloaded, '/', file.length, ')');
@@ -34,13 +34,12 @@ const setUpEngine = (engine, file, movie, torrent) => {
       engine.swarm.downloaded, '/', file.length, '); destroying');
     engine.removeAllListeners();
     engine.destroy();
-    console.log('torrentStream Notice: Movie set as downloaded:', movie.title);
+    console.log('torrentStream Notice: Torrent set as downloaded:', torrent.hash);
     torrent.data.downloaded = true;
-    movie.save();
   });
 };
 
-const getFileStreamTorrent = async (magnet, torrentPath, movie, torrent) => {
+const getFileStreamTorrent = async (magnet, torrentPath, torrent) => {
   let engine;
   let file;
 
@@ -74,7 +73,7 @@ const getFileStreamTorrent = async (magnet, torrentPath, movie, torrent) => {
       throw (new Error('no valid movie file found.'));
     }
   });
-  setUpEngine(engine, file, movie, torrent);
+  setUpEngine(engine, file, torrent);
   engineHash[torrentPath] = { engine, file };
   return file;
 };
@@ -86,8 +85,7 @@ const spiderTorrent = async (req, res) => {
   console.log('spiderTorrent Notice: Headers:', req.headers);
 
   // INPUT CHECK
-  let idImdb;
-  let hash;
+  const { idImdb, hash } = req.params;
   let torrent;
   if (!idImdb || !hash) {
     console.log('spiderTorrent Error:'.red, 'Invalid request:', req.params);
@@ -105,31 +103,21 @@ const spiderTorrent = async (req, res) => {
   });
   console.log('spiderTorrent Notice: Found title and hash:', movie.title);
 
-
-  const torrentPath = `./torrents/${idImdb}/${hash}`;
-
   // If download had aleady started
   if (!torrent.data || !torrent.data.downloaded) {
     console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', movie.title);
 
-    const file = await getFileStreamTorrent(`magnet:?xt=urn:btih:${hash}`, torrentPath, movie, torrent);
+    const path = `./torrents/${idImdb}/${hash}`;
+    const file = await getFileStreamTorrent(`magnet:?xt=urn:btih:${hash}`, path, movie, torrent);
     file.select();
     torrent.data = {
+      path,
       name: file.name,
-      length: file.length,
-      path: torrentPath,
+      size: file.length,
       torrentDate: new Date(),
     };
-    startConversion(torrent.data, file.createReadStream());
+    startConversion(torrent, file.createReadStream());
     movie.save();
-  } else {
-    console.log('spiderTorrent Notice: Movie data found for', movie.title, torrent.hash);
-    const stat = await fs.statAsync(torrent.data.path);
-    // console.log('spiderTorrent Notice: Movie size comparison:', stat.size, torrent.data.length);
-    if (stat.size >= torrent.data.length || torrent.data.downloaded) {
-      /* Does not work: file always final size; poential fix? */
-      console.log('spiderTorrent Notice: Movie already torrented; streaming:', movie.title, torrent.hash);
-    }
   }
   return spiderStreamer(torrent.data, req, res);
 };
