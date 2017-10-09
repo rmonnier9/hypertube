@@ -18,13 +18,14 @@ const spiderStreamer = (data, req, res) => (
       console.log('spiderStreamer Notice:', data.path, ' size:', stat.size);
       if (stat.size > 5000000) {
         clearInterval(intervalId);
-        return resolve(stat.size);
-      }
-      console.log('spiderStreamer Notice: Movie file not yet big enough; fails:', fails);
-      ++fails;
-      if (fails > 30) {
-        clearInterval(intervalId);
-        reject('Movie file never grew to at least 5mb');
+        resolve(stat.size);
+      } else {
+        console.log('spiderStreamer Notice: Movie file not yet big enough; fails:', fails);
+        ++fails;
+        if (fails > 30) {
+          clearInterval(intervalId);
+          reject('Movie file never grew to at least 5mb');
+        }
       }
     }, 2000);
   })).then(

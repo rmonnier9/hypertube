@@ -25,12 +25,12 @@ const engineHash = {};
 const setUpEngine = (engine, file, torrent) => {
   engine.on('download', (pieceIndex) => {
     // if (pieceIndex % 10 == 0) {
-    console.log('torrentStream Notice: Engine', engine.hashIndex, 'downloaded piece: Index:', pieceIndex, '(', engine.swarm.downloaded, '/', file.length, ')');
+    console.log('torrentStream Notice: Engine', engine.infoHash, 'downloaded piece: Index:', pieceIndex, '(', engine.swarm.downloaded, '/', file.length, ')');
     // }
   });
   engine.on('idle', () => {
-    console.log('torrentStream Notice: Engine', engine.hashIndex, 'idle');
-    console.log('torrentStream Notice: Engine', engine.hashIndex, 'downloaded (',
+    console.log('torrentStream Notice: Engine', engine.infoHash, 'idle');
+    console.log('torrentStream Notice: Engine', engine.infoHash, 'downloaded (',
       engine.swarm.downloaded, '/', file.length, '); destroying');
     engine.removeAllListeners();
     engine.destroy();
@@ -39,7 +39,7 @@ const setUpEngine = (engine, file, torrent) => {
   });
 };
 
-const getFileStreamTorrent = async (magnet, torrentPath, torrent) => {
+const getFileStreamTorrent = (magnet, torrentPath, torrent) => new Promise((resolve, reject) => {
   let engine;
   let file;
 
@@ -47,7 +47,7 @@ const getFileStreamTorrent = async (magnet, torrentPath, torrent) => {
   if (engineHash[torrentPath]) {
     engine = engineHash[torrentPath].engine;
     file = engineHash[torrentPath].file;
-    return file;
+    resolve(file);
   }
 
   // DOWNLOAD HAD NOT ALREADY STARTED
@@ -70,15 +70,16 @@ const getFileStreamTorrent = async (magnet, torrentPath, torrent) => {
     if (!file) {
       engine.removeAllListeners();
       engine.destroy();
-      throw (new Error('no valid movie file found.'));
+      reject(new Error('no valid movie file found.'));
     }
+    file.select();
+    setUpEngine(engine, file, torrent);
+    engineHash[torrentPath] = { engine, file };
+    resolve(file);
   });
-  setUpEngine(engine, file, torrent);
-  engineHash[torrentPath] = { engine, file };
-  return file;
-};
+});
 
-/* Called by video player */
+// ROUTE CONTROLLER
 const spiderTorrent = async (req, res) => {
   // console.log('spiderTorrent Notice: Request:', req);
   console.log('spiderTorrent Notice: Query:', req.params);
@@ -91,11 +92,11 @@ const spiderTorrent = async (req, res) => {
     console.log('spiderTorrent Error:'.red, 'Invalid request:', req.params);
     return handler.emit('badRequest', res);
   }
-  // Query for movie
   const movie = await Movie.findOne({ idImdb, 'torrents.hash': hash });
   if (!movie) {
     return handler.emit('noMovie', res);
   }
+  // SELECT CORRESPONDING TORRENT
   movie.torrents.forEach((currentTorrent) => {
     if (currentTorrent.hash === hash) {
       torrent = currentTorrent;
@@ -108,15 +109,14 @@ const spiderTorrent = async (req, res) => {
     console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', movie.title);
 
     const path = `./torrents/${idImdb}/${hash}`;
-    const file = await getFileStreamTorrent(`magnet:?xt=urn:btih:${hash}`, path, movie, torrent);
-    file.select();
+    const file = await getFileStreamTorrent(`magnet:?xt=urn:btih:${hash}`, path, torrent);
     torrent.data = {
       path,
       name: file.name,
       size: file.length,
       torrentDate: new Date(),
     };
-    startConversion(torrent, file.createReadStream());
+    await startConversion(torrent, file.createReadStream());
     movie.save();
   }
   return spiderStreamer(torrent.data, req, res);

@@ -13,11 +13,11 @@ const startConversion = async (torrent, fileStream) => {
     throw new Error(`spiderStreamer: Invalid mime type: ${data.name}`);
   }
 
-  // NO CONVERSION NEEDED
-  if (mime === 'video/mp4' || mime === 'video/webm' || mime === 'video/ogg') {
-    console.log('spiderStreamer Notice: No conversion needed:', mime);
-    return;
-  }
+  // // NO CONVERSION NEEDED
+  // if (mime === 'video/mp4' || mime === 'video/webm' || mime === 'video/ogg') {
+  //   console.log('spiderStreamer Notice: No conversion needed:', mime);
+  //   return;
+  // }
 
   // ALREADY CONVERTING
   if (!ffmpegHash[torrent.hash]) {
