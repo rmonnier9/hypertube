@@ -31,7 +31,7 @@ const SignupComponent = (props) => {
             hintText="Your password"
             type="password"
             name="password"
-            errorText={error.password}
+            errorText={error.newPassword}
             floatingLabelText="Password"
             required
           />

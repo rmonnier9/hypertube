@@ -1,19 +1,15 @@
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
-import mail from './mail';
+import * as mail from './mail';
+import checkReq from './checkReq';
 
 /**
  * POST /signin
  * Sign in using email and password.
  */
 export const postSignin = async (req, res, next) => {
-  req.checkBody('email', 'Email is not valid').isEmail();
-  req.checkBody('password', 'Password cannot be blank').notEmpty();
-  req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
-
-  const validationObj = await req.getValidationResult();
-  const error = validationObj.array();
+  const error = await checkReq(req);
 
   if (error.length) {
     return res.send({ error });
@@ -25,7 +21,6 @@ export const postSignin = async (req, res, next) => {
       return res.send({ error: info });
     }
     const token = jwt.sign({ _id: user._id, email: user.email, provider: 'local' }, process.env.SESSION_SECRET);
-    // console.log('user', user);
     const { lang } = user.profile;
     res.set('Access-Control-Expose-Headers', 'x-access-token');
     res.set('x-access-token', token);
@@ -40,18 +35,7 @@ export const postSignin = async (req, res, next) => {
  * Create new account and sign in.
  */
 export const postSignup = async (req, res, next) => {
-  req.checkBody('email', 'Email is not valid').isEmail();
-  req.checkBody('password', 'Password must be between 4 and 12 characters').len({ min: 4, max: 12 });
-  req.checkBody('password', 'Password must contain at least one uppercase, one lowercase and one digit.')
-    .matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/);
-  req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
-  req.checkBody('firstName', 'First name can\'t be more than 20 letters long').len({ max: 20 });
-  req.checkBody('lastName', 'Last name can\'t be more than 20 letters long').len({ max: 20 });
-
-  req.sanitize('creds.email').normalizeEmail({ gmail_remove_dots: false });
-
-  const validationObj = await req.getValidationResult();
-  const error = validationObj.array();
+  const error = await checkReq(req);
 
   if (error.length) {
     return res.send({ error });
@@ -59,7 +43,7 @@ export const postSignup = async (req, res, next) => {
 
   const user = new User({
     email: req.body.email,
-    password: req.body.password,
+    password: req.body.newPassword,
     profile: {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
@@ -73,10 +57,8 @@ export const postSignup = async (req, res, next) => {
     }
     user.save((err) => {
       if (err) { return next(err); }
-      const subject = 'Hypertube - Account created !';
-      const content = 'Welcome to Hypertube !';
-      mail(req.body.email, subject, content);
-      return res.send({ error: '' });
+      mail.sendWelcomeMail(req.body.email);
+      return res.send({ error: [] });
     });
   });
 };

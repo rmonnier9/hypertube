@@ -105,7 +105,7 @@ class MyInfosForms extends Component {
           <button id="email" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
         </div>
         {displayForm}
-        <div style={{ color: 'red' }}>{errorMessage}</div>
+        <div className="infos-error">{errorMessage}</div>
       </div>
     );
   }

@@ -56,14 +56,14 @@ class Signup extends Component {
     const { email, password, confirmPassword, firstName, lastName, file } = this.state;
     const data = {
       email: email.trim(),
-      password: password.trim(),
+      newPassword: password.trim(),
       confirmPassword: confirmPassword.trim(),
       firstName: firstName.trim(),
       lastName: lastName.trim(),
     };
     this.sendInfo(data)
       .then(({ data: { error } }) => {
-        if (error) this.setState({ status: 'closed', error });
+        if (error.length !== 0) this.setState({ status: 'closed', error });
         else {
           this.sendPicture(file)
             .then(({ data: { errorPic } }) => {

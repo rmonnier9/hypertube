@@ -11,7 +11,7 @@
 .profile-title {
   text-align: center;
   border-bottom: 1px green solid;
-  width: 250px;
+  width: 270px;
   padding-bottom: 20px;
 }
 
@@ -44,7 +44,7 @@ button.camera-icon:hover, button.glyphicon-pencil:hover {
 
 .infos-container {
   margin-top: 20px;
-  min-width: 250px;
+  width: 270px;
   display: inline-block;
 }
 
@@ -59,11 +59,18 @@ button.camera-icon:hover, button.glyphicon-pencil:hover {
 }
 
 .infos-form {
+  width: 270px;
   margin-top: 30px;
   padding: 15px;
   border: 2px solid green;
   position: relative;
   animation: fadein 1s;
+}
+
+.infos-error {
+  color: red;
+  overflow-wrap: break-word;
+  padding-top: 10px;
 }
 
 .infos-form:before {
@@ -87,14 +94,14 @@ button.camera-icon:hover, button.glyphicon-pencil:hover {
   margin-top: 30px;
   padding-top: 30px;
   border-top: 1px green solid;
-  width: 240px;
+  width: 270px;
   margin-bottom: 30px;
   padding-bottom: 30px;
   border-bottom: 1px green solid;
 }
 
 .search-user-input {
-  width: 240px;
+  width: 270px;
 }
 
 .profile-pic-search {

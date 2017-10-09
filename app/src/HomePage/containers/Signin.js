@@ -34,13 +34,16 @@ class Signin extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { message } = nextProps;
-    this.setState({ error: message });
+    if (message !== undefined) {
+      this.setState({ error: message });
+    }
   }
 
   render() {
     const { isAuthenticated } = this.props;
     const { from } = this.props.location.state || { from: { pathname: '/' } };
     const { error } = this.state;
+
     return (
       isAuthenticated ?
         <Redirect to={from} /> :
