@@ -1,9 +1,13 @@
-import fs from 'fs';
+import bluebird from 'bluebird';
 import events from 'events';
 import torrentStream from 'torrent-stream';
 import Movie from '../../models/Movie';
 import mimeTypes from './mimeTypes';
 import spiderStreamer from './spiderStreamer';
+import getFileExtension from './getFileExtension';
+import startConversion from './startConversion';
+
+const fs = bluebird.promisifyAll(require('fs'));
 
 const handler = new events.EventEmitter();
 const settings = {
@@ -16,58 +20,43 @@ const settings = {
   throttle: false
 };
 
-const hasValidExtension = (filename) => {
-  const extension = filename.match(/.*(\..+?)$/);
-  if (extension !== null && extension.length === 2
-    && mimeTypes[extension[1].toLowerCase()] !== undefined) {
-    return true;
-  }
-  return false;
-};
-
 const engineHash = {};
 
-const setUpEngine = (engine, movieFile, movie, torrent) => {
-  movieFile.createReadStream({ start: movieFile.length - 1025, end: movieFile.length - 1 });
+const setUpEngine = (engine, file, torrent) => {
   engine.on('download', (pieceIndex) => {
     // if (pieceIndex % 10 == 0) {
-    console.log('torrentStream Notice: Engine', engine.hashIndex, 'downloaded piece: Index:', pieceIndex, '(', engine.swarm.downloaded, '/', movieFile.length, ')');
+    console.log('torrentStream Notice: Engine', engine.infoHash, 'downloaded piece: Index:', pieceIndex, '(', engine.swarm.downloaded, '/', file.length, ')');
     // }
   });
   engine.on('idle', () => {
-    console.log('torrentStream Notice: Engine', engine.hashIndex, 'idle');
-    if (engine.selection.length === 0) { // (engine.swarm.downloaded < movieData.length) {
-      // console.log('torrentStream Notice:
-      // Engine', engine.hashIndex, 'downloaded (',
-      // engine.swarm.downloaded, '/', movieData.length, ')');
-      console.log('torrentStream Notice: Engine', engine.hashIndex, 'no files selected');
-    } // else {
-    console.log('torrentStream Notice: Engine', engine.hashIndex, 'downloaded (',
-      engine.swarm.downloaded, '/', movieFile.length, '); destroying');
-    /* FIXME: If fds are still open, maybe turn this back on */
+    console.log('torrentStream Notice: Engine', engine.infoHash, 'idle');
+    console.log('torrentStream Notice: Engine', engine.infoHash, 'downloaded (',
+      engine.swarm.downloaded, '/', file.length, '); destroying');
     engine.removeAllListeners();
     engine.destroy();
-    console.log('torrentStream Notice: Movie set as downloaded:', movie.title);
+    console.log('torrentStream Notice: Torrent set as downloaded:', torrent.hash);
     torrent.data.downloaded = true;
-    movie.save();
-    // }
   });
 };
 
-const getEngineAndFile = (magnet, torrentPath, movie, torrent) => new Promise((resolve, reject) => {
+const getFileStreamTorrent = (magnet, torrentPath, torrent) => new Promise((resolve, reject) => {
   let engine;
   let file;
+
+  // DOWNLOAD HAD ALREADY STARTED
   if (engineHash[torrentPath]) {
     engine = engineHash[torrentPath].engine;
     file = engineHash[torrentPath].file;
-    return resolve({ engine, file });
+    resolve(file);
   }
+
+  // DOWNLOAD HAD NOT ALREADY STARTED
   engine = torrentStream(magnet, { path: torrentPath });
   engine.on('ready', () => {
     engine.files.forEach((current) => {
-      /* Look for valid movie file extension and biggest file */
-
-      if (!hasValidExtension(current.name)) {
+      // Look for valid movie file extension and select the biggest file
+      const fileExtension = getFileExtension(current.name);
+      if (!mimeTypes[fileExtension]) {
         // Ignore non-movie files
         console.log('Skipping item: non-movie file', current.name, '| size:', current.length);
       } else if (file && current.length < file.length) {
@@ -83,110 +72,54 @@ const getEngineAndFile = (magnet, torrentPath, movie, torrent) => new Promise((r
       engine.destroy();
       reject(new Error('no valid movie file found.'));
     }
+    file.select();
+    setUpEngine(engine, file, torrent);
+    engineHash[torrentPath] = { engine, file };
+    resolve(file);
   });
-  setUpEngine(engine, file, movie, torrent);
-  engineHash[torrentPath] = { engine, file };
-  return resolve({ engine, file });
 });
 
-const getMovieStream = async (magnet, torrentPath, movie, torrent) => {
-  /* FIXME: Only do this engine if it hasn't been done already;
-  add 'data' field in database to make this work. */
-  const { engine, file } = await getEngineAndFile(magnet, torrentPath, movie, torrent);
-
-  /* If movie found */
-  /* Torrent movie */
-  file.select();
-  /* Create movie file data hash and send it back */
-  const movieData = {
-    name: file.name,
-    length: file.length,
-    date: movie.released,
-    // stream: movieFile.createReadStream({ flags: "r", start: 0, end: movieFile.length - 1 })
-    path: `${engine.path}/${file.path}`
-  };
-  console.log('spiderTorrent Notice: Movie data obtained:', movieData);
-  torrent.data = {
-    name: file.name,
-    length: file.length,
-    path: `${engine.path}/${file.path}`,
-    torrentDate: new Date(),
-  };
-  movie.save();
-  return movieData;
-};
-
-/* Helper to output prettier Mongoose error */
-const cleanMongooseErr = (err) => {
-  // var str = err.name+': '+err.message;
-  let str = err.message;
-  if (err.errors) {
-    str += ':';
-    for (error in err.errors) {
-      str += ` ${err.errors[error].message}`;
-    }
-  }
-  return str;
-};
-
-/* Called by video player */
+// ROUTE CONTROLLER
 const spiderTorrent = async (req, res) => {
   // console.log('spiderTorrent Notice: Request:', req);
   console.log('spiderTorrent Notice: Query:', req.params);
   console.log('spiderTorrent Notice: Headers:', req.headers);
-  let idImdb;
-  let hash;
+
+  // INPUT CHECK
+  const { idImdb, hash } = req.params;
   let torrent;
-  const { range } = req.headers.range;
-  /* If missing (or someone tried to hack resolution) redirect */
   if (!idImdb || !hash) {
     console.log('spiderTorrent Error:'.red, 'Invalid request:', req.params);
     return handler.emit('badRequest', res);
   }
-  /* Query for movie */
-  const movie = Movie.findOne({ idImdb, 'torrents.hash': hash });
+  const movie = await Movie.findOne({ idImdb, 'torrents.hash': hash });
   if (!movie) {
     return handler.emit('noMovie', res);
   }
+  // SELECT CORRESPONDING TORRENT
   movie.torrents.forEach((currentTorrent) => {
     if (currentTorrent.hash === hash) {
       torrent = currentTorrent;
     }
   });
   console.log('spiderTorrent Notice: Found title and hash:', movie.title);
-  const torrentPath = `./torrents/${movie.idImdb}/${hash}`;
 
   // If download had aleady started
-  if (torrent.data.path && torrent.data.length) {
-    console.log('spiderTorrent Notice: Movie data found for', movie.title, torrent.hash);
-    let fileSize;
-    try {
-      fileSize = fs.statSync(torrent.data.path).size;
-    } catch (exception) {
-      console.log('spiderTorrent Error:'.red, 'Movie size not found');
-      fileSize = 0;
-    }
-    // console.log('spiderTorrent Notice: Movie size comparison:', fileSize, torrent.data.length);
-    if (fileSize >= torrent.data.length || torrent.data.downloaded) {
-      /* Does not work: file always final size; poential fix? */
-      console.log('spiderTorrent Notice: Movie already torrented; streaming:', movie.title, torrent.hash);
-      return spiderStreamer({
-        name: torrent.data.name,
-        length: torrent.data.length,
-        date: movie.released,
-        path: torrent.data.path
-      }, req.params, range, res);
-    }
+  if (!torrent.data || !torrent.data.downloaded) {
+    console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', movie.title);
+
+    const path = `./torrents/${idImdb}/${hash}`;
+    const file = await getFileStreamTorrent(`magnet:?xt=urn:btih:${hash}`, path, torrent);
+    torrent.data = {
+      path,
+      name: file.name,
+      size: file.length,
+      torrentDate: new Date(),
+    };
+    await startConversion(torrent, file.createReadStream());
+    movie.save();
   }
-  /* DONE BY TORRET-STREAM: Create folder './torrents/'+movie._id+'/'+resolution.resolution
-  in a way that does not destroy it if it exists */
-  /* Get filestream, filename and file size from torrent-stream,
-  with the file created in folder above */
-  console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', movie.title);
-  const data = await getMovieStream(`magnet:?xt=urn:btih:${hash}`, torrentPath, movie, torrent);
-  // Hand filestream, filename and file size to vid-streamer hack
-  // console.log('spiderTorrent Notice: Sending data spiderStreamer: { name: "'+data.name+'", size: '+data.length+', date: [Date], stream: [Stream] }');
-  return spiderStreamer(data, req.params, range, res);
+  return spiderStreamer(torrent.data, req, res);
 };
 
 const errorHeader = (res, code) => {

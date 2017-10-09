@@ -5,9 +5,8 @@ import { connect, Provider } from 'react-redux';
 import { createLogger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
-import en from 'react-intl/locale-data/en';
 import axios from 'axios';
+import en from 'react-intl/locale-data/en';
 import fr from 'react-intl/locale-data/fr';
 import { IntlProvider, addLocaleData } from 'react-intl';
 

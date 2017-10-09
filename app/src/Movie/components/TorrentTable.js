@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
+import { injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
-// import { FormattedMessage } from 'react-intl';
-
-// <FormattedMessage
-//   id="Profil"
-//   defaultMessage="Profil"
-// />
 
 class TorrentTable extends Component {
 
@@ -19,22 +14,25 @@ class TorrentTable extends Component {
         <td style={{ color: 'red' }}>{torrent.peers}</td>
         <td>
           <Link to={`/video/${movie.idImdb}/${torrent.hash}`} className="play">
-            <span className="glyphicon glyphicon-play-circle" />
+            <span className="glyphicon glyphicon-play-circle" /> {/* download video or play video on click */}
           </Link>
         </td>
       </tr>
     ));
+    const video = this.props.intl.formatMessage({ id: 'movie.video' });
+    const size = this.props.intl.formatMessage({ id: 'movie.size' });
+    const play = this.props.intl.formatMessage({ id: 'movie.play' });
 
     return (
       <div className="movie-torrents">
         <table className="table torrents-table">
           <thead>
             <tr>
-              <th>Video</th>
-              <th>Size</th>
+              <th>{video}</th>
+              <th>{size}</th>
               <th style={{ color: 'green' }}>Seeds</th>
               <th style={{ color: 'red' }}>Peers</th>
-              <th>Play</th>
+              <th>{play}</th>
             </tr>
           </thead>
           <tbody>
@@ -46,4 +44,4 @@ class TorrentTable extends Component {
   }
 }
 
-export default TorrentTable;
+export default injectIntl(TorrentTable);

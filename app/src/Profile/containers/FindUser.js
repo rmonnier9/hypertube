@@ -78,7 +78,6 @@ class FindUser extends Component {
         );
       });
     }
-
     return (
       <div className="search-user-container">
         <form id="user-form" onSubmit={this.handleSubmit}>
@@ -86,7 +85,7 @@ class FindUser extends Component {
             currentValue={search}
             name="userName"
             type="text"
-            text="Enter a name to find another user"
+            id="profile.searchMessage"
             className="search-user-input"
             onChange={this.saveState}
             autocomplete="off"
@@ -94,7 +93,7 @@ class FindUser extends Component {
         </form>
         <SubmitForm
           className="btn btn-default submit-button"
-          value="Search"
+          id="general.search"
         />
         <div className="users-search-display">
           {usersDisplay}

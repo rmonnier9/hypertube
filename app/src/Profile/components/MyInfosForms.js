@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import FormClass from './FormClass';
 
 class MyInfosForms extends Component {
@@ -40,7 +40,7 @@ class MyInfosForms extends Component {
         formId: 'name-form',
         name: ['firstName', 'lastName'],
         type: ['text', 'text'],
-        text: ['First name', 'Last name'],
+        id: ['profile.firstName', 'profile.lastName'],
         values: [user.profile.firstName, user.profile.lastName],
       },
       email:
@@ -48,7 +48,7 @@ class MyInfosForms extends Component {
         formId: 'email-form',
         name: ['email', 'password'],
         type: ['text', 'password'],
-        text: ['New contact email', 'Confirm change with password'],
+        id: ['profile.newContact', 'profile.confirmChange'],
         values: [user.email, ''],
       },
       password:
@@ -56,7 +56,7 @@ class MyInfosForms extends Component {
         formId: 'password-form',
         name: ['password', 'confirmPassword'],
         type: ['password', 'password'],
-        text: ['New password', 'Confirm new password'],
+        id: ['profile.newPassword', 'profile.confirmPassword'],
         values: ['', ''],
       },
     };
@@ -70,43 +70,36 @@ class MyInfosForms extends Component {
     const email = change.email !== '' ? change.email : user.email;
     const firstName = change.firstName !== '' ? change.firstName : user.profile.firstName;
     const lastName = change.lastName !== '' ? change.lastName : user.profile.lastName;
-    const data = Object.assign(
-      form,
-      { onChange: this.passChange },
-      { onSubmit: this.handleSubmit },
-    );
     const displayForm = form.formId === null ? null : (
       <div className="infos-form top">
         <FormClass
-          data={data}
+          form={form}
+          onChange={this.passChange}
+          onSubmit={this.handleSubmit}
         />
       </div>
     );
-
+    const changePassword = this.props.intl.formatMessage({ id: 'profile.changePassword' });
+    const Name = this.props.intl.formatMessage({ id: 'profile.name' });
+    const Contact = this.props.intl.formatMessage({ id: 'profile.contact' });
     return (
       <div className="infos-container">
         <div>
           <div>
-            <span className="infos-password">Change my password</span>
+            <span className="infos-password">
+              { changePassword }
+            </span>
             <button id="password" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
           </div>
           <span className="infos-title"><b>
-            <FormattedMessage
-              id="profile.name"
-              defaultMessage="Name"
-            />
+            { Name }
           </b></span>
           <span>{firstName} {lastName}</span>
           <button id="name" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
         </div>
         <div>
           <span className="infos-title">
-            <b>
-              <FormattedMessage
-                id="profile.contact"
-                defaultMessage="Contact"
-              />
-            </b>
+            { Contact }
           </span>
           <span>{email}</span>
           <button id="email" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
@@ -118,4 +111,4 @@ class MyInfosForms extends Component {
   }
 }
 
-export default MyInfosForms;
+export default injectIntl(MyInfosForms);

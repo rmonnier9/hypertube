@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { updateLocale } from '../../reducers/i18n';
@@ -13,6 +14,8 @@ const SignOutMenu = props => (
 
 class NavBar extends Component {
   render() {
+    const myProfile = this.props.intl.formatMessage({ id: 'nav.myprofile' });
+    const gallery = this.props.intl.formatMessage({ id: 'nav.gallery' });
     return (
       <nav className="navbar">
         <div className="container-fluid">
@@ -23,10 +26,14 @@ class NavBar extends Component {
           </div>
           <ul className="nav navbar-nav">
             <li className="nav-link">
-              <Link to="/myprofile">My profile</Link>
+              <Link to="/myprofile">
+                { myProfile }
+              </Link>
             </li>
             <li className="nav-link">
-              <Link to="/">Gallery</Link>
+              <Link to="/">
+                { gallery }
+              </Link>
             </li>
           </ul>
           <ul className="nav navbar-nav navbar-right">
@@ -56,5 +63,4 @@ const mapDispatchToProps = dispatch => (
   { onLocaleChange: updateLocale({ dispatch }) }
 );
 
-// Use default export for the connected component (for app)
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(NavBar));

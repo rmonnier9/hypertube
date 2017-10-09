@@ -9,6 +9,11 @@ class Header extends Component {
     this.props.dispatch(logoutUser());
   }
 
+  componentWillMount() {
+    const lang = localStorage.getItem('lang-user') || 'en-en';
+    document.querySelector('html').setAttribute('lang', lang);
+  }
+
   render() {
     const { isAuthenticated } = this.props;
     return (

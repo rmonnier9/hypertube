@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-
-const lang = 'en';
+import { injectIntl } from 'react-intl';
 
 class Selectors extends Component {
+
 
   handleSelect = (event) => {
     const name = event.target.name;
@@ -11,6 +11,7 @@ class Selectors extends Component {
   }
 
   render() {
+    const lang = this.props.intl.locale.split('-')[0];
     const { filter } = this.props;
     const genreOptions = filter.genres
     .sort((a, b) => { if (a[lang] > b[lang]) return 1; return -1; })
@@ -19,30 +20,36 @@ class Selectors extends Component {
       const { _id: id } = movieGenre;
       return <option key={id} value={value}>{movieGenre[lang]}</option>;
     });
-
+    const oldest = this.props.intl.formatMessage({ id: 'gallery.oldest' });
+    const latest = this.props.intl.formatMessage({ id: 'gallery.latest' });
+    const seeds = this.props.intl.formatMessage({ id: 'gallery.seeds' });
+    const rating = this.props.intl.formatMessage({ id: 'gallery.rating' });
+    const all = this.props.intl.formatMessage({ id: 'gallery.all' });
+    const genres = this.props.intl.formatMessage({ id: 'gallery.genres' });
+    const orderBy = this.props.intl.formatMessage({ id: 'gallery.orderBy' });
     return (
       <div className="all-selectors">
         <div className="one-selector">
-          <div>Genres:</div>
+          <div>{genres}:</div>
           <select
             name="genre"
             className="selector-box"
             onChange={this.handleSelect}
             value={filter.genre}
           >
-            <option value="all">All</option>
+            <option value="all">{all}</option>
             {genreOptions}
           </select>
         </div>
         <div className="one-selector">
-          <div>Rating:</div>
+          <div>{rating}:</div>
           <select
             name="rating"
             className="selector-box"
             onChange={this.handleSelect}
             value={filter.rating}
           >
-            <option value="0">All</option>
+            <option value="0">{all}</option>
             <option value="9">9+</option>
             <option value="8">8+</option>
             <option value="7">7+</option>
@@ -55,17 +62,17 @@ class Selectors extends Component {
           </select>
         </div>
         <div className="one-selector">
-          <div>Order By:</div>
+          <div>{orderBy}:</div>
           <select
             name="sort"
             className="selector-box"
             onChange={this.handleSelect}
             value={filter.sort}
           >
-            <option value="latest">Latest</option>
-            <option value="oldest">Oldest</option>
-            <option value="seeds">Seeds</option>
-            <option value="rating">Rating</option>
+            <option value="latest">{latest}</option>
+            <option value="oldest">{oldest}</option>
+            <option value="seeds">{seeds}</option>
+            <option value="rating">{rating}</option>
           </select>
         </div>
       </div>
@@ -73,4 +80,4 @@ class Selectors extends Component {
   }
 }
 
-export default Selectors;
+export default injectIntl(Selectors);

@@ -42,11 +42,11 @@ class SearchBar extends Component {
           currentValue={search}
           name="search"
           type="text"
-          text=""
+          id=""
           className="searchBar-container"
           onChange={this.handleChange}
           autocomplete="off"
-          placeholder="Search title, actor, director..."
+          placeholder="gallery.searchPlaceholder"
         />
       </form>
     );

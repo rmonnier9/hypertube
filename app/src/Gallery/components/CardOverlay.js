@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import '../css/CardOverlay.css';
 
@@ -6,6 +7,7 @@ class CardOverlay extends Component {
 
   render() {
     const { rating, year, idImdb } = this.props.movie;
+    const buttonValue = this.props.intl.formatMessage({ id: 'gallery.viewDetail' });
     const link = `/movie/${idImdb}`;
     return (
       <div className="card-overlay">
@@ -13,7 +15,7 @@ class CardOverlay extends Component {
         <div className="card-overlay-infos">{`${rating} / 10`}</div>
         <br />
         <div className="card-button-container">
-          <Link className="card-button" to={link}>View details</Link>
+          <Link className="card-button" to={link}>{buttonValue}</Link>
         </div>
         <div className="card-overlay-infos">{year}</div>
       </div>
@@ -21,7 +23,7 @@ class CardOverlay extends Component {
   }
 }
 
-export default CardOverlay;
+export default injectIntl(CardOverlay);
 
 // <button className="card-button">View details</button>
 // <h4>{movie.genres[0] || null}</h4>

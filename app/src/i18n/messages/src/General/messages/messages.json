@@ -1,0 +1,18 @@
+[
+  {
+    "id": "general.search",
+    "defaultMessage": "Search"
+  },
+  {
+    "id": "general.save",
+    "defaultMessage": "Save"
+  },
+  {
+    "id": "nav.myprofile",
+    "defaultMessage": "MY PROFIL"
+  },
+  {
+    "id": "nav.gallery",
+    "defaultMessage": "GALLERY"
+  }
+]

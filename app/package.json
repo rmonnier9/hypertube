@@ -78,8 +78,8 @@
     }
   },
   "scripts": {
-    "generate-locale": "better-npm-run geni18n",
     "build-message": "rm -rf ./src/i18n/messages && BABEL_ENV=i18n ./node_modules/babel-cli/bin/babel.js --quiet src > /dev/null",
+    "generate-locale": "better-npm-run geni18n",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

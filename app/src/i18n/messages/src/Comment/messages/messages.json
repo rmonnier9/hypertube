@@ -1,0 +1,18 @@
+[
+  {
+    "id": "comments.comment",
+    "defaultMessage": "Comment"
+  },
+  {
+    "id": "comments.comments",
+    "defaultMessage": "Comments"
+  },
+  {
+    "id": "comments.ifOne",
+    "defaultMessage": "Be the first to comment this movie !"
+  },
+  {
+    "id": "comments.typeComment",
+    "defaultMessage": "Type your comment"
+  }
+]

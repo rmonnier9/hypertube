@@ -1,0 +1,26 @@
+[
+  {
+    "id": "movie.with",
+    "defaultMessage": "With"
+  },
+  {
+    "id": "movie.director",
+    "defaultMessage": "Director"
+  },
+  {
+    "id": "movie.genres",
+    "defaultMessage": "Genres"
+  },
+  {
+    "id": "movie.video",
+    "defaultMessage": "Video"
+  },
+  {
+    "id": "movie.size",
+    "defaultMessage": "Size"
+  },
+  {
+    "id": "movie.play",
+    "defaultMessage": "Play"
+  }
+]

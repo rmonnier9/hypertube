@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { injectIntl } from 'react-intl';
 import Loading from '../../General/components/Loading';
 import TorrentTable from '../components/TorrentTable';
 import CommentTable from '../../Comment/container/CommentTable';
 import '../css/movie.css';
-
-const lang = 'fr';
 
 const timing = (length) => {
   const hours = Math.trunc(length / 60);
@@ -54,6 +54,7 @@ class Movie extends Component {
 
   render() {
     const { loaded, error } = this.state;
+    const lang = this.props.locale.split('-')[0];
     const movie = this.movie;
     if (loaded === false) { return <Loading />; }
     if (error) { return <h2>{error}</h2>; }
@@ -71,6 +72,10 @@ class Movie extends Component {
     });
     const timeObj = timing(movie.runtime);
     const time = `${timeObj.hours}h${timeObj.minutes}`;
+
+    const witho = this.props.intl.formatMessage({ id: 'movie.with' });
+    const director = this.props.intl.formatMessage({ id: 'movie.director' });
+    const genresValue = this.props.intl.formatMessage({ id: 'movie.genres' });
 
     return (
       <div className="movie-container">
@@ -93,15 +98,15 @@ class Movie extends Component {
           </div>
           <div className="movie-details">
             <div>
-              <span className="movie-details-text">With:</span>
+              <span className="movie-details-text">{witho}:</span>
               { actors }
             </div>
             <div>
-              <span className="movie-details-text">Director:</span>
+              <span className="movie-details-text">{director}:</span>
               { movie.director }
             </div>
             <div>
-              <span className="movie-details-text">Genres:</span>
+              <span className="movie-details-text">{genresValue}:</span>
               { genres }
             </div>
           </div>
@@ -113,4 +118,8 @@ class Movie extends Component {
   }
 }
 
-export default Movie;
+const mapStateToProps = ({ i18n: { locale } }) => ({
+  locale,
+});
+
+export default injectIntl(connect(mapStateToProps)(Movie));

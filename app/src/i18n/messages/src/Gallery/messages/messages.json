@@ -1,0 +1,38 @@
+[
+  {
+    "id": "gallery.filter",
+    "defaultMessage": "Filter"
+  },
+  {
+    "id": "gallery.oldest",
+    "defaultMessage": "Oldest"
+  },
+  {
+    "id": "gallery.latest",
+    "defaultMessage": "Latest"
+  },
+  {
+    "id": "gallery.seeds",
+    "defaultMessage": "Seeds"
+  },
+  {
+    "id": "gallery.rating",
+    "defaultMessage": "Rating"
+  },
+  {
+    "id": "gallery.all",
+    "defaultMessage": "All"
+  },
+  {
+    "id": "gallery.genres",
+    "defaultMessage": "Genres"
+  },
+  {
+    "id": "gallery.orderBy",
+    "defaultMessage": "Order by"
+  },
+  {
+    "id": "gallery.searchPlaceholder",
+    "defaultMessage": "Search title, actor, director..."
+  }
+]

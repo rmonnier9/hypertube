@@ -29,7 +29,7 @@ class CommentInput extends Component {
             name="comment"
             type="text"
             onChange={this.saveInput}
-            placeholder="Type your comment"
+            placeholder="comments.typeComment"
           />
         </form>
       </CommentBlock>
