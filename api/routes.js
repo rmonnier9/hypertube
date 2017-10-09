@@ -17,7 +17,7 @@ const routes = async (app, passport, upload) => {
   app.post('/api/forgot', user.postForgot);
   app.post('/api/reset/:token', user.postReset);
 
-  app.get('/api/movie/stream/:idImdb/:hash', spiderTorrent);
+  app.get('/api/movie/stream/:id/:hash', spiderTorrent);
 
   // Logged part  ====================
   app.use(passport.authenticate('jwt', { session: false }));
@@ -25,7 +25,6 @@ const routes = async (app, passport, upload) => {
   app.get('/api/me', user.getMyAccount);
   app.post('/api/me', user.postUpdateProfile);
   app.delete('/api/me', user.deleteDeleteAccount); // not implemented
-  // app.post('/api/me/password', user.postUpdatePassword);
   app.post('/api/profile_pic', upload.single('imageUploaded'), picture.newPicture);
   app.get('/api/profile/:name', user.getAccount);
   app.get('/api/profile/id/:id', user.getAccountById);

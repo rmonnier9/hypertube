@@ -29,6 +29,7 @@ const MatchaRouter = ({ isAuthenticated, locale }) => (
         <PrivateRoute exact path="/video/:id/:hash" key={locale} isAuthenticated={isAuthenticated} component={Video} />
         <Route path="/signin" key={locale} component={Signin} />
         <Route path="/forgot" key={locale} component={Forgot} />
+        <Route path="/reset" key={locale} component={Reset} />
         <Route path="/signup" key={locale} component={Signup} />
         <Route key={locale} component={NotFound} />
       </Switch>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroller';
-import Loading from '../../General/components/Loading';
+// import Loading from '../../General/components/Loading';
 import MovieList from '../components/MovieList.js';
 import SearchBar from '../components/SearchBar.js';
 import Filter from './Filter.js';
@@ -128,7 +128,7 @@ class Gallery extends Component {
       movies,
       hasMoreItems,
     } = this.state;
-    const loader = <Loading />;
+    // const loader = <Loading />;
     if (!this.mounted) return null;
     return (
       <div>
