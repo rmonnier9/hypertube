@@ -12,7 +12,7 @@ const settings = {
 
 const isNumber = n => !isNaN(parseFloat(n)) && isFinite(n);
 
-const spiderStreamer = (data, req, res) => (
+const getVideoStream = (data, req, res) => (
   new Promise(((resolve, reject) => {
     let fails = 0;
     const intervalId = setInterval(async () => {
@@ -20,7 +20,7 @@ const spiderStreamer = (data, req, res) => (
       console.log('spiderStreamer Notice:', data.path, ' size:', stat.size);
       if (stat.size > 5000000) {
         clearInterval(intervalId);
-        resolve(stat.size);
+        resolve({ size: stat.size, modified: stat.mtime });
       } else {
         console.log('spiderStreamer Notice: Movie file not yet big enough; fails:', fails);
         ++fails;
@@ -31,20 +31,23 @@ const spiderStreamer = (data, req, res) => (
       }
     }, 2000);
   })).then(
-    (size) => {
+    ({ size, modified }) => {
       const info = {};
-      info.rangeRequest = false;
+      info.name = data.name;
       info.start = 0;
       info.end = size - 1;
       info.size = size;
+      info.modified = modified;
+      info.rangeRequest = false;
+
       const fileExtension = getFileExtension(data.name);
       const mime = mimeTypes[fileExtension];
+      console.log(fileExtension, mime);
       info.mime = mime;
 
-      let { range } = req.headers;
-      const { query } = req;
 
-      if (range && range.match(/bytes=(.+)-(.+)?/) !== null) {
+      let { range } = req.headers;
+      if (range && range.match(/bytes=(.+)-(.+)?/)) {
         range = range.match(/bytes=(.+)-(.+)?/);
         if (isNumber(range[1]) && range[1] >= 0 && range[1] < info.end) {
           info.start = range[1] - 0;
@@ -53,15 +56,8 @@ const spiderStreamer = (data, req, res) => (
           info.end = range[2] - 0;
         }
         info.rangeRequest = true;
-      } else if (query.start || query.end) {
-        // This is a range request, but doesn't get range headers. So there.
-        if (isNumber(query.start) && query.start >= 0 && query.start < info.end) {
-          info.start = query.start - 0;
-        }
-        if (isNumber(query.end) && query.end > info.start && query.end <= info.end) {
-          info.end = query.end - 0;
-        }
       }
+      info.length = (info.end - info.start) + 1;
       console.log('spiderStreamer Notice: Header Info:', info);
 
       console.log('spiderStreamer Notice: Sending header');
@@ -76,10 +72,9 @@ const spiderStreamer = (data, req, res) => (
 
 const downloadHeader = (res, info) => {
   let code = 200;
-  let header;
 
-  header = {
-    'Cache-Control': `public; max-age=${settings.maxAge}`,
+  const header = {
+    // 'Cache-Control': `public; max-age=${settings.maxAge}`,
     Connection: 'keep-alive',
     'Content-Type': info.mime,
     'Content-Disposition': `inline; filename=${info.name};`,
@@ -94,9 +89,9 @@ const downloadHeader = (res, info) => {
   }
 
   header.Pragma = 'public';
-  header['Last-Modified'] = new Date(2016).toUTCString();
+  header['Last-Modified'] = info.modified.toUTCString();
   header['Content-Transfer-Encoding'] = 'binary';
-  header['Content-Length'] = info.size;
+  header['Content-Length'] = info.length;
   if (settings.cors) {
     header['Access-Control-Allow-Origin'] = '*';
     header['Access-Control-Allow-Headers'] = 'Access-Control-Allow-Headers, Origin, X-Requested-With, Content-Type, Accept';
@@ -106,4 +101,4 @@ const downloadHeader = (res, info) => {
   res.writeHead(code, header);
 };
 
-export default spiderStreamer;
+export default getVideoStream;
