@@ -45,12 +45,12 @@ const videoStream = (req, res) => {
     let fails = 0;
     const intervalId = setInterval(async () => {
       const stat = await fs.statAsync(path);
-      console.log('videoStreamer Notice:', path, ' size:', stat.size);
+      console.log('videoStream Notice:', path, ' size:', stat.size);
       if (stat.size > 5000000) {
         clearInterval(intervalId);
         resolve({ size: stat.size, modified: stat.mtime });
       } else {
-        console.log('videoStreamer Notice: Movie file not yet big enough; fails:', fails);
+        console.log('videoStream Notice: Movie file not yet big enough; fails:', fails);
         ++fails;
         if (fails > 30) {
           clearInterval(intervalId);
@@ -86,7 +86,7 @@ const videoStream = (req, res) => {
       }
       info.length = (info.end - info.start) + 1;
 
-      console.log('videoStreamer Notice: Sending header');
+      console.log('videoStream Notice: Sending header');
       downloadHeader(res, info);
 
       const stream = fs.createReadStream(path, { flags: 'r', start: info.start, end: info.end });
