@@ -1,6 +1,6 @@
 import * as user from './controllers/user';
 import * as movie from './controllers/movie';
-import * as connect from './controllers/connect'; // signup signin
+import * as authentication from './controllers/authentication';
 import * as picture from './controllers/picture';
 import * as search from './controllers/search';
 import * as comment from './controllers/comment';
@@ -11,8 +11,8 @@ const routes = async (app, passport, upload) => {
   /**
    * Primary app routes.
    */
-  app.post('/api/signin', connect.postSignin);
-  app.post('/api/signup/info', connect.postSignup);
+  app.post('/api/signin', authentication.local);
+  app.post('/api/signup/info', user.postSignup);
   app.post('/api/signup/upload', upload.single('imageUploaded'), picture.postSignupPicture);
   app.post('/api/forgot', user.postForgot);
   app.post('/api/reset/:token', user.postReset);
@@ -42,13 +42,9 @@ const routes = async (app, passport, upload) => {
    * OAuth authentication routes. (Sign in)
    */
   app.get('/api/auth/fortytwo', passport.authenticate('42'));
-  app.get('/api/auth/fortytwo/callback', passport.authenticate('42', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect('/');
-  });
+  app.get('/api/auth/fortytwo/callback', authentication.fortytwo);
   app.get('/api/auth/google', passport.authenticate('google', { scope: 'profile email' }));
-  app.get('/api/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect('/');
-  });
+  app.get('/api/auth/google/callback', authentication.google);
 };
 
 export default routes;
