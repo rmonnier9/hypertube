@@ -41,9 +41,13 @@ const routes = async (app, passport, upload) => {
   /**
    * OAuth authentication routes. (Sign in)
    */
+  app.get('/api/auth/fortytwo', passport.authenticate('42'));
+  app.get('/api/auth/fortytwo/callback', passport.authenticate('42', { failureRedirect: '/login' }), (req, res) => {
+    res.redirect('/');
+  });
   app.get('/api/auth/google', passport.authenticate('google', { scope: 'profile email' }));
   app.get('/api/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect(req.session.returnTo || '/');
+    res.redirect('/');
   });
 };
 
