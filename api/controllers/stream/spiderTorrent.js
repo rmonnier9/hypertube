@@ -1,4 +1,5 @@
 import events from 'events';
+import fs from 'fs';
 import torrentStream from 'torrent-stream';
 import Movie from '../../models/Movie';
 import mimeTypes from './mimeTypes';
@@ -76,6 +77,26 @@ const getFileStreamTorrent = (magnet, torrentPath, torrent) => new Promise((reso
   });
 });
 
+const deleteFolderRecursive = async (path) => {
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach((file) => {
+      const curPath = `${path}/${file}`;
+      if (fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+    return 'ok';
+  }
+};
+
+const eraseForTest = async (idImdb, hash) => {
+  await Movie.update({ idImdb, 'torrents.hash': hash }, { $unset: { 'torrents.$.data': '' } });
+  await deleteFolderRecursive('./torrents');
+};
+
 // ROUTE CONTROLLER
 const spiderTorrent = async (req, res) => {
   // console.log('spiderTorrent Notice: Request:', req);
@@ -84,6 +105,7 @@ const spiderTorrent = async (req, res) => {
 
   // INPUT CHECK
   const { idImdb, hash } = req.params;
+
   let torrent;
   if (!idImdb || !hash) {
     console.log('spiderTorrent Error:'.red, 'Invalid request:', req.params);
@@ -93,6 +115,7 @@ const spiderTorrent = async (req, res) => {
   if (!movie) {
     return handler.emit('noMovie', res);
   }
+  await eraseForTest(idImdb, hash);
   // SELECT CORRESPONDING TORRENT
   movie.torrents.forEach((currentTorrent) => {
     if (currentTorrent.hash === hash) {
@@ -116,7 +139,7 @@ const spiderTorrent = async (req, res) => {
     await startConversion(torrent, file.createReadStream());
     movie.save();
   }
-  return spiderStreamer(torrent.data, req, res);
+  // return spiderStreamer(torrent.data, req, res);
 };
 
 const errorHeader = (res, code) => {
