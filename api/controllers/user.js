@@ -7,6 +7,39 @@ import checkReq from './checkReq';
 const crypto = bluebird.promisifyAll(require('crypto'));
 
 /**
+ * POST /signup/info
+ * Create new account and sign in.
+ */
+export const postSignup = async (req, res, next) => {
+  const error = await checkReq(req);
+
+  if (error.length) {
+    return res.send({ error });
+  }
+
+  const user = new User({
+    email: req.body.email,
+    password: req.body.newPassword,
+    profile: {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+    }
+  });
+
+  User.findOne({ email: req.body.email }, (err, existingUser) => {
+    if (err) { return next(err); }
+    if (existingUser) {
+      return res.send({ error: [{ param: 'email', msg: 'Account with that email address already exists.' }] });
+    }
+    user.save((err) => {
+      if (err) { return next(err); }
+      mail.sendWelcomeMail(req.body.email);
+      return res.send({ error: [] });
+    });
+  });
+};
+
+/**
  * GET /me
  * Profile page.
  */
