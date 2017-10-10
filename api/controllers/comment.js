@@ -45,6 +45,11 @@ const addUserProps = async ({ comments }) => (
   }))
 );
 
+/**
+ * POST /api/comment/:idImdb
+ * Post comment on the specified movie
+ */
+
 export const addComment = async (req, res) => {
   const { idImdb } = req.params;
   const newComment = await createCommentObject(req.body, req.user.id);
@@ -58,6 +63,11 @@ export const addComment = async (req, res) => {
   const results = await addUserProps(list);
   return res.send({ error: '', comments: results });
 };
+
+/**
+ * GET /api/comment/:idImdb
+ * Get comments on the specified movie
+ */
 
 export const getComment = async (req, res) => {
   const { idImdb } = req.params;

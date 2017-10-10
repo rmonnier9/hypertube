@@ -1,7 +1,7 @@
 import axios from 'axios';
 import ptn from 'parse-torrent-name';
 import parseGenre from './genre';
-import { Movie, Torrent } from '../models/Movie';
+import { Movie, Torrent } from '../../models/Movie';
 
 const keyMovieDb = '92d923e066d13a3034abbbfb0d5ea7ab';
 
@@ -18,7 +18,7 @@ const bytesToSize = (bytes) => {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   if (bytes === 0) return 'n/a';
   const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
-  return `${Math.round(bytes / Math.pow(1024, i), 2)} ${sizes[i]}`;
+  return `${Math.round(bytes / (1024 ** i), 2)} ${sizes[i]}`;
 };
 
 const parseTorrentYifi = (torrents, title) => (
