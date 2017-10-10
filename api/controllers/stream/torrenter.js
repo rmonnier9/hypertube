@@ -92,19 +92,21 @@ const videoTorrenter = async (req, res, next) => {
   if (req.torrent.data && req.torrent.data.downloaded) {
     next();
   }
-  console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', movie.title);
+  console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', req.torrent.title.en);
 
-  const pathFolder = `./torrents/${req.movie.idImdb}/${req.torrent.hash}`;
+  const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;
   const file = await getFileStreamTorrent(pathFolder, req.torrent);
   req.torrent.data = {
     path: `${pathFolder}/${file.path}`,
     name: file.name,
     size: file.length,
     torrentDate: new Date(),
+    downloaded: true,
   };
-  await startConversion(torrent, file.createReadStream());
-  req.movie.save();
-  return getVideoStream(torrent.data, req, res);
+  await Movie.updateOne({ idImdb: req.idImdb, 'torrents.hash': req.torrent.hash }, { $set: { 'torrents.$.data': req.torrent.data } });
+  console.log('HERE', req.torrent);
+  await startConversion(req.torrent, file.createReadStream());
+  return getVideoStream(req.torrent.data, req, res);
 };
 
 export default videoTorrenter;

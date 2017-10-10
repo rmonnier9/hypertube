@@ -16,13 +16,13 @@ const videoChecker = async (req, res, next) => {
   } else if (!hash) {
     next(new Error('No torrent hash.'));
   }
-  const torrent = await Movie.findOne({ idImdb, 'torrents.hash': hash }, { 'torrents.$': 1 });
-  if (!torrent) {
+  const movie = await Movie.findOne({ idImdb, 'torrents.hash': hash }, { idImdb: 1, 'torrents.$': 1 });
+  if (!movie) {
     next(new Error('Movie not found.'));
   }
-
-  console.log(torrent);
-  req.torrent = torrent[0];
+  req.idImdb = movie.idImdb;
+  req.torrent = movie.torrents[0];
+  console.log('video checker will send', movie.torrents[0]);
   next();
 };
 
