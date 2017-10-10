@@ -30,9 +30,9 @@ const engineHash = {};
 
 const setUpEngine = (engine, file, torrent) => {
   engine.on('download', (pieceIndex) => {
-    // if (pieceIndex % 10 == 0) {
-    console.log('torrentStream Notice: Engine', engine.infoHash, 'downloaded piece: Index:', pieceIndex, '(', engine.swarm.downloaded, '/', file.length, ')');
-    // }
+    if (pieceIndex % 10 === 0) {
+      console.log('torrentStream Notice: Engine', engine.infoHash, 'downloaded piece: Index:', pieceIndex, '(', engine.swarm.downloaded, '/', file.length, ')');
+    }
   });
   engine.on('idle', () => {
     console.log('torrentStream Notice: Engine', engine.infoHash, 'idle');
@@ -104,9 +104,8 @@ const videoTorrenter = async (req, res, next) => {
     downloaded: true,
   };
   await Movie.updateOne({ idImdb: req.idImdb, 'torrents.hash': req.torrent.hash }, { $set: { 'torrents.$.data': req.torrent.data } });
-  console.log('HERE', req.torrent);
   await startConversion(req.torrent, file.createReadStream());
-  return getVideoStream(req.torrent.data, req, res);
+  return getVideoStream(req, res);
 };
 
 export default videoTorrenter;

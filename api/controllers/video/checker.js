@@ -22,7 +22,6 @@ const videoChecker = async (req, res, next) => {
   }
   req.idImdb = movie.idImdb;
   req.torrent = movie.torrents[0];
-  console.log('video checker will send', movie.torrents[0]);
   next();
 };
 

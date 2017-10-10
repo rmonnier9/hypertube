@@ -39,7 +39,7 @@ const downloadHeader = (res, info) => {
 };
 
 const videoStream = (req, res) => {
-  const { path, name } = req.torrent;
+  const { path, name } = req.torrent.data;
 
   return new Promise(((resolve, reject) => {
     let fails = 0;
