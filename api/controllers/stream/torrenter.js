@@ -1,22 +1,10 @@
-import events from 'events';
+import fs from 'fs';
 import torrentStream from 'torrent-stream';
 import Movie from '../../models/Movie';
 import mimeTypes from './mimeTypes';
 import getVideoStream from './streamer';
 import getFileExtension from './getFileExtension';
 import startConversion from './startConversion';
-
-const handler = new events.EventEmitter();
-const settings = {
-  mode: 'development',
-  forceDownload: false,
-  rootFolder: 'torrents/',
-  rootPath: 'videos/',
-  server: 'Hypertube/1.0.0',
-  maxAge: '3600',
-  throttle: false
-};
-
 
 const deleteFolderRecursive = async (path) => {
   if (fs.existsSync(path)) {
@@ -61,7 +49,7 @@ const getFileStreamTorrent = (torrentPath, torrent) => new Promise((resolve, rej
   let engine;
   let file;
 
-  const magnet = `magnet:?xt=urn:btih:${torrent.hash}`,
+  const magnet = `magnet:?xt=urn:btih:${torrent.hash}`;
   // DOWNLOAD HAD ALREADY STARTED
   if (engineHash[torrentPath]) {
     engine = engineHash[torrentPath].engine;
@@ -102,7 +90,6 @@ const getFileStreamTorrent = (torrentPath, torrent) => new Promise((resolve, rej
 const videoTorrenter = async (req, res, next) => {
   // If download had aleady started
   if (req.torrent.data && req.torrent.data.downloaded) {
-    req.data = req.torrent.data;
     next();
   }
   console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', movie.title);

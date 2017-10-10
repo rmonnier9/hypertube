@@ -16,7 +16,7 @@ const videoChecker = async (req, res, next) => {
   } else if (!hash) {
     next(new Error('No torrent hash.'));
   }
-  const torrent = await Movie.findOne({ idImdb, 'torrents.hash': hash }, { _id: 0, 'torrents.$.hash': hash });
+  const torrent = await Movie.findOne({ idImdb, 'torrents.hash': hash }, { 'torrents.$': 1 });
   if (!torrent) {
     next(new Error('Movie not found.'));
   }

@@ -6,6 +6,8 @@ import * as search from './controllers/search';
 import * as comment from './controllers/comment';
 import * as genre from './controllers/genreCount';
 import videoChecker from './controllers/stream/checker';
+import videoTorrenter from './controllers/stream/torrenter';
+import videoStreamer from './controllers/stream/streamer';
 
 const routes = async (app, passport, upload) => {
   /**
@@ -17,7 +19,7 @@ const routes = async (app, passport, upload) => {
   app.post('/api/forgot', user.postForgot);
   app.post('/api/reset/:token', user.postReset);
 
-  app.get('/api/movie/stream/:idImdb/:hash', videoChecker);
+  app.get('/api/movie/stream/:idImdb/:hash', videoChecker, videoTorrenter, videoStreamer);
 
   // Logged part  ====================
   app.use(passport.authenticate('jwt', { session: false }));
