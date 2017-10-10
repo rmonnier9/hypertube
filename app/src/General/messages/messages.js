@@ -9,6 +9,18 @@ export const searchValue = defineMessages({
     id: 'general.save',
     defaultMessage: 'Save',
   },
+  enter: {
+    id: 'general.enter',
+    defaultMessage: 'Enter',
+  },
+  next: {
+    id: 'general.next',
+    defaultMessage: 'Next',
+  },
+  send: {
+    id: 'general.send',
+    defaultMessage: 'Send',
+  },
   myprofile: {
     id: 'nav.myprofile',
     defaultMessage: 'MY PROFIL',

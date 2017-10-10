@@ -16,13 +16,13 @@ class Header extends Component {
 
   render() {
     const { isAuthenticated } = this.props;
+
     return (
       <header className="header">
-        {isAuthenticated &&
-          <NavBar
-            handleSignOut={this.handleSignOut}
-          />
-        }
+        <NavBar
+          isAuthenticated={isAuthenticated}
+          handleSignOut={this.handleSignOut}
+        />
       </header>
     );
   }
@@ -38,3 +38,9 @@ const mapStateToProps = ({
 
 // Use default export for the connected component (for app)
 export default connect(mapStateToProps)(Header);
+
+// {isAuthenticated &&
+//   <NavBar
+//     handleSignOut={this.handleSignOut}
+//   />
+// }

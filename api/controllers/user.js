@@ -14,7 +14,7 @@ export const getMyAccount = (req, res, next) => {
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
     user.password = '';
-    return res.send({ error: '', user });
+    return res.send({ error: [], user });
   });
 };
 
@@ -43,7 +43,7 @@ export const postUpdateProfile = async (req, res, next) => {
         user.save((err) => {
           if (err) { return next(err); }
           user.password = '';
-          return res.send({ error: '', user });
+          return res.send({ error: [], user });
         });
       });
       break;
@@ -61,18 +61,18 @@ export const postUpdateProfile = async (req, res, next) => {
         user.comparePassword(req.body.password, (err, isMatch) => {
           if (err) { return next(err); }
           if (isMatch === false) {
-            return res.send({ error: [{ param: 'password', msg: 'Incorrect password.', value: req.body.password }] });
+            return res.send({ error: [{ param: 'password', msg: 'error.incorrectPassword' }] });
           }
           user.email = req.body.email;
           user.save((err) => {
             if (err) {
               if (err.code === 11000) {
-                return res.send({ error: [{ param: 'email', msg: 'The email address you have entered is already associated with an account.', value: req.body.email }] });
+                return res.send({ error: [{ param: 'email', msg: 'error.emailUsed' }] });
               }
               return next(err);
             }
             user.password = '';
-            return res.send({ error: '', user });
+            return res.send({ error: [], user });
           });
         });
       });
@@ -92,14 +92,14 @@ export const postUpdateProfile = async (req, res, next) => {
         user.save((err) => {
           if (err) { return next(err); }
           mail.sendResetPasswordEmail(user);
-          return res.send({ error: '', user });
+          return res.send({ error: [], user });
         });
       });
 
       break;
     }
     default:
-      res.status(401).send({ error: 'invalid action requested' });
+      res.status(401).send({ error: [{ param: 'invalid', msg: 'error.invalid', value: req.body.email }] });
   }
 };
 
@@ -141,33 +141,33 @@ export const getAccount = (req, res, next) => {
   User.find(matchObj, (err, existingUsers) => {
     if (err) { return next(err); }
     if (existingUsers.length === 0) {
-      return res.send({ error: [{ param: 'userName', msg: 'No account with that name.' }] });
+      return res.send({ error: [{ param: 'userName', msg: 'error.noUserName' }] });
     }
     existingUsers.forEach((user) => {
       user.password = '';
       user.email = '';
     });
-    return res.send({ error: '', users: existingUsers });
+    return res.send({ error: [], users: existingUsers });
   });
 };
 
 /**
- * GET /profile/:id
+ * GET /profile/id/:id
  * Other user profile page.
  */
 export const getAccountById = (req, res, next) => {
   let objectId = req.params.id;
   try {
     objectId = mongoose.Types.ObjectId(req.params.id);
-  } catch (err) { return res.send({ error: 'Cannot find a user.' }); }
+  } catch (err) { return res.send({ error: [{ param: 'user', msg: 'error.noUserProfile' }] }); }
   User.findById(objectId, (err, user) => {
     if (err) { return next(err); }
     if (!user) {
-      return res.send({ error: 'Cannot find a user.' });
+      return res.send({ error: [{ param: 'user', msg: 'error.noUserProfile' }] });
     }
     user.password = '';
     user.email = '';
-    return res.send({ error: '', user });
+    return res.send({ error: [], user });
   });
 };
 

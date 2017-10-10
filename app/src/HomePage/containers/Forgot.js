@@ -6,11 +6,13 @@ class Forgot extends Component {
 
   state = {
     password: '',
-    successMessage: '',
-    error: [],
+    success: false,
+    error: [{ param: '', msg: '' }],
   }
 
-  handleChange = ({ target: { name, value } }) => this.setState({ [name]: value, error: [] });
+  handleChange = ({ target: { name, value } }) => {
+    this.setState({ [name]: value, error: [{ param: '', msg: '' }] })
+  };
 
   sendMail = (event) => {
     event.preventDefault();
@@ -21,10 +23,10 @@ class Forgot extends Component {
       if (error.length === 0) {
         this.setState({
           error,
-          successMessage: 'An email has been sent to reset your password.',
+          success: true,
         });
       } else {
-        this.setState({ error, successMessage: '' });
+        this.setState({ error, success: false });
       }
     })
     .catch(err => console.error('Error: ', err));
@@ -36,7 +38,7 @@ class Forgot extends Component {
   }
 
   render() {
-    const { error, successMessage } = this.state;
+    const { error, success } = this.state;
 
     return (
       <div>
@@ -44,7 +46,7 @@ class Forgot extends Component {
           handleSubmit={this.sendMail}
           handleChange={this.handleChange}
           error={error}
-          successMessage={successMessage}
+          success={success}
         />
       </div>
     );

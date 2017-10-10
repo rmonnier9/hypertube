@@ -14,13 +14,15 @@ class Signup extends Component {
     confirmPassword: '',
     firstName: '',
     lastName: '',
-    error: [],
+    error: [{ param: '', msg: '' }],
     errorPic: '',
     status: 'closed',
     file: {},
   }
 
-  handleChange = ({ target: { name, value } }) => this.setState({ [name]: value, error: [] });
+  handleChange = ({ target: { name, value } }) => {
+    this.setState({ [name]: value, error: [{ param: '', msg: '' }] });
+  }
 
   imageUpload = (file) => { this.setState({ file }); }
 
@@ -63,7 +65,7 @@ class Signup extends Component {
     };
     this.sendInfo(data)
       .then(({ data: { error } }) => {
-        if (error.length !== 0) this.setState({ status: 'closed', error });
+        if (error.length) this.setState({ status: 'closed', error });
         else {
           this.sendPicture(file)
             .then(({ data: { errorPic } }) => {

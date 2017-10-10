@@ -53,7 +53,7 @@ export const postSignup = async (req, res, next) => {
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err); }
     if (existingUser) {
-      return res.send({ error: [{ param: 'email', msg: 'Account with that email address already exists.' }] });
+      return res.send({ error: [{ param: 'email', msg: 'error.emailUsed' }] });
     }
     user.save((err) => {
       if (err) { return next(err); }

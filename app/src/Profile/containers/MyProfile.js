@@ -11,7 +11,7 @@ class MyProfile extends Component {
 
   state = {
     profileLoaded: false,
-    error: '',
+    error: [],
     status: 'closed',
     file: {},
     picture: '',
@@ -22,7 +22,7 @@ class MyProfile extends Component {
     const url = '/api/me';
     axios({ url, method: 'GET' })
     .then(({ data: { error, user } }) => {
-      if (error) {
+      if (error.length) {
         this.setState({ error });
       } else {
         this.user = user;
@@ -61,8 +61,9 @@ class MyProfile extends Component {
     const { file } = this.state;
     this.sendPicture(file)
     .then(({ data: { error, picture } }) => {
-      if (error) this.setState({ status: 'open', error });
-      else {
+      if (error.length) {
+        this.setState({ status: 'open', error });
+      } else {
         this.setState({ status: 'closed', picture });
       }
     });
@@ -77,7 +78,7 @@ class MyProfile extends Component {
       file,
     } = this.state;
 
-    if (error) { return (<div>{error}</div>); }
+    if (error.length) { return (<div>{error}</div>); } // no error backend
     if (!profileLoaded) { return <Loading />; }
 
     return (

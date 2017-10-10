@@ -17,10 +17,12 @@ class Signin extends Component {
   state = {
     email: '',
     password: '',
-    error: [],
+    error: [{ param: '', msg: '' }],
   }
 
-  handleChange = ({ target: { name, value } }) => this.setState({ [name]: value, error: [] });
+  handleChange = ({ target: { name, value } }) => {
+    this.setState({ [name]: value, error: [{ param: '', msg: '' }] })
+  };
 
   handleSubmit = (event) => {
     event.preventDefault();

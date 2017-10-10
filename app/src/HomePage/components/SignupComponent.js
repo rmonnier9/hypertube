@@ -1,82 +1,102 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from './Dialog.js';
 
-const SignupComponent = (props) => {
-  const error = {};
-  props.error.forEach((field) => {
-    error[field.param] = field.msg;
-  });
-  return (
-    <div>
-      <div className="homepage-background" />
-      <div className="homepage-container">
-        <form
-          onSubmit={props.handleNextStep}
-          onChange={props.handleChange}
-        >
-          <h2 className="homepage-title" >Sign up</h2>
-          <TextField
-            hintText="Your email"
-            name="email"
-            errorText={error.email}
-            floatingLabelText="Email"
-            required
-          />
-          <br />
-          <TextField
-            hintText="Your password"
-            type="password"
-            name="password"
-            errorText={error.newPassword}
-            floatingLabelText="Password"
-            required
-          />
-          <br />
-          <TextField
-            hintText="Your password"
-            type="password"
-            name="confirmPassword"
-            errorText={error.confirmPassword}
-            floatingLabelText="Confirm password"
-            required
-          />
-          <br />
-          <TextField
-            hintText="Your first name"
-            name="firstName"
-            errorText={error.firstName}
-            floatingLabelText="First name"
-            required
-          />
-          <br />
-          <TextField
-            hintText="Your last name"
-            name="lastName"
-            errorText={error.lastName}
-            floatingLabelText="Last name"
-            required
-          />
-          <br />
-          <RaisedButton className="homepage-submit" type="submit" name="submit" label="Next" />
-          <br />
-          <Link to="/signin" className="homepage-linkto">Already member?</Link>
-          <Dialog
-            preview={props.preview}
-            handleUpload={props.handleUpload}
-            handleSubmit={props.handleSubmit}
-            error={props.errorPic}
-            status={props.status}
-            file={props.file}
-          />
-        </form>
+class SignupComponent extends Component {
+
+  render() {
+    const error = {};
+    this.props.error.forEach((field) => {
+      if (field.msg) {
+        error[field.param] = this.props.intl.formatMessage({ id: field.msg });
+      }
+    });
+
+    const signUp = this.props.intl.formatMessage({ id: 'homepage.signUp' });
+    const yourEmail = this.props.intl.formatMessage({ id: 'homepage.yourEmail' });
+    const email = this.props.intl.formatMessage({ id: 'homepage.email' });
+    const yourPassword = this.props.intl.formatMessage({ id: 'homepage.yourPassword' });
+    const password = this.props.intl.formatMessage({ id: 'homepage.password' });
+    const confirmPassword = this.props.intl.formatMessage({ id: 'homepage.confirmPassword' });
+    const yourFirstName = this.props.intl.formatMessage({ id: 'homepage.yourFirstName' });
+    const firstName = this.props.intl.formatMessage({ id: 'profile.firstName' });
+    const lastName = this.props.intl.formatMessage({ id: 'profile.lastName' });
+    const yourLastName = this.props.intl.formatMessage({ id: 'homepage.yourLastName' });
+    const alreadyMember = this.props.intl.formatMessage({ id: 'homepage.alreadyMember' });
+    const next = this.props.intl.formatMessage({ id: 'general.next' });
+
+    return (
+      <div>
+        <div className="homepage-background" />
+        <div className="homepage-container">
+          <form
+            onSubmit={this.props.handleNextStep}
+            onChange={this.props.handleChange}
+          >
+            <h2 className="homepage-title">{signUp}</h2>
+            <TextField
+              hintText={yourEmail}
+              name="email"
+              errorText={error.email}
+              floatingLabelText={email}
+              required
+            />
+            <br />
+            <TextField
+              hintText={yourPassword}
+              type="password"
+              name="password"
+              errorText={error.newPassword}
+              floatingLabelText={password}
+              required
+            />
+            <br />
+            <TextField
+              hintText={yourPassword}
+              type="password"
+              name="confirmPassword"
+              errorText={error.confirmPassword}
+              floatingLabelText={confirmPassword}
+              required
+            />
+            <br />
+            <TextField
+              hintText={yourFirstName}
+              name="firstName"
+              errorText={error.firstName}
+              floatingLabelText={firstName}
+              required
+            />
+            <br />
+            <TextField
+              hintText={yourLastName}
+              name="lastName"
+              errorText={error.lastName}
+              floatingLabelText={lastName}
+              required
+            />
+            <br />
+            <RaisedButton className="homepage-submit" type="submit" name="submit" label={next} />
+            <br />
+            <Link to="/signin" className="homepage-linkto">{alreadyMember}</Link>
+            <Dialog
+              preview={this.props.preview}
+              handleUpload={this.props.handleUpload}
+              handleSubmit={this.props.handleSubmit}
+              error={this.props.errorPic}
+              status={this.props.status}
+              file={this.props.file}
+            />
+          </form>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 SignupComponent.PropTypes = {
   handleSubmit: PropTypes.func.required,
@@ -84,4 +104,4 @@ SignupComponent.PropTypes = {
   error: PropTypes.array.required,
 };
 
-export default SignupComponent;
+export default injectIntl(SignupComponent);

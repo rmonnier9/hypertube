@@ -5,5 +5,52 @@ export const errorValue = defineMessages({
     id: 'error.incorrectPassword',
     defaultMessage: 'Incorrect password.',
   },
-
+  noBlankPassword: {
+    id: 'error.noBlankPassword',
+    defaultMessage: 'Password cannot be blank.',
+  },
+  noPasswordLength: {
+    id: 'error.noPasswordLength',
+    defaultMessage: 'Password must be between 4 and 12 characters.',
+  },
+  noPasswordComplex: {
+    id: 'error.noPasswordComplex',
+    defaultMessage: 'Password must contain at least one uppercase, one lowercase and one digit.',
+  },
+  noPasswordMatch: {
+    id: 'error.noPasswordMatch',
+    defaultMessage: 'Passwords do not match.',
+  },
+  noFirstNameLength: {
+    id: 'error.noFirstNameLength',
+    defaultMessage: 'First name can\'t be more than 20 letters long.',
+  },
+  noLastNameLength: {
+    id: 'error.noLastNameLength',
+    defaultMessage: 'Last name can\'t be more than 20 letters long.',
+  },
+  notEmail: {
+    id: 'error.notEmail',
+    defaultMessage: 'Email is not valid.',
+  },
+  emailUsed: {
+    id: 'error.emailUsed',
+    defaultMessage: 'The email address you have entered is already associated with an account.',
+  },
+  noUserName: {
+    id: 'error.noUserName',
+    defaultMessage: 'No account with that name.',
+  },
+  noUserProfile: {
+    id: 'error.noUserProfile',
+    defaultMessage: 'This user profile cannot be found or does not exist.',
+  },
+  noMovie: {
+    id: 'error.noMovie',
+    defaultMessage: 'This movie cannot be found or does not exist.',
+  },
+  invalid: {
+    id: 'error.invalid',
+    defaultMessage: 'Invalid action requested.',
+  },
 });

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Loading from '../../General/components/Loading';
 import '../css/profile.css';
 
@@ -8,7 +8,7 @@ class OneProfile extends Component {
 
   state = {
     profileLoaded: false,
-    error: '',
+    error: [{ param: '', msg: '' }],
   }
 
   componentDidMount() {
@@ -17,12 +17,12 @@ class OneProfile extends Component {
     const url = `/api/profile/id/${id}`;
     axios({ url, method: 'GET' })
     .then(({ data: { error, user } }) => {
-      if (error) {
+      if (error.length) {
         this.setState({ error });
       } else {
         this.user = user;
         this.setState({
-          profileLoaded: true,
+          profileLoaded: true
         });
       }
     });
@@ -33,7 +33,10 @@ class OneProfile extends Component {
       profileLoaded,
       error,
     } = this.state;
-    if (error) { return (<div>{error}</div>); }
+    const errorMessage = error[0].msg ? this.props.intl.formatMessage({ id: error[0].msg }) : '';
+
+    if (error[0].msg) { return <div className="one-user-profile-error">{errorMessage}</div>; }
+
     if (!profileLoaded) { return <Loading />; }
 
     const {
@@ -63,4 +66,4 @@ class OneProfile extends Component {
 
 }
 
-export default OneProfile;
+export default injectIntl(OneProfile);

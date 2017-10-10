@@ -45,6 +45,7 @@ class Filter extends Component {
 
   render() {
     const filter = { ...this.state };
+
     return (
       <form className="selects-container" id="user-form" onSubmit={this.handleSubmit}>
         <Selectors

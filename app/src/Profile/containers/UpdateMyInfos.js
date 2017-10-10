@@ -11,7 +11,7 @@ class UpdateMyInfos extends Component {
     password: '',
     confirmPassword: '',
     change: { email: '', firstName: '', lastName: '' },
-    error: [{ param: '', msg: '', value: '' }],
+    error: [{ param: '', msg: '' }],
     success: false,
   }
 
@@ -39,15 +39,15 @@ class UpdateMyInfos extends Component {
     axios.post(url, infos)
     .then(({ data }) => {
       const { error, user } = data;
-      if (error.length !== 0) {
+      if (error.length) {
         this.setState({ error });
       } else if (id === 'password-form') {
         this.setState({
-          error: [{ param: '', msg: '', value: '' }],
+          error: [{ param: '', msg: '' }],
         });
       } else {
         this.setState({
-          error: [{ param: '', msg: '', value: '' }],
+          error: [{ param: '', msg: '' }],
           change: {
             email: user.email,
             firstName: user.profile.firstName,

@@ -8,10 +8,12 @@ class Reset extends Component {
     password: '',
     confirmPassword: '',
     successMessage: '',
-    error: [],
+    error: [{ param: '', msg: '' }],
   }
 
-  handleChange = ({ target: { name, value } }) => this.setState({ [name]: value, error: [] });
+  handleChange = ({ target: { name, value } }) => {
+    this.setState({ [name]: value, error: [{ param: '', msg: '' }] })
+  };
 
   resetPassword = (event) => {
     event.preventDefault();

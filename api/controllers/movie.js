@@ -6,9 +6,9 @@ export const getInfos = (req, res, next) => {
     if (err) {
       return next(err);
     } else if (movie === null) {
-      return res.send({ error: 'Movie not found' });
+      return res.send({ error: [{ param: 'user', msg: 'error.noMovie' }] });
     }
-    return res.send({ error: '', movie });
+    return res.send({ error: [], movie });
   });
 };
 
