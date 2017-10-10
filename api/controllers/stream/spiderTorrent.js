@@ -115,7 +115,7 @@ const spiderTorrent = async (req, res) => {
   if (!movie) {
     return handler.emit('noMovie', res);
   }
-  await eraseForTest(idImdb, hash);
+  // await eraseForTest(idImdb, hash);
   // SELECT CORRESPONDING TORRENT
   movie.torrents.forEach((currentTorrent) => {
     if (currentTorrent.hash === hash) {
@@ -125,7 +125,8 @@ const spiderTorrent = async (req, res) => {
   console.log('spiderTorrent Notice: Found title and hash:', movie.title);
 
   // If download had aleady started
-  if (!torrent.data || !torrent.data.downloaded) {
+  console.log('the torrent to process', torrent.data);
+  if (!torrent.data || !torrent.data.path) {
     console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', movie.title);
 
     const path = `./torrents/${idImdb}/${hash}`;
@@ -139,7 +140,7 @@ const spiderTorrent = async (req, res) => {
     await startConversion(torrent, file.createReadStream());
     movie.save();
   }
-  // return spiderStreamer(torrent.data, req, res);
+  return spiderStreamer(torrent.data, req, res);
 };
 
 const errorHeader = (res, code) => {
