@@ -5,12 +5,12 @@ import mimeTypes from './mimeTypes';
 
 const ffmpegHash = {};
 
-const startConversion = async (torrent, fileStream) => {
+const startConversion = (torrent, fileStream) => new Promise((resolve, reject) => {
   const { data } = torrent;
   const fileExtension = getFileExtension(data.name);
-  const mime = !mimeTypes[fileExtension];
+  const mime = mimeTypes[fileExtension];
   if (!mime) {
-    throw new Error(`spiderStreamer: Invalid mime type: ${data.name}`);
+    reject(new Error(`spiderStreamer: Invalid mime type: ${data.name}`));
   }
 
   // // NO CONVERSION NEEDED
@@ -20,9 +20,9 @@ const startConversion = async (torrent, fileStream) => {
   // }
 
   // ALREADY CONVERTING
-  if (!ffmpegHash[torrent.hash]) {
+  if (ffmpegHash[torrent.hash]) {
     console.log('startConversion Notice: Already converting');
-    return;
+    return resolve();
   }
 
 
@@ -43,17 +43,18 @@ const startConversion = async (torrent, fileStream) => {
     .on('codecData', (codecData) => {
       console.log('fluent-ffmpeg Notice: CodecData:', codecData);
       ffmpegHash[torrent.hash] = codecData;
+      resolve();
     })
-  // .on('progress', function(progress) {
-  // console.log('fluent-ffmpeg Notice: Progress:', progress.timemark, 'converted');
-  // })
-  // .inputFormat(format)
+    .on('progress', (progress) => {
+      console.log('fluent-ffmpeg Notice: Progress:', progress.timemark, 'converted');
+    })
+    .inputFormat(fileExtension.substr(1))
     .audioCodec('aac')
     .videoCodec('libx264')
     .output(data.path)
     .outputFormat('mp4')
     .outputOptions('-movflags frag_keyframe+empty_moov')
     .run();
-};
+});
 
 export default startConversion;

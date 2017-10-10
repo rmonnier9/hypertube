@@ -24,7 +24,3 @@ class CardOverlay extends Component {
 }
 
 export default injectIntl(CardOverlay);
-
-// <button className="card-button">View details</button>
-// <h4>{movie.genres[0] || null}</h4>
-// <h4>{movie.genres[1] || null}</h4>

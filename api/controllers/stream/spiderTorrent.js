@@ -1,4 +1,3 @@
-import bluebird from 'bluebird';
 import events from 'events';
 import torrentStream from 'torrent-stream';
 import Movie from '../../models/Movie';
@@ -6,8 +5,6 @@ import mimeTypes from './mimeTypes';
 import spiderStreamer from './spiderStreamer';
 import getFileExtension from './getFileExtension';
 import startConversion from './startConversion';
-
-const fs = bluebird.promisifyAll(require('fs'));
 
 const handler = new events.EventEmitter();
 const settings = {
@@ -111,7 +108,7 @@ const spiderTorrent = async (req, res) => {
     const path = `./torrents/${idImdb}/${hash}`;
     const file = await getFileStreamTorrent(`magnet:?xt=urn:btih:${hash}`, path, torrent);
     torrent.data = {
-      path,
+      path: `${path}/${file.path}`,
       name: file.name,
       size: file.length,
       torrentDate: new Date(),

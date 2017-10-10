@@ -80,8 +80,9 @@ class MyInfosForms extends Component {
       </div>
     );
     const changePassword = this.props.intl.formatMessage({ id: 'profile.changePassword' });
-    const Name = this.props.intl.formatMessage({ id: 'profile.name' });
-    const Contact = this.props.intl.formatMessage({ id: 'profile.contact' });
+    const name = this.props.intl.formatMessage({ id: 'profile.name' });
+    const contact = this.props.intl.formatMessage({ id: 'profile.contact' });
+    const errorMessage = this.props.intl.formatMessage({ id: 'profile.changePassword' });
     return (
       <div className="infos-container">
         <div>
@@ -92,14 +93,14 @@ class MyInfosForms extends Component {
             <button id="password" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
           </div>
           <span className="infos-title"><b>
-            { Name }
+            { name }
           </b></span>
           <span>{firstName} {lastName}</span>
           <button id="name" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
         </div>
         <div>
           <span className="infos-title">
-            { Contact }
+            { contact }
           </span>
           <span>{email}</span>
           <button id="email" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />

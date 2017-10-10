@@ -147,6 +147,7 @@ class Gallery extends Component {
         >
           <MovieList
             movies={movies}
+            hasMoreItems={hasMoreItems}
           />
         </InfiniteScroll>
       </div>

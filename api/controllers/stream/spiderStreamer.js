@@ -1,4 +1,6 @@
 import bluebird from 'bluebird';
+import mimeTypes from './mimeTypes';
+import getFileExtension from './getFileExtension';
 
 const fs = bluebird.promisifyAll(require('fs'));
 
@@ -35,8 +37,13 @@ const spiderStreamer = (data, req, res) => (
       info.start = 0;
       info.end = size - 1;
       info.size = size;
+      const fileExtension = getFileExtension(data.name);
+      const mime = mimeTypes[fileExtension];
+      info.mime = mime;
+
       let { range } = req.headers;
       const { query } = req;
+
       if (range && range.match(/bytes=(.+)-(.+)?/) !== null) {
         range = range.match(/bytes=(.+)-(.+)?/);
         if (isNumber(range[1]) && range[1] >= 0 && range[1] < info.end) {
@@ -59,7 +66,8 @@ const spiderStreamer = (data, req, res) => (
 
       console.log('spiderStreamer Notice: Sending header');
       downloadHeader(res, info);
-      const stream = fs.createReadStream(info.path, { flags: 'r', start: info.start, end: info.end });
+
+      const stream = fs.createReadStream(data.path, { flags: 'r', start: info.start, end: info.end });
       console.log('spiderStreamer Notice: Piping stream...');
       stream.pipe(res);
       console.log('spiderStreamer Notice: Pipe set');
@@ -70,29 +78,19 @@ const downloadHeader = (res, info) => {
   let code = 200;
   let header;
 
-  if (settings.forceDownload) {
-    header = {
-      Expires: 0,
-      'Cache-Control': 'must-revalidate, post-check=0, pre-check=0',
-      // "Cache-Control": "private",
-      'Content-Type': info.mime,
-      'Content-Disposition': `attachment; filename=${info.name};`
-    };
-  } else {
-    header = {
-      'Cache-Control': `public; max-age=${settings.maxAge}`,
-      Connection: 'keep-alive',
-      'Content-Type': info.mime,
-      'Content-Disposition': `inline; filename=${info.name};`,
-      'Accept-Ranges': 'bytes'
-    };
+  header = {
+    'Cache-Control': `public; max-age=${settings.maxAge}`,
+    Connection: 'keep-alive',
+    'Content-Type': info.mime,
+    'Content-Disposition': `inline; filename=${info.name};`,
+    'Accept-Ranges': 'bytes'
+  };
 
-    if (info.rangeRequest) {
-      // Partial http response
-      code = 206;
-      header.Status = '206 Partial Content';
-      header['Content-Range'] = `bytes ${info.start}-${info.end}/${info.size}`;
-    }
+  if (info.rangeRequest) {
+    // Partial http response
+    code = 206;
+    header.Status = '206 Partial Content';
+    header['Content-Range'] = `bytes ${info.start}-${info.end}/${info.size}`;
   }
 
   header.Pragma = 'public';
