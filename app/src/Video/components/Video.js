@@ -6,7 +6,7 @@ export default class App extends Component {
     const url = `http://localhost:3000/api/movie/stream/${id}/${hash}`;
 
     return (
-      <video id="videoPlayer" controls>
+      <video autoplay id="videoPlayer" controls>
         <source src={url} type="video/mp4" />
       </video>
     );

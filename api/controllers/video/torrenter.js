@@ -31,6 +31,8 @@ const engineHash = {};
 const setUpEngine = (engine, file, torrent) => {
   engine.on('download', (pieceIndex) => {
     if (pieceIndex % 10 === 0) {
+      const completion = Math.round((100 * engine.swarm.downloaded) / file.length);
+      console.log('Completion ', completion, ' %');
       console.log('torrentStream Notice: Engine', engine.infoHash, 'downloaded piece: Index:', pieceIndex, '(', engine.swarm.downloaded, '/', file.length, ')');
     }
   });
@@ -90,12 +92,12 @@ const getFileStreamTorrent = (torrentPath, torrent) => new Promise((resolve, rej
 const videoTorrenter = async (req, res, next) => {
   // If download had aleady started
   if (req.torrent.data && req.torrent.data.downloaded) {
-    next();
+    return next();
   }
   console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', req.torrent.title.en);
 
   const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;
-  const file = await getFileStreamTorrent(pathFolder, req.torrent);
+  const file = await getFileStreamTorrent(pathFolder, req.torrent, res, req.idImdb);
   req.torrent.data = {
     path: `${pathFolder}/${file.path}`,
     name: file.name,
@@ -105,7 +107,7 @@ const videoTorrenter = async (req, res, next) => {
   };
   await Movie.updateOne({ idImdb: req.idImdb, 'torrents.hash': req.torrent.hash }, { $set: { 'torrents.$.data': req.torrent.data } });
   await startConversion(req.torrent, file.createReadStream());
-  return getVideoStream(req, res);
+  return next();
 };
 
 export default videoTorrenter;

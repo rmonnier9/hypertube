@@ -16,7 +16,7 @@ const startConversion = (torrent, fileStream) => new Promise((resolve, reject) =
   // NO CONVERSION NEEDED
   if (mime === 'video/mp4' || mime === 'video/webm' || mime === 'video/ogg') {
     console.log('spiderStreamer Notice: No conversion needed:', mime);
-    return;
+    return resolve();
   }
 
   // ALREADY CONVERTING

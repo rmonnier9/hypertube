@@ -39,6 +39,7 @@ const downloadHeader = (res, info) => {
 };
 
 const videoStream = (req, res) => {
+  console.log('torrentttttt', req.torrent);
   const { path, name } = req.torrent.data;
 
   return new Promise(((resolve, reject) => {
@@ -70,10 +71,11 @@ const videoStream = (req, res) => {
 
       const fileExtension = getFileExtension(name);
       const mime = mimeTypes[fileExtension];
-      console.log(fileExtension, mime);
+      console.log('VIDEO STREAM, ext and mime', fileExtension, mime);
       info.mime = mime;
 
       let { range } = req.headers;
+      console.log('VIDEO STREAM RANGE', range);
       if (range && range.match(/bytes=(.+)-(.+)?/)) {
         range = range.match(/bytes=(.+)-(.+)?/);
         if (isNumber(range[1]) && range[1] >= 0 && range[1] < info.end) {
