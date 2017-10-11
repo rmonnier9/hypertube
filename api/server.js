@@ -17,7 +17,7 @@ import passportConfig from './config/passport';
 import routes from './routes';
 
 
-import movieScraper from './controllers/movieScraper';
+// import movieScraper from './controllers/scraper/movieScraper';
 
 // movieScraper();
 
