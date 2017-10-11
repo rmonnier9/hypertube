@@ -41,6 +41,8 @@
     "general.save": "Sauvegarder",
     "general.submit": "Confirmer",
     "general.cancel": "Annuler",
+    "general.pageNotFound": "Page indisponible",
+    "general.noPage": "Oups... La page que vous essayez de voir n'existe pas.",
     "nav.myprofile": "MON PROFIL",
     "nav.gallery": "GALERIE",
     "movie.with": "Avec",
@@ -75,6 +77,7 @@
     "error.noUserProfile": "Le profil de cet utilisateur n'est pas disponible ou n'existe pas.",
     "error.imageOnly": "Seule une image peut être téléchargée.",
     "error.noMovie": "Ce film n'est pas disponible ou n'existe pas.",
+    "error.noToken": "Ce lien n'est pas valide ou a expiré.",
     "error.invalid": "Action invalide."
   },
   "en-en": {
@@ -119,6 +122,8 @@
     "general.save": "Save",
     "general.submit": "Submit",
     "general.cancel": "Cancel",
+    "general.pageNotFound": "Page Not Found",
+    "general.noPage": "Sorry, but the page you were trying to view does not exist.",
     "nav.myprofile": "MY PROFIL",
     "nav.gallery": "GALLERY",
     "movie.with": "With",
@@ -153,6 +158,7 @@
     "error.noUserProfile": "This user profile cannot be found or does not exist.",
     "error.imageOnly": "Please upload an image only.",
     "error.noMovie": "This movie cannot be found or does not exist.",
+    "error.noToken": "Password reset token is invalid or has expired.",
     "error.invalid": "Invalid action requested."
   }
 }

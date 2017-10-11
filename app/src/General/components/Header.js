@@ -38,9 +38,3 @@ const mapStateToProps = ({
 
 // Use default export for the connected component (for app)
 export default connect(mapStateToProps)(Header);
-
-// {isAuthenticated &&
-//   <NavBar
-//     handleSignOut={this.handleSignOut}
-//   />
-// }

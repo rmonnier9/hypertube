@@ -1,10 +1,16 @@
 import React from 'react';
+import { injectIntl } from 'react-intl';
 
-const NotFound = () => (
-  <div className="not-found">
-    <h1>Page Not Found</h1>
-    <p>Sorry, but the page you were trying to view does not exist.</p>
-  </div>
-);
+const NotFound = (props) => {
+  const pageNotFound = props.intl.formatMessage({ id: 'general.pageNotFound' });
+  const noPage = props.intl.formatMessage({ id: 'general.noPage' });
 
-export default NotFound;
+  return (
+    <div className="not-found">
+      <h1>{pageNotFound}</h1>
+      <p>{noPage}</p>
+    </div>
+  );
+};
+
+export default injectIntl(NotFound);

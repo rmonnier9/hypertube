@@ -12,6 +12,7 @@ class MyProfile extends Component {
   state = {
     profileLoaded: false,
     error: [],
+    errorPic: [{ param: '', msg: '' }],
     status: 'closed',
     file: {},
     picture: '',
@@ -60,11 +61,11 @@ class MyProfile extends Component {
     event.preventDefault();
     const { file } = this.state;
     this.sendPicture(file)
-    .then(({ data: { error, picture } }) => {
-      if (error.length) {
-        this.setState({ status: 'open', error });
+    .then(({ data: { errorPic, picture } }) => {
+      if (errorPic.length) {
+        this.setState({ status: 'open', errorPic });
       } else {
-        this.setState({ status: 'closed', picture });
+        this.setState({ status: 'closed', picture, errorPic: [{ param: '', msg: '' }] });
       }
     });
   }
@@ -73,6 +74,7 @@ class MyProfile extends Component {
     const {
       profileLoaded,
       error,
+      errorPic,
       picture,
       status,
       file,
@@ -98,6 +100,7 @@ class MyProfile extends Component {
           handleClose={this.handleClose}
           status={status}
           file={file}
+          errorPic={errorPic}
         />
         <UpdateMyInfos user={this.user} />
         <FindUser

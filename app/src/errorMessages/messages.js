@@ -57,6 +57,10 @@ export const errorValue = defineMessages({
     id: 'error.noMovie',
     defaultMessage: 'This movie cannot be found or does not exist.',
   },
+  noToken: {
+    id: 'error.noToken',
+    defaultMessage: 'Password reset token is invalid or has expired.',
+  },
   invalid: {
     id: 'error.invalid',
     defaultMessage: 'Invalid action requested.',

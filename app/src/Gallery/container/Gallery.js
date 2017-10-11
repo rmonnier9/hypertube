@@ -14,7 +14,7 @@ class Gallery extends Component {
   constructor(props) {
     super(props);
     const { search } = props.location;
-    this.lang = props.locale.split('-').pop();
+    this.lang = props.locale.split('-')[0];
     this.mounted = true;
     this.state = {
       search,

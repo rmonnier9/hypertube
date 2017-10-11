@@ -29,6 +29,14 @@ export const searchValue = defineMessages({
     id: 'general.cancel',
     defaultMessage: 'cancel',
   },
+  pageNotFound: {
+    id: 'general.pageNotFound',
+    defaultMessage: 'Page Not Found',
+  },
+  noPage: {
+    id: 'general.noPage',
+    defaultMessage: 'Sorry, but the page you were trying to view does not exist.',
+  },
   myprofile: {
     id: 'nav.myprofile',
     defaultMessage: 'MY PROFIL',

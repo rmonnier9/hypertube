@@ -21,14 +21,12 @@ class Movie extends Component {
   }
 
   componentDidMount() {
-    const { pathname } = this.props.location;
-    const idImdb = pathname.split('/').pop();
+    const idImdb = this.props.match.params.idImdb;
     this.getMovie(idImdb);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { pathname } = nextProps.location;
-    const idImdb = pathname.split('/').pop();
+    const idImdb = nextProps.match.params.idImdb;
     this.setState({ loaded: false, error: [{ param: '', msg: '' }] });
     this.getMovie(idImdb);
   }

@@ -21,7 +21,7 @@ const getSortObj = (sort) => {
       sortObj = { 'torrents.seeds': -1 };
       break;
 
-    // sort by name when user do an open research
+    // sort by name when user does an open research
     case 'name-en':
       sortObj = { 'title.en': 1 };
       break;

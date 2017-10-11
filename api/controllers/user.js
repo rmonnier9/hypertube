@@ -198,7 +198,7 @@ export const postReset = async (req, res, next) => {
     .where('passwordResetExpires').gt(Date.now())
     .then((user) => {
       if (!user) {
-        return res.send({ error: [{ param: 'token', msg: 'Password reset token is invalid or has expired.' }] });
+        return res.send({ error: [{ param: 'token', msg: 'error.noToken' }] });
       }
       user.password = req.body.password;
       user.passwordResetToken = undefined;
@@ -232,7 +232,7 @@ export const postForgot = async (req, res, next) => {
       .findOne({ email: req.body.email })
       .then((user) => {
         if (!user) {
-          return res.send({ error: [{ param: 'email', msg: 'No account with that email.' }] });
+          return res.send({ error: [{ param: 'email', msg: 'error.noEmailUsed' }] });
         }
         user.passwordResetToken = token;
         user.passwordResetExpires = Date.now() + 3600000; // 1 hour
