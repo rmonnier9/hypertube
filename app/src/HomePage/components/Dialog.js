@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Dialog from 'material-ui/Dialog';
+import { injectIntl } from 'react-intl';
 import FlatButton from 'material-ui/FlatButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import UploadPicture from './UploadPicture';
@@ -7,7 +8,7 @@ import UploadPicture from './UploadPicture';
 /**
  * A modal dialog can only be closed by selecting one of the actions.
  */
-export default class CustomDialog extends Component {
+class CustomDialog extends Component {
 
   state = {
     open: false,
@@ -28,21 +29,34 @@ export default class CustomDialog extends Component {
   render() {
     const file = this.props.file === undefined ? {} : this.props.file;
     const preview = this.props.file === undefined ? null : this.props.file.preview;
-    const error = this.props.file === undefined ? 'Please upload an image only.' : this.props.error;
+    let error;
+    if (this.props.error[0].msg) {
+      error = this.props.intl.formatMessage({ id: this.props.error[0].msg });
+    } else if (this.props.file === undefined) {
+      error = this.props.intl.formatMessage({ id: 'error.imageOnly' });
+    } else {
+      error = '';
+    }
+
+    const cancel = this.props.intl.formatMessage({ id: 'general.cancel' });
+    const submit = this.props.intl.formatMessage({ id: 'general.submit' });
+
     const actions = [
       <FlatButton
-        label="Cancel"
+        label={cancel}
         primary
         onClick={this.handleClose}
       />,
       <FlatButton
-        label="Submit"
+        label={submit}
         primary
         disabled={!preview}
         onClick={this.props.handleSubmit}
       />,
     ];
+
     if (this.props.status === 'loading') return <CircularProgress />;
+
     return (
       <div>
         <Dialog
@@ -60,3 +74,5 @@ export default class CustomDialog extends Component {
     );
   }
 }
+
+export default injectIntl(CustomDialog);

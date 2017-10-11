@@ -69,3 +69,8 @@ a.play:hover {
 button.play:focus {
   outline: none;
 }
+
+.movie-error {
+  color: #F5F5F5;
+  margin-left: 10px;
+}

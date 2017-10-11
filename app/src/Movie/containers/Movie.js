@@ -17,19 +17,17 @@ class Movie extends Component {
 
   state = {
     loaded: false,
-    error: null,
+    error: [{ param: '', msg: '' }],
   }
 
   componentDidMount() {
-    const { pathname } = this.props.location;
-    const idImdb = pathname.split('/').pop();
+    const idImdb = this.props.match.params.idImdb;
     this.getMovie(idImdb);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { pathname } = nextProps.location;
-    const idImdb = pathname.split('/').pop();
-    this.setState({ loaded: false, error: null });
+    const idImdb = nextProps.match.params.idImdb;
+    this.setState({ loaded: false, error: [{ param: '', msg: '' }] });
     this.getMovie(idImdb);
   }
 
@@ -41,7 +39,7 @@ class Movie extends Component {
       method: 'GET',
     })
     .then(({ data: { error, movie } }) => {
-      if (error) {
+      if (error.length) {
         this.setState({ error, loaded: true });
       } else {
         this.movie = movie;
@@ -56,23 +54,28 @@ class Movie extends Component {
     const { loaded, error } = this.state;
     const lang = this.props.locale.split('-')[0];
     const movie = this.movie;
+    const errorMessage = error[0].msg ? this.props.intl.formatMessage({ id: error[0].msg }) : '';
+
     if (loaded === false) { return <Loading />; }
-    if (error) { return <h2>{error}</h2>; }
+
+    if (error[0].msg) { return <div className="movie-error">{errorMessage}</div>; }
+
     const genres = movie.genres.map((genre, index, array) => {
       if (index === array.length - 1) {
         return (<span key={genre[lang]}>{genre[lang]}</span>);
       }
       return (<span key={genre[lang]}>{genre[lang]}, </span>);
     });
+
     const actors = movie.stars.map((actor, index, array) => {
       if (index === array.length - 1) {
         return (<span key={actor}>{actor}</span>);
       }
       return (<span key={actor}>{actor}, </span>);
     });
+
     const timeObj = timing(movie.runtime);
     const time = `${timeObj.hours}h${timeObj.minutes}`;
-
     const witho = this.props.intl.formatMessage({ id: 'movie.with' });
     const director = this.props.intl.formatMessage({ id: 'movie.director' });
     const genresValue = this.props.intl.formatMessage({ id: 'movie.genres' });

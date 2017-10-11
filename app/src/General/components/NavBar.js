@@ -5,17 +5,34 @@ import { connect } from 'react-redux';
 import { updateLocale } from '../../reducers/i18n';
 import '../css/nav.css';
 
-const SignOutMenu = props => (
-  <button
-    onClick={props.handleSignOut}
-    className="glyphicon glyphicon-off"
-  />
-);
-
 class NavBar extends Component {
   render() {
     const myProfile = this.props.intl.formatMessage({ id: 'nav.myprofile' });
     const gallery = this.props.intl.formatMessage({ id: 'nav.gallery' });
+    const { isAuthenticated } = this.props;
+
+    let profileNav;
+    let galleryNav;
+    let signOut;
+    if (isAuthenticated) {
+      profileNav = <Link to="/myprofile">{ myProfile }</Link>;
+      galleryNav = <Link to="/">{ gallery }</Link>;
+      signOut = (
+        <button
+          onClick={this.props.handleSignOut}
+          className="glyphicon glyphicon-off"
+        />
+      );
+    } else {
+      profileNav = '';
+      galleryNav = '';
+      signOut = (
+        <span
+          className="glyphicon glyphicon-off off"
+        />
+      );
+    }
+
     return (
       <nav className="navbar">
         <div className="container-fluid">
@@ -26,14 +43,10 @@ class NavBar extends Component {
           </div>
           <ul className="nav navbar-nav">
             <li className="nav-link">
-              <Link to="/myprofile">
-                { myProfile }
-              </Link>
+              {profileNav}
             </li>
             <li className="nav-link">
-              <Link to="/">
-                { gallery }
-              </Link>
+              {galleryNav}
             </li>
           </ul>
           <ul className="nav navbar-nav navbar-right">
@@ -44,9 +57,7 @@ class NavBar extends Component {
               <button className="nav-lang" onClick={() => this.props.onLocaleChange('en-en')}>EN</button>
             </li>
             <li className="nav-link">
-              <SignOutMenu
-                handleSignOut={this.props.handleSignOut}
-              />
+              {signOut}
             </li>
           </ul>
         </div>

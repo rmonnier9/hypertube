@@ -130,3 +130,8 @@ a.one-user-search-display {
 .one-user-profile {
   margin-bottom: 20px;
 }
+
+.one-user-profile-error {
+  color: #F5F5F5;
+  margin-left: 10px;
+}

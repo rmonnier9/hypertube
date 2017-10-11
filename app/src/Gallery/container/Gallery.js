@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
-// import Loading from '../../General/components/Loading';
 import MovieList from '../components/MovieList.js';
 import SearchBar from '../components/SearchBar.js';
 import Filter from './Filter.js';
 import '../css/gallery.css';
 
 const CancelToken = axios.CancelToken;
-const lang = 'fr';
 
 class Gallery extends Component {
 
   constructor(props) {
     super(props);
-    const { search } = this.props.location;
+    const { search } = props.location;
+    this.lang = props.locale.split('-')[0];
     this.mounted = true;
     this.state = {
       search,
@@ -92,7 +92,7 @@ class Gallery extends Component {
     } = this.state;
     source.cancel('Request canceled by reloading.');
     const { pathname } = this.props.location;
-    const newUrl = `${pathname}?name=${search}&sort=name-${lang}`;
+    const newUrl = `${pathname}?name=${search}&sort=name-${this.lang}`;
     this.props.history.push(newUrl);
     this.setState({
       search,
@@ -128,7 +128,6 @@ class Gallery extends Component {
       movies,
       hasMoreItems,
     } = this.state;
-    // const loader = <Loading />;
     if (!this.mounted) return null;
     return (
       <div>
@@ -153,7 +152,10 @@ class Gallery extends Component {
       </div>
     );
   }
-
 }
 
-export default Gallery;
+const mapStateToProps = ({ i18n: { locale } }) => ({
+  locale,
+});
+
+export default connect(mapStateToProps)(Gallery);

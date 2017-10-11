@@ -1,12 +1,12 @@
 .homepage-container {
   margin: auto;
-  margin-top: 25vh;
-  width: 400px;
+  margin-top: 15vh;
+  width: 450px;
   /*min-height: 400px;*/
   padding: 10px 25px 25px 25px;
   border-style: solid;
   border-width: 2px;
-  border-radius: 10px;
+  /*border-radius: 10px;*/
   background-color: #F5F5F5;
   border-color: green;
   position: relative;
