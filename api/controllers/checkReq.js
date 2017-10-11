@@ -3,7 +3,6 @@
  */
 
 const checkReq = async (req) => {
-
   if (req.body.email !== undefined) {
     req.checkBody('email', 'Email is not valid').isEmail();
     req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
@@ -30,7 +29,6 @@ const checkReq = async (req) => {
   const error = validationObj.array();
 
   return (error.length) ? error : [];
-
 };
 
 export default checkReq;

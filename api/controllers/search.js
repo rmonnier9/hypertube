@@ -36,6 +36,11 @@ const getSortObj = (sort) => {
   return sortObj;
 };
 
+/**
+ * GET /api/gallery/search
+ * Search movies into database.
+ */
+
 export const getSearch = async (req, res) => {
   const { query } = req;
   let matchObj = {};
