@@ -15,10 +15,10 @@ export const postSignin = async (req, res, next) => {
     return res.send({ error });
   }
 
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate('local', (err, user) => {
     if (err) { return next(err); }
     if (!user) {
-      return res.send({ error: info });
+      return res.send({ error: [{ param: 'email', msg: 'error.noEmailUsed' }] });
     }
     const token = jwt.sign({ _id: user._id, email: user.email, provider: 'local' }, process.env.SESSION_SECRET);
     const { lang } = user.profile;

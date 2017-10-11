@@ -21,6 +21,14 @@ export const searchValue = defineMessages({
     id: 'general.send',
     defaultMessage: 'Send',
   },
+  submit: {
+    id: 'general.submit',
+    defaultMessage: 'Submit',
+  },
+  cancel: {
+    id: 'general.cancel',
+    defaultMessage: 'cancel',
+  },
   myprofile: {
     id: 'nav.myprofile',
     defaultMessage: 'MY PROFIL',

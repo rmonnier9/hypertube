@@ -37,6 +37,10 @@ export const errorValue = defineMessages({
     id: 'error.emailUsed',
     defaultMessage: 'The email address you have entered is already associated with an account.',
   },
+  noEmailUsed: {
+    id: 'error.noEmailUsed',
+    defaultMessage: 'There is no account with this email.',
+  },
   noUserName: {
     id: 'error.noUserName',
     defaultMessage: 'No account with that name.',
@@ -44,6 +48,10 @@ export const errorValue = defineMessages({
   noUserProfile: {
     id: 'error.noUserProfile',
     defaultMessage: 'This user profile cannot be found or does not exist.',
+  },
+  imageOnly: {
+    id: 'error.imageOnly',
+    defaultMessage: 'Please upload an image only.',
   },
   noMovie: {
     id: 'error.noMovie',

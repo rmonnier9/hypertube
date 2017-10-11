@@ -15,7 +15,7 @@ class Signup extends Component {
     firstName: '',
     lastName: '',
     error: [{ param: '', msg: '' }],
-    errorPic: '',
+    errorPic: [{ param: '', msg: '' }],
     status: 'closed',
     file: {},
   }
@@ -69,7 +69,7 @@ class Signup extends Component {
         else {
           this.sendPicture(file)
             .then(({ data: { errorPic } }) => {
-              if (errorPic) this.setState({ status: 'open', errorPic });
+              if (errorPic.length) this.setState({ status: 'open', errorPic });
               else {
                 this.setState({ status: 'closed' });
                 this.props.dispatch(loginUser({

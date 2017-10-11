@@ -8,11 +8,13 @@ import RaisedButton from 'material-ui/RaisedButton';
 const InputForgot = (props) => {
   const error = {};
   props.error.forEach((field) => {
-    error[field.param] = field.msg;
+    if (field.msg) {
+      error[field.param] = props.intl.formatMessage({ id: field.msg });
+    }
   });
 
   const { success } = props;
-  const emailResetPassword = success ? props.intl.formatMessage({ id: 'homepage.emailResetPassword' }) : '';
+  const confirmForgotPassword = success ? props.intl.formatMessage({ id: 'homepage.confirmForgotPassword' }) : '';
 
   const forgotPassword = props.intl.formatMessage({ id: 'homepage.forgotPassword' });
   const yourEmail = props.intl.formatMessage({ id: 'homepage.yourEmail' });
@@ -39,7 +41,7 @@ const InputForgot = (props) => {
           <RaisedButton className="homepage-submit" type="submit" name="submit" label={send} />
         </form>
         <br />
-        <div style={{ color: 'green' }}>{emailResetPassword}</div>
+        <div style={{ color: 'green' }}>{confirmForgotPassword}</div>
         <br />
         <Link to="/signin" className="homepage-linkto">{nevermind}</Link>
       </div>

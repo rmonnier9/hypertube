@@ -61,13 +61,21 @@ export const homeValue = defineMessages({
     id: 'homepage.forgotPassword',
     defaultMessage: 'Forgot password',
   },
-  emailResetPassword: {
-    id: 'homepage.emailResetPassword',
+  confirmForgotPassword: {
+    id: 'homepage.confirmForgotPassword',
     defaultMessage: 'An email has been sent to reset your password.',
+  },
+  confirmResetPassword: {
+    id: 'homepage.confirmResetPassword',
+    defaultMessage: 'Your password has been changed. You can now log in.',
   },
   nevermind: {
     id: 'homepage.nevermind',
     defaultMessage: 'Nevermind, I remember...',
+  },
+  uploadImage: {
+    id: 'homepage.uploadProfilePic',
+    defaultMessage: 'Upload a profile picture',
   },
 
 });

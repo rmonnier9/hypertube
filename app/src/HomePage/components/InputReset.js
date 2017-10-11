@@ -8,9 +8,13 @@ import RaisedButton from 'material-ui/RaisedButton';
 const InputReset = (props) => {
   const error = {};
   props.error.forEach((field) => {
-    error[field.param] = field.msg;
+    if (field.msg) {
+      error[field.param] = props.intl.formatMessage({ id: field.msg });
+    }
   });
-  const { successMessage } = props;
+
+  const { success } = props;
+  const confirmResetPassword = success ? props.intl.formatMessage({ id: 'homepage.confirmResetPassword' }) : '';
 
   const changePassword = props.intl.formatMessage({ id: 'homepage.changePassword' });
   const confirmPassword = props.intl.formatMessage({ id: 'homepage.confirmPassword' });
@@ -47,7 +51,7 @@ const InputReset = (props) => {
           <RaisedButton className="homepage-submit" type="submit" name="submit" label={send} />
         </form>
         <br />
-        <div style={{ color: 'green' }}>{successMessage}</div>
+        <div style={{ color: 'green' }}>{confirmResetPassword}</div>
         <div style={{ color: 'red' }}>{error.token}</div>
         <br />
         <Link to="/signin" className="homepage-linkto">{logIn}</Link>
