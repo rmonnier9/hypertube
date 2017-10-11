@@ -4,7 +4,7 @@ import * as authentication from './controllers/authentication';
 import * as picture from './controllers/picture';
 import * as search from './controllers/search';
 import * as comment from './controllers/comment';
-import * as genre from './controllers/genreCount';
+import * as genre from './controllers/scraper/genreCount';
 import * as video from './controllers/video';
 
 const routes = async (app, passport, upload) => {
