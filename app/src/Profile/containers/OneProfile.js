@@ -12,8 +12,7 @@ class OneProfile extends Component {
   }
 
   componentDidMount() {
-    const { pathname } = this.props.location;
-    const id = pathname.split('/').pop();
+    const { id } = this.props.match.params;
     const url = `/api/profile/id/${id}`;
     axios({ url, method: 'GET' })
     .then(({ data: { error, user } }) => {

@@ -8,6 +8,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 class SigninComponent extends Component {
 
   render() {
+  	const oauth = (url) => window.location.replace(`${url}?next=http://localhost:3000`);
+
     const error = {};
     this.props.error.forEach((field) => {
       if (field.msg) {
@@ -53,7 +55,17 @@ class SigninComponent extends Component {
             <br />
             <RaisedButton className="homepage-submit" type="submit" name="submit" label={enter} />
             <br />
-            <a target="_new" href="/api/auth/google">GoogleAuth (in progress)</a>
+            <span
+              onClick={() => oauth('/api/auth/google')}
+            >
+              Google Auth
+            </span>
+            <br />
+            <span
+              onClick={() => oauth('/api/auth/42')}
+            >
+              42 Auth
+            </span>
             <br />
             <Link to="/forgot" className="homepage-linkto">{forgot}</Link>
             <br />
