@@ -1,5 +1,5 @@
-import Movie from '../../models/Movie';
-import Genre from '../../models/Genre';
+import Movie from '../models/Movie';
+import Genre from '../models/Genre';
 
 const changes = [
   { en: 'Drama', fr: 'Drame' },

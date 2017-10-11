@@ -42,7 +42,7 @@ export const fortytwo = async (req, res, next) => {
     res.set('Access-Control-Expose-Headers', 'x-access-token');
     res.set('x-access-token', token);
     res.set('lang-user', lang);
-    res.send({ error: '' });
+    res.redirect('/');
   })(req, res, next);
 };
 
@@ -51,7 +51,7 @@ export const fortytwo = async (req, res, next) => {
  * Sign in using Google.
  */
 export const google = async (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate('google', (err, user, info) => {
     if (err) { return next(err); }
     if (!user) {
       return res.send({ error: info });

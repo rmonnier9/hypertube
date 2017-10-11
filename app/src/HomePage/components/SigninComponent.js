@@ -10,6 +10,8 @@ const SigninComponent = (props) => {
     error[field.param] = field.msg;
   });
 
+	const oauth = (url) => window.location.replace(`${url}?next=http://localhost:3000`);
+
   return (
     <div>
       <div className="homepage-background" />
@@ -39,7 +41,17 @@ const SigninComponent = (props) => {
           <br />
           <RaisedButton className="homepage-submit" type="submit" name="submit" label="Enter" />
           <br />
-          <a target="_new" href="/api/auth/google">GoogleAuth (in progress)</a>
+          <span
+            onClick={() => oauth('/api/auth/google')}
+          >
+            Google Auth
+          </span>
+          <br />
+          <span
+            onClick={() => oauth('/api/auth/42')}
+          >
+            42 Auth
+          </span>
           <br />
           <Link to="/forgot" className="homepage-linkto">Forgot password?</Link>
           <br />
