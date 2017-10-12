@@ -34,33 +34,28 @@ const Comment = ({ comment, locale }) => (
   </div>
 );
 
-class CommentList extends Component {
+const CommentList = (props) => {
+  const ifOne = props.intl.formatMessage({ id: 'comments.ifOne' });
+  const { comments } = props;
 
-  render() {
-    const ifOne = this.props.intl.formatMessage({ id: 'comments.ifOne' });
-    const { comments } = this.props;
-    const lang = this.props.locale;
-    console.log(lang);
-
-    if (!comments || !comments.length) {
-      return (
-        <CommentBlock>
-          { ifOne }
-        </CommentBlock>
-      );
-    }
-
+  if (!comments || !comments.length) {
     return (
-      <div>
-        {comments.map(comment => (
-          <CommentBlock key={comment.id}>
-            <Comment comment={comment} locale={this.props.locale} />
-          </CommentBlock>
-      ))}
-      </div>
+      <CommentBlock>
+        { ifOne }
+      </CommentBlock>
     );
   }
-}
+
+  return (
+    <div>
+      {comments.map(comment => (
+        <CommentBlock key={comment.id}>
+          <Comment comment={comment} locale={props.locale} />
+        </CommentBlock>
+    ))}
+    </div>
+  );
+};
 
 const mapStateToProps = ({ i18n: { locale } }) => ({
   locale,

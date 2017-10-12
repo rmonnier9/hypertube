@@ -26,9 +26,9 @@ export function localeChange(locale) {
 // ------------------------------------
 // Specialized Action Creator
 // ------------------------------------
-export const updateLocale = ({ dispatch }) => {
-  return nextLocale => dispatch(localeChange(nextLocale));
-};
+export const updateLocale = ({ dispatch }) => (
+  nextLocale => dispatch(localeChange(nextLocale))
+);
 
 // ------------------------------------
 // Reducer
@@ -38,9 +38,7 @@ const initialState = {
   messages: localeData[defaultLanguage] || localeData[langWithoutRegionCode(defaultLanguage)] || localeData['en-en'],
 };
 
-function i18nReducer(state = initialState, action) {
-  // console.log('reducer action.payload', action.payload);
-  // console.log('in storage', localStorage.getItem('lang-user'));
+const i18nReducer = (state = initialState, action) => {
   if (action.payload) {
     localStorage.setItem('lang-user', action.payload);
     document.querySelector('html').setAttribute('lang', action.payload);
@@ -53,6 +51,6 @@ function i18nReducer(state = initialState, action) {
       || localeData.en,
     }
     : state;
-}
+};
 
 export default i18nReducer;

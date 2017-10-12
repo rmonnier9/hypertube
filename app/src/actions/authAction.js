@@ -68,7 +68,7 @@ const loginUser = (creds, oauth = false) => (dispatch) => {
       dispatch(loginError(error));
     }
   })
-  .catch(err => console.log('Error: ', err));
+  .catch((err) => {});
 };
 
 // logout action function, remove local storage

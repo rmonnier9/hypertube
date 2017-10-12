@@ -66,3 +66,5 @@ export const errorValue = defineMessages({
     defaultMessage: 'Invalid action requested.',
   },
 });
+
+export default errorValue;

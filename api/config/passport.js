@@ -79,7 +79,7 @@ const passportConfig = (passport) => {
         const user = new User();
         user.fortytwo = profile.id;
         user.email = profile.emails[0].value;
-        user.profile.picture = profile.photos[0].value;
+        user.profile.pictureURL = profile.photos[0].value;
         user.tokens.push({ kind: '42', accessToken });
         user.save((err) => {
           done(err, user);
@@ -116,7 +116,7 @@ const passportConfig = (passport) => {
           user.tokens.push({ kind: 'google', accessToken });
           user.profile.name = profile.displayName;
           user.profile.gender = profile._json.gender;
-          user.profile.picture = profile._json.image.url;
+          user.profile.pictureURL = profile._json.image.url;
           user.save((err) => {
             done(err, user);
           });

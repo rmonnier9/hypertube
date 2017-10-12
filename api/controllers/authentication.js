@@ -22,7 +22,7 @@ export const local = async (req, res, next) => {
     const { lang } = user.profile;
     res.set('Access-Control-Expose-Headers', 'x-access-token');
     res.set('x-access-token', token);
-    res.set('lang-user', lang);
+    res.set('lang-user', lang || 'en-en');
     res.send({ error: '' });
   })(req, res, next);
 };
@@ -41,7 +41,7 @@ export const fortytwo = async (req, res, next) => {
     const { lang } = user.profile;
     res.set('Access-Control-Expose-Headers', 'x-access-token');
     res.set('x-access-token', token);
-    res.set('lang-user', lang);
+    res.set('lang-user', lang || 'en-en');
     res.send({ error: '' });
   })(req, res, next);
 };
@@ -60,7 +60,7 @@ export const google = async (req, res, next) => {
     const { lang } = user.profile;
     res.set('Access-Control-Expose-Headers', 'x-access-token');
     res.set('x-access-token', token);
-    res.set('lang-user', lang);
+    res.set('lang-user', lang || 'en-en');
     res.send({ error: '' });
   })(req, res, next);
 };
