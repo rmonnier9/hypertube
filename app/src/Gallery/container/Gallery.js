@@ -23,7 +23,7 @@ class Gallery extends Component {
       genre: parsed.genre || 'all',
       rating: parsed.rating || 0,
       sort: parsed.sort || '',
-      text: parsed.name || '',
+      name: parsed.name || '',
       movies: [],
       error: [],
       hasMoreItems: true,
@@ -46,9 +46,11 @@ class Gallery extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { search } = nextProps.location;
+    const { source } = this.state;
+    source.cancel('Request canceled by reloading.');
+    const parsed = queryString.parse(nextProps.location.search);
     this.setState({
-      search,
+      ...parsed,
       movies: [],
       loadStarted: true,
       hasMoreItems: true,
@@ -112,7 +114,13 @@ class Gallery extends Component {
     });
   }
 
-  search = (text) => {
+  changeUrl = (name, genre, rating, sort) => {
+    const { pathname } = this.props.location;
+    const newUrl = `${pathname}?name=${name}&genre=${genre}&rating=${rating}&sort=${sort}&lang=${this.lang}`;
+    this.props.history.push(newUrl);
+  }
+
+  search = (name) => {
     const {
       source,
       genre,
@@ -120,12 +128,9 @@ class Gallery extends Component {
       sort,
     } = this.state;
     source.cancel('Request canceled by reloading.');
-    const { pathname } = this.props.location;
-
-    const newUrl = `${pathname}?name=${text}&genre=${genre}&rating=${rating}&sort=${sort}&lang=${this.lang}`;
-    this.props.history.push(newUrl);
+    this.changeUrl(name, genre, rating, sort);
     this.setState({
-      text,
+      name,
       movies: [],
       loadStarted: true,
       hasMoreItems: true,
@@ -134,21 +139,17 @@ class Gallery extends Component {
     });
   }
 
-  filter = (name, value) => {
+  filter = (text, value) => {
     const {
       source,
-      text,
+      name,
     } = this.state;
-    const genre = (name === 'genre') ? value : this.state.genre;
-    const rating = (name === 'rating') ? value : this.state.rating;
-    const sort = (name === 'sort') ? value : this.state.sort;
+    const genre = (text === 'genre') ? value : this.state.genre;
+    const rating = (text === 'rating') ? value : this.state.rating;
+    const sort = (text === 'sort') ? value : this.state.sort;
     source.cancel('Request canceled by reloading.');
-    const { pathname } = this.props.location;
-    // const { genre, rating, sort } = search;
-    const newUrl = `${pathname}?name=${text}&genre=${genre}&rating=${rating}&sort=${sort}&lang=${this.lang}`;
-    this.props.history.push(newUrl);
+    this.changeUrl(name, genre, rating, sort);
     this.setState({
-      // search,
       [name]: value,
       movies: [],
       loadStarted: true,

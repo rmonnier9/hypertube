@@ -10,7 +10,8 @@ import '../css/movie.css';
 
 const timing = (length) => {
   const hours = Math.trunc(length / 60);
-  const minutes = length % 60;
+  let minutes = length % 60;
+  if (minutes < 10) { minutes = `0${minutes}`; }
   return ({ hours, minutes });
 };
 

@@ -5,22 +5,22 @@ import TextInput from '../../General/components/TextInput';
 class SearchBar extends Component {
 
   state = {
-    text: '',
+    name: '',
   }
 
   componentDidMount = () => {
     const parsed = queryString.parse(this.props.location.search);
     if (parsed.name) {
-      this.setState({ text: parsed.name });
+      this.setState({ name: parsed.name });
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
     const parsed = queryString.parse(nextProps.location.search);
     if (parsed.name) {
-      this.setState({ text: parsed.name });
+      this.setState({ name: parsed.name });
     } else {
-      this.setState({ text: '' });
+      this.setState({ name: '' });
     }
   }
 
@@ -30,17 +30,17 @@ class SearchBar extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.props.onSearch(this.state.text);
+    this.props.onSearch(this.state.name);
   }
 
   render() {
-    const { text } = this.state;
+    const { name } = this.state;
 
     return (
       <form className="" onSubmit={this.handleSubmit}>
         <TextInput
-          currentValue={text}
-          name="text"
+          currentValue={name}
+          name="name"
           type="text"
           id=""
           className="searchBar-container"
