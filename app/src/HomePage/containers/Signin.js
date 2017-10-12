@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import queryString from 'query-string';
+import openPopup from './popup';
+
 import { loginUser } from '../../actions/authAction';
 import SigninComponent from '../components/SigninComponent.js';
 import '../css/homepage.css';
@@ -32,6 +35,31 @@ class Signin extends Component {
     this.props.dispatch(loginUser(creds));
   }
 
+  handleOAuth = provider => () => {
+    const url = `/api/auth/${provider}`;
+    const name = `Signin with ${provider}`;
+    const popup = openPopup(provider, url, name);
+    let dispatched = false;
+    const interval = setInterval(() => {
+      if (!popup || popup.closed || dispatched) {
+        clearInterval(interval);
+      } else {
+        try {
+          const { code } = queryString.parse(popup.location.search);
+          if (code) {
+            popup.close();
+            dispatched = true;
+            const creds = {
+              code,
+              provider,
+            };
+            this.props.dispatch(loginUser(creds, true));
+          }
+        } catch (e) {};
+      }
+    }, 50);
+  }
+
   componentWillReceiveProps(nextProps) {
     const { message } = nextProps;
     if (message !== undefined) {
@@ -50,6 +78,7 @@ class Signin extends Component {
         <SigninComponent
           handleSubmit={this.handleSubmit}
           handleChange={this.handleChange}
+          handleOAuth={this.handleOAuth}
           error={error}
         />
     );

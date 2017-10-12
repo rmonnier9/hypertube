@@ -68,7 +68,7 @@ const passportConfig = (passport) => {
   passport.use('42', new FortyTwoStrategy({
     clientID: process.env.FORTYTWO_ID,
     clientSecret: process.env.FORTYTWO_SECRET,
-    callbackURL: '/api/auth/42/callback',
+    callbackURL: '/oauth/42/callback',
   }, (accessToken, refreshToken, profile, done) => {
     User.findOne({ fortytwo: profile.id }, (err, existingUser) => {
       if (err) return done(err);
@@ -80,7 +80,7 @@ const passportConfig = (passport) => {
         user.fortytwo = profile.id;
         user.email = profile.emails[0].value;
         user.profile.picture = profile.photos[0].value;
-        user.tokens.push({ kind: 'fortytwo', accessToken });
+        user.tokens.push({ kind: '42', accessToken });
         user.save((err) => {
           done(err, user);
         });
@@ -94,7 +94,7 @@ const passportConfig = (passport) => {
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_ID,
     clientSecret: process.env.GOOGLE_SECRET,
-    callbackURL: '/api/auth/google/callback',
+    callbackURL: '/oauth/google/callback',
     passReqToCallback: true
   }, (req, accessToken, refreshToken, profile, done) => {
     console.log('test');

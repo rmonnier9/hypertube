@@ -28,7 +28,7 @@ export const local = async (req, res, next) => {
 };
 
 /**
- * GET /api/auth/fortytwo/callback
+ * GET /api/auth/42/callback
  * Sign in using 42.
  */
 export const fortytwo = async (req, res, next) => {
@@ -42,7 +42,7 @@ export const fortytwo = async (req, res, next) => {
     res.set('Access-Control-Expose-Headers', 'x-access-token');
     res.set('x-access-token', token);
     res.set('lang-user', lang);
-    res.redirect('/');
+    res.send({ error: '' });
   })(req, res, next);
 };
 

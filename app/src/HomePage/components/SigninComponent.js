@@ -10,7 +10,6 @@ const SigninComponent = (props) => {
     error[field.param] = field.msg;
   });
 
-	const oauth = (url) => window.location.replace(`${url}?next=http://localhost:3000`);
 
   return (
     <div>
@@ -42,13 +41,15 @@ const SigninComponent = (props) => {
           <RaisedButton className="homepage-submit" type="submit" name="submit" label="Enter" />
           <br />
           <span
-            onClick={() => oauth('/api/auth/google')}
+            role="button"
+            onClick={props.handleOAuth('google')}
           >
             Google Auth
           </span>
           <br />
           <span
-            onClick={() => oauth('/api/auth/42')}
+            role="button"
+            onClick={props.handleOAuth('42')}
           >
             42 Auth
           </span>
@@ -66,6 +67,7 @@ SigninComponent.PropTypes = {
   error: PropTypes.array.required,
   handleSubmit: PropTypes.func.required,
   handleChange: PropTypes.func.required,
+  handleOAuth: PropTypes.func.required,
 };
 
 export default SigninComponent;

@@ -89,8 +89,7 @@ app.use(errorHandler());
 
 // if a request doesn't match a route, send the front app
 app.get('*', (req, res) => {
-  console.log(req.path);
-  res.sendFile(path.resolve(__dirname, 'build', 'index.html'))
+  res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
 });
 
 /**
