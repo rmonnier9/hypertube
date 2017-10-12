@@ -31,7 +31,7 @@ export const postSignupPicture = async (req, res, next) => {
         return res.send({ errorPic: [{ param: 'email', msg: 'error.noEmailUsed' }] });
       }
       user.profile.picture = filename;
-      user.profile.pictureURL = `/uploads/${filename}`;
+      user.profile.pictureURL = `/static/uploads/${filename}`;
       user.save((err) => {
         if (err) { return next(err); }
         return res.send({ errorPic: [] });
@@ -70,7 +70,7 @@ export const newPicture = async (req, res, next) => {
       }
     }
     user.profile.picture = filename;
-    user.profile.pictureURL = `/uploads/${filename}`;
+    user.profile.pictureURL = `/static/uploads/${filename}`;
     user.save((err) => {
       if (err) { return next(err); }
       return res.send({ errorPic: [], picture: filename });

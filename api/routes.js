@@ -17,7 +17,7 @@ const routes = async (app, passport, upload) => {
   app.get('/api/auth/google', passport.authenticate('google', { scope: 'profile email' }));
   app.get('/api/auth/google/callback', authentication.google);
   app.use('/oauth', (req, res) => {
-    res.send({ error: '' });
+    res.end();
   });
 
   /**
@@ -48,8 +48,6 @@ const routes = async (app, passport, upload) => {
   app.get('/api/genres', genre.getGenreTable);
 
   app.get('/api/gallery/search', search.getSearch);
-
-
 };
 
 export default routes;
