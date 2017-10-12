@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     website: String,
     picture: String,
     pictureURL: String,
+    movies: [String],
   }
 }, { timestamps: true });
 

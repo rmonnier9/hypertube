@@ -1,6 +1,6 @@
 import { defineMessages } from 'react-intl';
 
-export const withValue = defineMessages({
+export const movieValue = defineMessages({
   with: {
     id: 'movie.with',
     defaultMessage: 'With',
@@ -24,5 +24,9 @@ export const withValue = defineMessages({
   play: {
     id: 'movie.play',
     defaultMessage: 'Play',
+  },
+  tooltipSeen: {
+    id: 'movie.tooltipSeen',
+    defaultMessage: 'Seen',
   },
 });

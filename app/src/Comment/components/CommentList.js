@@ -3,7 +3,6 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import 'moment/min/locales';
-// time = moment(posted).locale('fr-fr').format('D MMMM H:mm');
 
 import '../css/comment.css';
 

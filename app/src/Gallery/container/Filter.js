@@ -19,7 +19,12 @@ class Filter extends Component {
     const url = '/api/genres';
     axios({ url, method: 'GET' })
     .then(({ data: { genres } }) => {
-      this.setState({ genres });
+      const parsed = queryString.parse(this.props.location.search);
+      if (parsed.genre === undefined) {
+        this.setState({ genre: 'all', rating: 0, sort: 'latest', genres });
+      } else {
+        this.setState({ ...parsed, genres });
+      }
     });
   }
 

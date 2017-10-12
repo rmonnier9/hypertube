@@ -74,3 +74,9 @@ button.play:focus {
   color: #F5F5F5;
   margin-left: 10px;
 }
+
+.movie-seen {
+  color: green;
+  font-size: 0.8em;
+  margin-left: 5px;
+}

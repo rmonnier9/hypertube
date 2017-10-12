@@ -1,4 +1,5 @@
 import Movie from '../models/Movie';
+import User from '../models/User';
 
 /**
  * GET /api/movie/info/:idImdb
@@ -11,9 +12,13 @@ export const getInfos = (req, res, next) => {
     if (err) {
       return next(err);
     } else if (movie === null) {
-      return res.send({ error: [{ param: 'user', msg: 'error.noMovie' }] });
+      return res.send({ error: [{ param: 'movie', msg: 'error.noMovie' }] });
     }
-    return res.send({ error: [], movie });
+    User.findById(req.user.id, (err, user) => {
+      if (err) { return next(err); }
+      user.password = '';
+      return res.send({ error: [], user, movie });
+    });
   });
 };
 
