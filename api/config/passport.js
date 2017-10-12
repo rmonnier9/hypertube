@@ -77,12 +77,12 @@ const passportConfig = (passport) => {
         if (err) return done(err);
         if (existingEmailUser) return done('email already used');
         const user = new User();
-        user.firstName = profile.first_name;
-        user.lastName = profile.last_name;
-        user.fortytwo = profile.id;
         user.email = profile.emails[0].value;
-        user.profile.pictureURL = profile.photos[0].value;
+        user.fortytwo = profile.id;
         user.tokens.push({ kind: '42', accessToken });
+        user.profile.firstName = profile.name.givenName;
+        user.profile.lastName = profile.name.familyName;
+        user.profile.pictureURL = profile.photos[0].value;
         user.save((err) => {
           done(err, user);
         });
@@ -112,12 +112,11 @@ const passportConfig = (passport) => {
           });
         } else {
           const user = new User();
-          user.firstName = profile.name.givenName;
-          user.lastName = profile.name.familyName;
           user.email = profile.emails[0].value;
           user.google = profile.id;
           user.tokens.push({ kind: 'google', accessToken });
-          user.profile.name = profile.displayName;
+          user.profile.firstName = profile.name.givenName;
+          user.profile.lastName = profile.name.familyName;
           user.profile.gender = profile._json.gender;
           user.profile.pictureURL = profile._json.image.url;
           user.save((err) => {
