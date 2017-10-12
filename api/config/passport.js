@@ -77,6 +77,8 @@ const passportConfig = (passport) => {
         if (err) return done(err);
         if (existingEmailUser) return done('email already used');
         const user = new User();
+        user.firstName = profile.first_name;
+        user.lastName = profile.last_name;
         user.fortytwo = profile.id;
         user.email = profile.emails[0].value;
         user.profile.pictureURL = profile.photos[0].value;
@@ -97,7 +99,6 @@ const passportConfig = (passport) => {
     callbackURL: '/oauth/google/callback',
     passReqToCallback: true
   }, (req, accessToken, refreshToken, profile, done) => {
-    console.log('test');
     User.findOne({ google: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) return done(null, existingUser);
@@ -111,6 +112,8 @@ const passportConfig = (passport) => {
           });
         } else {
           const user = new User();
+          user.firstName = profile.name.givenName;
+          user.lastName = profile.name.familyName;
           user.email = profile.emails[0].value;
           user.google = profile.id;
           user.tokens.push({ kind: 'google', accessToken });
