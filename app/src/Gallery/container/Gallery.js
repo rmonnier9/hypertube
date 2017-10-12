@@ -22,7 +22,7 @@ class Gallery extends Component {
       // search,
       genre: parsed.genre || 'all',
       rating: parsed.rating || 0,
-      sort: parsed.sort || 'seeds',
+      sort: parsed.sort || '',
       text: parsed.name || '',
       movies: [],
       error: [],
@@ -45,17 +45,17 @@ class Gallery extends Component {
     });
   }
 
-  // componentWillReceiveProps(nextProps) {
-    // const { search } = nextProps.location;
-    // this.setState({
-      // search,
-    //   movies: [],
-    //   loadStarted: true,
-    //   hasMoreItems: true,
-    //   nextHref: null,
-    //   source: CancelToken.source(),
-    // });
-  // }
+  componentWillReceiveProps(nextProps) {
+    const { search } = nextProps.location;
+    this.setState({
+      search,
+      movies: [],
+      loadStarted: true,
+      hasMoreItems: true,
+      nextHref: null,
+      source: CancelToken.source(),
+    });
+  }
 
   // shouldComponentUpdate(nextProps, nextState) {
   //   const { search } = nextState;
@@ -122,7 +122,7 @@ class Gallery extends Component {
     source.cancel('Request canceled by reloading.');
     const { pathname } = this.props.location;
 
-    const newUrl = `${pathname}?name=${text}&genre=${genre}&rating=${rating}&sort=${sort}`;
+    const newUrl = `${pathname}?name=${text}&genre=${genre}&rating=${rating}&sort=${sort}&lang=${this.lang}`;
     this.props.history.push(newUrl);
     this.setState({
       text,
@@ -145,7 +145,7 @@ class Gallery extends Component {
     source.cancel('Request canceled by reloading.');
     const { pathname } = this.props.location;
     // const { genre, rating, sort } = search;
-    const newUrl = `${pathname}?name=${text}&genre=${genre}&rating=${rating}&sort=${sort}`;
+    const newUrl = `${pathname}?name=${text}&genre=${genre}&rating=${rating}&sort=${sort}&lang=${this.lang}`;
     this.props.history.push(newUrl);
     this.setState({
       // search,

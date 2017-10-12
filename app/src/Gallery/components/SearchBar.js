@@ -40,7 +40,7 @@ class SearchBar extends Component {
       <form className="" onSubmit={this.handleSubmit}>
         <TextInput
           currentValue={text}
-          name="search"
+          name="text"
           type="text"
           id=""
           className="searchBar-container"

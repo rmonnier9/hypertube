@@ -40,7 +40,7 @@ class Selectors extends Component {
             onChange={this.handleSelect}
             value={filter.genre}
           >
-            <option value="all">{all}</option>
+            <option value="">{all}</option>
             {genreOptions}
           </select>
         </div>
@@ -72,6 +72,7 @@ class Selectors extends Component {
             onChange={this.handleSelect}
             value={filter.sort}
           >
+            <option value="" />
             <option value="latest">{latest}</option>
             <option value="oldest">{oldest}</option>
             <option value="seeds">{seeds}</option>

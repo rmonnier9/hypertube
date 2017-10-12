@@ -3,7 +3,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 // import queryString from 'query-string';
 
-import SubmitForm from '../../General/components/SubmitForm.js';
+// import SubmitForm from '../../General/components/SubmitForm.js';
 import Selectors from '../components/Selectors.js';
 
 class Filter extends Component {
@@ -40,7 +40,7 @@ class Filter extends Component {
 
   saveState = (name, value) => {
     // this.setState({ [name]: value });
-    console.log('save', name, value);
+    // console.log('save', name, value);
     this.props.onFilter(name, value);
   }
 
@@ -55,7 +55,7 @@ class Filter extends Component {
     const { genres } = this.state;
     const { genre, rating, sort } = this.props;
     const filter = Object.assign({ genre }, { rating }, { sort }, { genres });
-    console.log('test', filter);
+    // console.log('test', filter);
 
     return (
       <form className="selects-container" id="user-form">
