@@ -2,37 +2,38 @@ import queryString from 'query-string';
 
 import Movie from '../models/Movie';
 
-const getSortObj = (sort) => {
-  let sortObj;
+const getSortObj = (sort, sortBySuggestion, lang) => {
+  if (sortBySuggestion) {
+    return { 'torrents.seeds': -1 };
+  }
+
+  const sortObj = {};
+  if (lang === 'fr') {
+    sortObj['title.fr'] = 1;
+  }
+  sortObj['title.en'] = 1;
+
   switch (sort) {
     case 'latest':
-      sortObj = { year: -1 };
+      sortObj.year = -1;
       break;
 
     case 'oldest':
-      sortObj = { year: 1 };
+      sortObj.year = 1;
       break;
 
     case 'rating':
-      sortObj = { rating: -1 };
+      sortObj.rating = -1;
       break;
 
     case 'seeds':
-      sortObj = { 'torrents.seeds': -1 };
-      break;
-
-    // sort by name when user does an open research
-    case 'name-en':
-      sortObj = { 'title.en': 1 };
-      break;
-
-    case 'name-fr':
-      sortObj = { 'title.fr': 1 };
+      sortObj['torrents.seeds'] = -1;
       break;
 
     default:
-      sortObj = { year: -1 };
+      break;
   }
+
   return sortObj;
 };
 
@@ -43,34 +44,41 @@ const getSortObj = (sort) => {
 
 export const getSearch = async (req, res) => {
   const { query } = req;
-  let matchObj = {};
+  const { lang = 'en' } = query;
+  const matchObj = { $and: [] };
 
   if (query.name) {
     const regex = new RegExp(query.name, 'i');
-
-    matchObj = {
-      $or: [
-        { 'title.fr': regex },
-        { 'title.en': regex },
-        { director: regex },
-        { stars: regex },
-      ],
-    };
-  } else if (query.genre === 'all') {
-    // no filtering by genre, only by rating
-    matchObj = { rating: { $gte: query.rating } };
-  } else if (query.genre) {
-    // filtering by genre and by rating
-    matchObj = {
-      $and: [
-        { 'genres.en': query.genre },
-        { rating: { $gte: query.rating } }
-      ],
-    };
+    const $or = [
+      { director: regex },
+      { stars: regex },
+    ];
+    if (lang === 'fr') {
+      $or.push({ 'title.fr': regex });
+    } else {
+      $or.push({ 'title.en': regex });
+    }
+    matchObj.$and.push({ $or });
+  }
+  if (query.genre) {
+    if (lang === 'fr') {
+      matchObj.$and.push({
+        'genres.fr': query.genre,
+      });
+    } else {
+      matchObj.$and.push({
+        'genres.en': query.genre,
+      });
+    }
+  }
+  if (query.rating) {
+    matchObj.$and.push({
+      rating: { $gte: query.rating }
+    });
   }
 
-  // create aggregate params
-  const sortObj = getSortObj(query.sort);
+  const sortBySuggestion = !!matchObj.$and.length;
+  const sortObj = getSortObj(query.sort, sortBySuggestion, lang);
 
   // define number of results per requests
   const toSkip = !query.start ? 0 : parseInt(query.start, 10);
