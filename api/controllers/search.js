@@ -38,16 +38,8 @@ const getMatchObj = (query, lang) => {
   }
 };
 
-const getSortObj = (sort, sortBySuggestion, lang) => {
-  if (sortBySuggestion) {
-    return { 'torrents.seeds': -1 };
-  }
-
+const getSortObj = (sort, suggestionDefaultSort, lang) => {
   const sortObj = {};
-  if (lang === 'fr') {
-    sortObj['title.fr'] = 1;
-  }
-  sortObj['title.en'] = 1;
 
   switch (sort) {
     case 'latest':
@@ -67,8 +59,15 @@ const getSortObj = (sort, sortBySuggestion, lang) => {
       break;
 
     default:
+      if (suggestionDefaultSort) {
+        return { 'torrents.seeds': -1 };
+      }
       break;
   }
+  if (lang === 'fr') {
+    sortObj['title.fr'] = 1;
+  }
+  sortObj['title.en'] = 1;
 
   return sortObj;
 };
@@ -84,14 +83,17 @@ export const getSearch = async (req, res) => {
 
   const matchObj = getMatchObj(query, lang);
 
-  const sortBySuggestion = !matchObj;
-  const sortObj = getSortObj(query.sort, sortBySuggestion, lang);
+  const suggestionDefaultSort = !matchObj;
+  console.log(query.sort, suggestionDefaultSort, matchObj);
+  const sortObj = getSortObj(query.sort, suggestionDefaultSort, lang);
 
   // define number of results per requests
   const toSkip = !query.start ? 0 : parseInt(query.start, 10);
   const numberPerRequest = 10;
 
-  // get users from db
+  console.log(sortObj);
+
+  // get movies from db
   const cursor = Movie.find(
     matchObj,
     null,
