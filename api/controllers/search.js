@@ -2,6 +2,42 @@ import queryString from 'query-string';
 
 import Movie from '../models/Movie';
 
+const getMatchObj = (query, lang) => {
+  if (!query.name && !query.genre && !query.rating) return null;
+
+  const matchObj = { $and: [] };
+
+  if (query.name) {
+    const regex = new RegExp(query.name, 'i');
+    const $or = [
+      { director: regex },
+      { stars: regex },
+    ];
+    if (lang === 'fr') {
+      $or.push({ 'title.fr': regex });
+    } else {
+      $or.push({ 'title.en': regex });
+    }
+    matchObj.$and.push({ $or });
+  }
+  if (query.genre) {
+    if (lang === 'fr') {
+      matchObj.$and.push({
+        'genres.fr': query.genre,
+      });
+    } else {
+      matchObj.$and.push({
+        'genres.en': query.genre,
+      });
+    }
+  }
+  if (query.rating) {
+    matchObj.$and.push({
+      rating: { $gte: query.rating }
+    });
+  }
+};
+
 const getSortObj = (sort, sortBySuggestion, lang) => {
   if (sortBySuggestion) {
     return { 'torrents.seeds': -1 };
@@ -45,39 +81,10 @@ const getSortObj = (sort, sortBySuggestion, lang) => {
 export const getSearch = async (req, res) => {
   const { query } = req;
   const { lang = 'en' } = query;
-  const matchObj = { $and: [] };
 
-  if (query.name) {
-    const regex = new RegExp(query.name, 'i');
-    const $or = [
-      { director: regex },
-      { stars: regex },
-    ];
-    if (lang === 'fr') {
-      $or.push({ 'title.fr': regex });
-    } else {
-      $or.push({ 'title.en': regex });
-    }
-    matchObj.$and.push({ $or });
-  }
-  if (query.genre) {
-    if (lang === 'fr') {
-      matchObj.$and.push({
-        'genres.fr': query.genre,
-      });
-    } else {
-      matchObj.$and.push({
-        'genres.en': query.genre,
-      });
-    }
-  }
-  if (query.rating) {
-    matchObj.$and.push({
-      rating: { $gte: query.rating }
-    });
-  }
+  const matchObj = getMatchObj(query, lang);
 
-  const sortBySuggestion = !!matchObj.$and.length;
+  const sortBySuggestion = !matchObj;
   const sortObj = getSortObj(query.sort, sortBySuggestion, lang);
 
   // define number of results per requests
