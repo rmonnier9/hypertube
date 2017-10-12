@@ -20,13 +20,16 @@ class Selectors extends Component {
       const { _id: id } = movieGenre;
       return <option key={id} value={value}>{movieGenre[lang]}</option>;
     });
+
     const oldest = this.props.intl.formatMessage({ id: 'gallery.oldest' });
     const latest = this.props.intl.formatMessage({ id: 'gallery.latest' });
     const seeds = this.props.intl.formatMessage({ id: 'gallery.seeds' });
     const rating = this.props.intl.formatMessage({ id: 'gallery.rating' });
+    const name = this.props.intl.formatMessage({ id: 'profile.name' });
     const all = this.props.intl.formatMessage({ id: 'gallery.all' });
     const genres = this.props.intl.formatMessage({ id: 'gallery.genres' });
     const orderBy = this.props.intl.formatMessage({ id: 'gallery.orderBy' });
+
     return (
       <div className="all-selectors">
         <div className="one-selector">
@@ -73,6 +76,7 @@ class Selectors extends Component {
             <option value="oldest">{oldest}</option>
             <option value="seeds">{seeds}</option>
             <option value="rating">{rating}</option>
+            <option value="name">{name}</option>
           </select>
         </div>
       </div>

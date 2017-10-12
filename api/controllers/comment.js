@@ -19,9 +19,9 @@ const addUserProps = async ({ comments }) => (
       idUser: comment.idUser,
       date: comment.date,
       text: comment.text,
-      picture: profile.picture,
-      lastName: profile.lastName,
-      firstName: profile.firstName,
+      pictureURL: profile.pictureURL || '/static/uploads/empty_profile.png',
+      firstName: profile.firstName || 'John',
+      lastName: profile.lastName || 'Doe',
     };
     return object;
   }))

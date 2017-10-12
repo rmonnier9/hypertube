@@ -15,7 +15,7 @@ class MyProfile extends Component {
     errorPic: [{ param: '', msg: '' }],
     status: 'closed',
     file: {},
-    picture: '',
+    pictureURL: '',
     otherUser: {},
   }
 
@@ -61,11 +61,11 @@ class MyProfile extends Component {
     event.preventDefault();
     const { file } = this.state;
     this.sendPicture(file)
-    .then(({ data: { errorPic, picture } }) => {
+    .then(({ data: { errorPic, pictureURL } }) => {
       if (errorPic.length) {
         this.setState({ status: 'open', errorPic });
       } else {
-        this.setState({ status: 'closed', picture, errorPic: [{ param: '', msg: '' }] });
+        this.setState({ status: 'closed', pictureURL, errorPic: [{ param: '', msg: '' }] });
       }
     });
   }
@@ -75,7 +75,7 @@ class MyProfile extends Component {
       profileLoaded,
       error,
       errorPic,
-      picture,
+      pictureURL,
       status,
       file,
     } = this.state;
@@ -93,7 +93,7 @@ class MyProfile extends Component {
         </h1>
         <ProfilePic
           user={this.user}
-          picture={picture}
+          pictureURL={pictureURL}
           handleUpload={this.imageUpload}
           handleSubmit={this.handleSubmit}
           handleOpen={this.handleOpen}

@@ -70,7 +70,7 @@ class FindUser extends Component {
           <Link to={`/profile/${id}`} className="one-user-search-display" key={id}>
             <img
               className="profile-pic-search"
-              src={`/static/uploads/${user.profile.picture}`}
+              src={user.profile.pictureURL || '/static/uploads/empty_profile.png'}
               alt="profile-pic"
             />
             <span>{user.profile.firstName} </span>

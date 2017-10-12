@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import queryString from 'query-string';
 import InfiniteScroll from 'react-infinite-scroller';
 import MovieList from '../components/MovieList.js';
 import SearchBar from '../components/SearchBar.js';
@@ -13,11 +14,16 @@ class Gallery extends Component {
 
   constructor(props) {
     super(props);
-    const { search } = props.location;
+    // const { search } = props.location;
+    const parsed = queryString.parse(this.props.location.search);
     this.lang = props.locale.split('-')[0];
     this.mounted = true;
     this.state = {
-      search,
+      // search,
+      genre: parsed.genre || 'all',
+      rating: parsed.rating || 0,
+      sort: parsed.sort || 'seeds',
+      text: parsed.name || '',
       movies: [],
       error: [],
       hasMoreItems: true,
@@ -34,39 +40,43 @@ class Gallery extends Component {
         this.setState({ error });
       } else {
         this.user = user;
-        // this.setState({
-        //   profileLoaded: true,
-        // });
+        // this.setState({ ...parsed });
       }
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { search } = nextProps.location;
-    this.setState({
-      search,
-      movies: [],
-      loadStarted: true,
-      hasMoreItems: true,
-      nextHref: null,
-      source: CancelToken.source(),
-    });
-  }
+  // componentWillReceiveProps(nextProps) {
+    // const { search } = nextProps.location;
+    // this.setState({
+      // search,
+    //   movies: [],
+    //   loadStarted: true,
+    //   hasMoreItems: true,
+    //   nextHref: null,
+    //   source: CancelToken.source(),
+    // });
+  // }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const { search } = nextState;
-    if (search || (!search && this.state.search)) return true;
-    const { nextHref } = nextState;
-    const { nextHref: oldHref } = this.state;
-    const nextstart = !nextHref ? 0 : nextHref.split('=').pop();
-    const oldstart = !oldHref ? 0 : oldHref.split('=').pop();
-    if (nextstart <= oldstart) return false;
-    return true;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   const { search } = nextState;
+  //   if (search || (!search && this.state.search)) return true;
+  //   const { nextHref } = nextState;
+  //   const { nextHref: oldHref } = this.state;
+  //   const nextstart = !nextHref ? 0 : nextHref.split('=').pop();
+  //   const oldstart = !oldHref ? 0 : oldHref.split('=').pop();
+  //   if (nextstart <= oldstart) return false;
+  //   return true;
+  // }
 
   componentWillUnmount() {
     this.mounted = false;
   }
+
+  // saveState = (name, value) => {
+    // console.log(name, value);
+    // this.setState({ [name]: value }, this.filter());
+    // this.filter();
+  // }
 
   getSearchURL = () => {
     const { search } = this.props.location;
@@ -102,16 +112,20 @@ class Gallery extends Component {
     });
   }
 
-  search = (search) => {
+  search = (text) => {
     const {
       source,
+      genre,
+      rating,
+      sort,
     } = this.state;
     source.cancel('Request canceled by reloading.');
     const { pathname } = this.props.location;
-    const newUrl = `${pathname}?name=${search}&sort=name-${this.lang}`;
+
+    const newUrl = `${pathname}?name=${text}&genre=${genre}&rating=${rating}&sort=${sort}`;
     this.props.history.push(newUrl);
     this.setState({
-      search,
+      text,
       movies: [],
       loadStarted: true,
       hasMoreItems: true,
@@ -120,17 +134,22 @@ class Gallery extends Component {
     });
   }
 
-  filter = (search) => {
+  filter = (name, value) => {
     const {
       source,
+      text,
     } = this.state;
+    const genre = (name === 'genre') ? value : this.state.genre;
+    const rating = (name === 'rating') ? value : this.state.rating;
+    const sort = (name === 'sort') ? value : this.state.sort;
     source.cancel('Request canceled by reloading.');
     const { pathname } = this.props.location;
-    const { genre, rating, sort } = search;
-    const newUrl = `${pathname}?genre=${genre}&rating=${rating}&sort=${sort}`;
+    // const { genre, rating, sort } = search;
+    const newUrl = `${pathname}?name=${text}&genre=${genre}&rating=${rating}&sort=${sort}`;
     this.props.history.push(newUrl);
     this.setState({
-      search,
+      // search,
+      [name]: value,
       movies: [],
       loadStarted: true,
       hasMoreItems: true,
@@ -143,6 +162,9 @@ class Gallery extends Component {
     const {
       movies,
       hasMoreItems,
+      genre,
+      rating,
+      sort,
     } = this.state;
     if (!this.mounted) return null;
     return (
@@ -150,6 +172,9 @@ class Gallery extends Component {
         <Filter
           onFilter={this.filter}
           location={this.props.location}
+          genre={genre}
+          rating={rating}
+          sort={sort}
         />
         <SearchBar
           onSearch={this.search}
