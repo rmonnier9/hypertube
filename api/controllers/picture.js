@@ -73,7 +73,7 @@ export const newPicture = async (req, res, next) => {
     user.profile.pictureURL = `/uploads/${filename}`;
     user.save((err) => {
       if (err) { return next(err); }
-      return res.send({ error: [], picture: filename });
+      return res.send({ errorPic: [], picture: filename });
     });
   });
 };

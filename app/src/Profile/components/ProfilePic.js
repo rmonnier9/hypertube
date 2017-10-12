@@ -12,7 +12,7 @@ export default class ProfileProfile extends Component {
     const { picture } = this.props;
     const path = picture ?
     `/static/uploads/${picture}` :
-    `/static/uploads/${this.props.user.profile.picture}`;
+    this.props.user.profile.pictureURL;
 
     return (
       <div>
