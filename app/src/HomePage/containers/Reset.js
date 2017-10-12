@@ -7,11 +7,13 @@ class Reset extends Component {
   state = {
     password: '',
     confirmPassword: '',
-    successMessage: '',
-    error: [],
+    success: false,
+    error: [{ param: '', msg: '' }],
   }
 
-  handleChange = ({ target: { name, value } }) => this.setState({ [name]: value, error: [] });
+  handleChange = ({ target: { name, value } }) => {
+    this.setState({ [name]: value, error: [{ param: '', msg: '' }] })
+  };
 
   resetPassword = (event) => {
     event.preventDefault();
@@ -29,10 +31,10 @@ class Reset extends Component {
       if (error.length === 0) {
         this.setState({
           error,
-          successMessage: 'Your password has been changed. You can now log in.',
+          success: true,
         });
       } else {
-        this.setState({ error, successMessage: '' });
+        this.setState({ error, success: false });
       }
     })
     .catch(err => console.error('Error: ', err));
@@ -44,7 +46,7 @@ class Reset extends Component {
   }
 
   render() {
-    const { error, successMessage } = this.state;
+    const { error, success } = this.state;
 
     return (
       <div>
@@ -52,7 +54,7 @@ class Reset extends Component {
           handleSubmit={this.resetPassword}
           handleChange={this.handleChange}
           error={error}
-          successMessage={successMessage}
+          success={success}
         />
       </div>
     );

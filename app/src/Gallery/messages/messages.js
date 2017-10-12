@@ -41,4 +41,8 @@ export const filterValue = defineMessages({
     id: 'gallery.viewDetail',
     defaultMessage: 'View Details',
   },
+  noMovie: {
+    id: 'gallery.noMovie',
+    defaultMessage: 'No movies here for that search.',
+  },
 });

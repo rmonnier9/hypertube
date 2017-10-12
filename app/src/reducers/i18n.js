@@ -39,8 +39,8 @@ const initialState = {
 };
 
 function i18nReducer(state = initialState, action) {
-  console.log('reducer action.payload', action.payload);
-  console.log('in storage', localStorage.getItem('lang-user'));
+  // console.log('reducer action.payload', action.payload);
+  // console.log('in storage', localStorage.getItem('lang-user'));
   if (action.payload) {
     localStorage.setItem('lang-user', action.payload);
     document.querySelector('html').setAttribute('lang', action.payload);

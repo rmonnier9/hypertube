@@ -66,10 +66,10 @@ class MyInfosForms extends Component {
   render() {
     const { error, change, user } = this.props;
     const { form } = this.state;
-    const errorMessage = error[0].msg;
     const email = change.email !== '' ? change.email : user.email;
     const firstName = change.firstName !== '' ? change.firstName : user.profile.firstName;
     const lastName = change.lastName !== '' ? change.lastName : user.profile.lastName;
+  
     const displayForm = form.formId === null ? null : (
       <div className="infos-form top">
         <FormClass
@@ -79,9 +79,12 @@ class MyInfosForms extends Component {
         />
       </div>
     );
+
     const changePassword = this.props.intl.formatMessage({ id: 'profile.changePassword' });
-    const Name = this.props.intl.formatMessage({ id: 'profile.name' });
-    const Contact = this.props.intl.formatMessage({ id: 'profile.contact' });
+    const name = this.props.intl.formatMessage({ id: 'profile.name' });
+    const contact = this.props.intl.formatMessage({ id: 'profile.contact' });
+    const errorMessage = error[0].msg ? this.props.intl.formatMessage({ id: error[0].msg }) : '';
+
     return (
       <div className="infos-container">
         <div>
@@ -92,14 +95,14 @@ class MyInfosForms extends Component {
             <button id="password" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
           </div>
           <span className="infos-title"><b>
-            { Name }
+            { name }
           </b></span>
           <span>{firstName} {lastName}</span>
           <button id="name" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />
         </div>
         <div>
           <span className="infos-title">
-            { Contact }
+            { contact }
           </span>
           <span>{email}</span>
           <button id="email" onClick={this.handleClick} className="glyphicon glyphicon-pencil" />

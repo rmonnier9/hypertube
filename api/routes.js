@@ -37,7 +37,6 @@ const routes = async (app, passport, upload) => {
   app.get('/api/me', user.getMyAccount);
   app.post('/api/me', user.postUpdateProfile);
   app.delete('/api/me', user.deleteDeleteAccount); // not implemented
-  // app.post('/api/me/password', user.postUpdatePassword);
   app.post('/api/profile_pic', upload.single('imageUploaded'), picture.newPicture);
   app.get('/api/profile/:name', user.getAccount);
   app.get('/api/profile/id/:id', user.getAccountById);

@@ -28,16 +28,12 @@ export const postSignupPicture = async (req, res, next) => {
   User.findOne({ email })
     .then((user) => {
       if (!user) {
-        return res.send({ errorPic: 'Account with that email address does not exist.' });
-      }
-      // verif if the user has already a pic, which, is unlikely => security purpose, to dig
-      if (user.profile.picture) {
-        return res.send({ errorPic: 'You can\'t upload a new picture here, go to your profile' });
+        return res.send({ errorPic: [{ param: 'email', msg: 'error.noEmailUsed' }] });
       }
       user.profile.picture = filename;
       user.save((err) => {
         if (err) { return next(err); }
-        return res.send({ errorPic: '' });
+        return res.send({ errorPic: [] });
       });
     });
 };
@@ -63,6 +59,9 @@ export const newPicture = async (req, res, next) => {
   }
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
+    if (!user) {
+      return res.send({ errorPic: [{ param: 'email', msg: 'error.noEmailUsed' }] });
+    }
     if (user.profile.picture) {
       const oldPath = path.resolve(__dirname, `../public/uploads/${user.profile.picture}`);
       if (fs.existsSync(oldPath)) {
@@ -72,7 +71,7 @@ export const newPicture = async (req, res, next) => {
     user.profile.picture = filename;
     user.save((err) => {
       if (err) { return next(err); }
-      return res.send({ error: '', picture: filename });
+      return res.send({ error: [], picture: filename });
     });
   });
 };

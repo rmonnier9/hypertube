@@ -15,14 +15,14 @@ const passportConfig = (passport) => {
         return done(err);
       }
       if (!user) {
-        return done(null, false, [{ param: 'email', msg: `Email ${email} not found.`, value: email }]);
+        return done(null, false, [{ param: 'email', msg: 'error.noEmailUsed', value: email }]);
       }
       user.comparePassword(password, (err, isMatch) => {
         if (err) return done(err);
         if (isMatch) {
           return done(null, user);
         }
-        return done(null, false, [{ param: 'password', msg: 'Invalid password.' }]);
+        return done(null, false, [{ param: 'password', msg: 'error.incorrectPassword' }]);
       });
     });
   }));
