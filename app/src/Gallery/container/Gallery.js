@@ -19,13 +19,29 @@ class Gallery extends Component {
     this.state = {
       search,
       movies: [],
+      error: [],
       hasMoreItems: true,
       nextHref: null,
       source: CancelToken.source(),
     };
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  componentDidMount() {
+    const url = '/api/me';
+    axios({ url, method: 'GET' })
+    .then(({ data: { error, user } }) => {
+      if (error.length) {
+        this.setState({ error });
+      } else {
+        this.user = user;
+        // this.setState({
+        //   profileLoaded: true,
+        // });
+      }
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
     const { search } = nextProps.location;
     this.setState({
       search,
@@ -147,6 +163,7 @@ class Gallery extends Component {
           <MovieList
             movies={movies}
             hasMoreItems={hasMoreItems}
+            user={this.user}
           />
         </InfiniteScroll>
       </div>

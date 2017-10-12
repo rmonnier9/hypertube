@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
     location: String,
     website: String,
     picture: String,
+    movies: [String],
   }
 }, { timestamps: true });
 

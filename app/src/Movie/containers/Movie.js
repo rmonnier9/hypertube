@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl';
 import Loading from '../../General/components/Loading';
 import TorrentTable from '../components/TorrentTable';
 import CommentTable from '../../Comment/container/CommentTable';
+import TooltipSpan from '../../General/components/TooltipSpan';
 import '../css/movie.css';
 
 const timing = (length) => {
@@ -38,11 +39,12 @@ class Movie extends Component {
       url,
       method: 'GET',
     })
-    .then(({ data: { error, movie } }) => {
+    .then(({ data: { error, movie, user } }) => {
       if (error.length) {
         this.setState({ error, loaded: true });
       } else {
         this.movie = movie;
+        this.user = user;
         this.setState({
           loaded: true,
         });
@@ -76,15 +78,29 @@ class Movie extends Component {
 
     const timeObj = timing(movie.runtime);
     const time = `${timeObj.hours}h${timeObj.minutes}`;
+
+    const idImdb = this.movie.idImdb;
+    const { movies } = this.user.profile;
+    const textTooltipSeen = this.props.intl.formatMessage({ id: 'movie.tooltipSeen' });
+    const tooltipSeen = (
+      <TooltipSpan
+        className="glyphicon glyphicon-ok movie-seen"
+        id="movieSeen"
+        text={textTooltipSeen}
+      />
+    );
+    const movieSeen = movies.includes(idImdb) ? tooltipSeen : '';
+
     const witho = this.props.intl.formatMessage({ id: 'movie.with' });
     const director = this.props.intl.formatMessage({ id: 'movie.director' });
     const genresValue = this.props.intl.formatMessage({ id: 'movie.genres' });
+
 
     return (
       <div className="movie-container">
         <img className="movie-poster" src={movie.posterLarge} alt="movie" />
         <div className="movie-infos">
-          <h1>{ movie.title[lang] }</h1>
+          <h1>{ movie.title[lang] } {movieSeen}</h1>
           <div>
             <span className="movie-year">{ movie.year }</span>
             <span>{ time } </span>

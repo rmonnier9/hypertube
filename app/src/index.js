@@ -12,7 +12,7 @@ import { IntlProvider, addLocaleData } from 'react-intl';
 
 import rootReducer from './reducers';
 import HyperRouter from './HyperRouter.js';
-import registerServiceWorker from './registerServiceWorker';
+// import registerServiceWorker from './registerServiceWorker';
 
 
 // ========================================================

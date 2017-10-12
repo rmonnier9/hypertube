@@ -3,7 +3,6 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import 'moment/min/locales';
-// time = moment(posted).locale('fr-fr').format('D MMMM H:mm');
 
 import '../css/comment.css';
 
@@ -39,8 +38,6 @@ class CommentList extends Component {
   render() {
     const ifOne = this.props.intl.formatMessage({ id: 'comments.ifOne' });
     const { comments } = this.props;
-    const lang = this.props.locale;
-    console.log(lang);
 
     if (!comments || !comments.length) {
       return (

@@ -52,7 +52,8 @@ class Card extends Component {
   }
 
   render() {
-    const { movie } = this.props;
+    const { movie, user } = this.props;
+
     return (
       <div className="card-container">
         <div
@@ -71,7 +72,7 @@ class Card extends Component {
             transitionEnterTimeout={500}
             transitionLeaveTimeout={300}
           >
-            { this.state.hover ? <CardOverlay movie={movie} /> : null }
+            { this.state.hover ? <CardOverlay movie={movie} user={user} /> : null }
           </ReactCSSTransitionGroup>
         </div>
       </div>
