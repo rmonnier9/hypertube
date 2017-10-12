@@ -62,6 +62,7 @@ const SigninComponent = (props) => {
             role="button"
             onClick={props.handleOAuth('42')}
           >
+            42 Auth
           </span>
           <br />
           <Link to="/forgot" className="homepage-linkto">{forgot}</Link>
