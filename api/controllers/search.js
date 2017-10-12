@@ -36,6 +36,7 @@ const getMatchObj = (query, lang) => {
       rating: { $gte: query.rating }
     });
   }
+  return matchObj;
 };
 
 const getSortObj = (sort, suggestionDefaultSort, lang) => {
@@ -84,14 +85,11 @@ export const getSearch = async (req, res) => {
   const matchObj = getMatchObj(query, lang);
 
   const suggestionDefaultSort = !matchObj;
-  console.log(query.sort, suggestionDefaultSort, matchObj);
   const sortObj = getSortObj(query.sort, suggestionDefaultSort, lang);
 
   // define number of results per requests
   const toSkip = !query.start ? 0 : parseInt(query.start, 10);
   const numberPerRequest = 10;
-
-  console.log(sortObj);
 
   // get movies from db
   const cursor = Movie.find(
