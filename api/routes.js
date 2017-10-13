@@ -6,7 +6,7 @@ import * as search from './controllers/search';
 import * as comment from './controllers/comment';
 import * as genre from './controllers/scraper/genreCount';
 import * as video from './controllers/video';
-import deleteAll from './controllers/video/deleter';
+import deleteOne from './controllers/video/deleter';
 
 const routes = async (app, passport, upload) => {
   /**
@@ -30,7 +30,7 @@ const routes = async (app, passport, upload) => {
   app.post('/api/reset/:token', user.postReset);
   app.get('/api/movie/stream/:idImdb/:hash', video.checker, video.torrenter, video.streamer);
   app.get('/api/movie/subtitle/:idImdb/:hash', video.getSub);
-  app.get('/api/movie/clearAll', deleteAll);
+  app.get('/api/movie/clear/:idImdb', deleteOne);
 
 
   /**
