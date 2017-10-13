@@ -16,6 +16,7 @@ import Signup from './HomePage/containers/Signup';
 import Gallery from './Gallery/container/Gallery';
 import Video from './Video/components/Video';
 import Movie from './Movie/containers/Movie';
+import Deleter from './Clear/Clear';
 
 const MatchaRouter = ({ isAuthenticated, locale }) => (
   <Router>
@@ -27,6 +28,7 @@ const MatchaRouter = ({ isAuthenticated, locale }) => (
         <PrivateRoute exact path="/profile/:id" key={locale} isAuthenticated={isAuthenticated} component={OneProfile} />
         <PrivateRoute exact path="/movie/:idImdb" key={locale} isAuthenticated={isAuthenticated} component={Movie} />
         <PrivateRoute exact path="/video/:id/:hash" key={locale} isAuthenticated={isAuthenticated} component={Video} />
+        <PrivateRoute exact path="/clearAll" key={locale} isAuthenticated={isAuthenticated} component={Deleter} />
         <Route path="/signin" key={locale} component={Signin} />
         <Route path="/forgot" key={locale} component={Forgot} />
         <Route path="/reset" key={locale} component={Reset} />

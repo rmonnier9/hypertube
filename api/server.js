@@ -17,8 +17,10 @@ import passportConfig from './config/passport';
 import routes from './routes';
 
 // import movieScraper from './controllers/scraper/movieScraper';
-
-// movieScraper();
+//
+// try {
+//   // movieScraper();
+// } catch (e) { console.log(e); }
 
 /**
  * multer configuration
