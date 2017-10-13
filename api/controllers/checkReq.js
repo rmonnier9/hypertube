@@ -4,25 +4,25 @@
 
 const checkReq = async (req) => {
   if (req.body.email !== undefined) {
-    req.checkBody('email', 'Email is not valid').isEmail();
+    req.checkBody('email', 'error.notEmail').isEmail();
     req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
   }
   if (req.body.password !== undefined) {
-    req.checkBody('password', 'Password cannot be blank').notEmpty();
+    req.checkBody('password', 'error.noBlankPassword').notEmpty();
   }
   if (req.body.newPassword !== undefined) {
-    req.checkBody('newPassword', 'Password must be between 4 and 12 characters').len({ min: 4, max: 12 });
-    req.checkBody('newPassword', 'Password must contain at least one uppercase, one lowercase and one digit.')
+    req.checkBody('newPassword', 'error.noPasswordLength').len({ min: 4, max: 12 });
+    req.checkBody('newPassword', 'error.noPasswordComplex')
       .matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/);
   }
   if (req.body.confirmPassword !== undefined) {
-    req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.newPassword);
+    req.checkBody('confirmPassword', 'error.noPasswordMatch').equals(req.body.newPassword);
   }
   if (req.body.firstName !== undefined) {
-    req.checkBody('firstName', 'First name can\'t be more than 20 letters long').len({ max: 20 });
+    req.checkBody('firstName', 'error.noFirstNameLength').len({ max: 20 });
   }
   if (req.body.lastName !== undefined) {
-    req.checkBody('lastName', 'Last name can\'t be more than 20 letters long').len({ max: 20 });
+    req.checkBody('lastName', 'error.noLastNameLength').len({ max: 20 });
   }
 
   const validationObj = await req.getValidationResult();

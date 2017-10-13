@@ -1,34 +1,56 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import queryString from 'query-string';
 import InfiniteScroll from 'react-infinite-scroller';
-import Loading from '../../General/components/Loading';
 import MovieList from '../components/MovieList.js';
 import SearchBar from '../components/SearchBar.js';
 import Filter from './Filter.js';
 import '../css/gallery.css';
 
 const CancelToken = axios.CancelToken;
-const lang = 'fr';
 
 class Gallery extends Component {
 
   constructor(props) {
     super(props);
-    const { search } = this.props.location;
+    // const { search } = props.location;
+    const parsed = queryString.parse(this.props.location.search);
+    this.lang = props.locale.split('-')[0];
     this.mounted = true;
     this.state = {
-      search,
+      // search,
+      genre: parsed.genre || '',
+      rating: parsed.rating || 0,
+      sort: parsed.sort || '',
+      name: parsed.name || '',
       movies: [],
+      error: [],
       hasMoreItems: true,
       nextHref: null,
       source: CancelToken.source(),
     };
   }
 
-  componentWillReceiveProps = (nextProps) => {
-    const { search } = nextProps.location;
+  componentDidMount() {
+    const url = '/api/me';
+    axios({ url, method: 'GET' })
+    .then(({ data: { error, user } }) => {
+      if (error.length) {
+        this.setState({ error });
+      } else {
+        this.user = user;
+        // this.setState({ ...parsed });
+      }
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { source } = this.state;
+    source.cancel('Request canceled by reloading.');
+    const parsed = queryString.parse(nextProps.location.search);
     this.setState({
-      search,
+      ...parsed,
       movies: [],
       loadStarted: true,
       hasMoreItems: true,
@@ -37,20 +59,26 @@ class Gallery extends Component {
     });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const { search } = nextState;
-    if (search || (!search && this.state.search)) return true;
-    const { nextHref } = nextState;
-    const { nextHref: oldHref } = this.state;
-    const nextstart = !nextHref ? 0 : nextHref.split('=').pop();
-    const oldstart = !oldHref ? 0 : oldHref.split('=').pop();
-    if (nextstart <= oldstart) return false;
-    return true;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   const { search } = nextState;
+  //   if (search || (!search && this.state.search)) return true;
+  //   const { nextHref } = nextState;
+  //   const { nextHref: oldHref } = this.state;
+  //   const nextstart = !nextHref ? 0 : nextHref.split('=').pop();
+  //   const oldstart = !oldHref ? 0 : oldHref.split('=').pop();
+  //   if (nextstart <= oldstart) return false;
+  //   return true;
+  // }
 
   componentWillUnmount() {
     this.mounted = false;
   }
+
+  // saveState = (name, value) => {
+    // console.log(name, value);
+    // this.setState({ [name]: value }, this.filter());
+    // this.filter();
+  // }
 
   getSearchURL = () => {
     const { search } = this.props.location;
@@ -79,23 +107,30 @@ class Gallery extends Component {
     })
     .catch((error) => {
       if (axios.isCancel(error)) {
-        console.log('Request canceled', error.message);
+        // console.log('Request canceled', error.message);
       } else {
-        console.log(error);
+        // console.log(error);
       }
     });
   }
 
-  search = (search) => {
+  changeUrl = (name, genre, rating, sort) => {
+    const { pathname } = this.props.location;
+    const newUrl = `${pathname}?name=${name}&genre=${genre}&rating=${rating}&sort=${sort}&lang=${this.lang}`;
+    this.props.history.push(newUrl);
+  }
+
+  search = (name) => {
     const {
       source,
+      genre,
+      rating,
+      sort,
     } = this.state;
     source.cancel('Request canceled by reloading.');
-    const { pathname } = this.props.location;
-    const newUrl = `${pathname}?name=${search}&sort=name-${lang}`;
-    this.props.history.push(newUrl);
+    this.changeUrl(name, genre, rating, sort);
     this.setState({
-      search,
+      name,
       movies: [],
       loadStarted: true,
       hasMoreItems: true,
@@ -104,17 +139,18 @@ class Gallery extends Component {
     });
   }
 
-  filter = (search) => {
+  filter = (text, value) => {
     const {
       source,
+      name,
     } = this.state;
+    const genre = (text === 'genre') ? value : this.state.genre;
+    const rating = (text === 'rating') ? value : this.state.rating;
+    const sort = (text === 'sort') ? value : this.state.sort;
     source.cancel('Request canceled by reloading.');
-    const { pathname } = this.props.location;
-    const { genre, rating, sort } = search;
-    const newUrl = `${pathname}?genre=${genre}&rating=${rating}&sort=${sort}`;
-    this.props.history.push(newUrl);
+    this.changeUrl(name, genre, rating, sort);
     this.setState({
-      search,
+      [name]: value,
       movies: [],
       loadStarted: true,
       hasMoreItems: true,
@@ -127,14 +163,19 @@ class Gallery extends Component {
     const {
       movies,
       hasMoreItems,
+      genre,
+      rating,
+      sort,
     } = this.state;
-    const loader = <Loading />;
     if (!this.mounted) return null;
     return (
       <div>
         <Filter
           onFilter={this.filter}
           location={this.props.location}
+          genre={genre}
+          rating={rating}
+          sort={sort}
         />
         <SearchBar
           onSearch={this.search}
@@ -147,12 +188,17 @@ class Gallery extends Component {
         >
           <MovieList
             movies={movies}
+            hasMoreItems={hasMoreItems}
+            user={this.user}
           />
         </InfiniteScroll>
       </div>
     );
   }
-
 }
 
-export default Gallery;
+const mapStateToProps = ({ i18n: { locale } }) => ({
+  locale,
+});
+
+export default connect(mapStateToProps)(Gallery);

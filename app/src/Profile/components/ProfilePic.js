@@ -9,10 +9,9 @@ export default class ProfileProfile extends Component {
   }
 
   render() {
-    const { picture } = this.props;
-    const path = picture ?
-    `/static/uploads/${picture}` :
-    `/static/uploads/${this.props.user.profile.picture}`;
+    const { pictureURL } = this.props;
+    const path = pictureURL || this.props.user.profile.pictureURL || '/static/uploads/empty_profile.png';
+
     return (
       <div>
         <div>

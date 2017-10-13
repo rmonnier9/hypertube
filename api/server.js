@@ -16,7 +16,6 @@ import dotenv from 'dotenv/config';
 import passportConfig from './config/passport';
 import routes from './routes';
 
-
 // import movieScraper from './controllers/scraper/movieScraper';
 //
 // try {
@@ -70,6 +69,10 @@ app.use(expressStatusMonitor()); // report realtime server metrics for Express-b
 app.use(compression()); // reduce page loads time to the order of 15-20%
 app.use(logger('dev')); // morgan
 app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+app.use(express.static(path.join(__dirname, 'build'), {
+  dotfiles: 'ignore',
+  index: false,
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator()); // validate form inputs. cf req.assert in controllers files
@@ -85,6 +88,11 @@ routes(app, passport, upload);
  * Error Handler. only use in development
  */
 app.use(errorHandler());
+
+// if a request doesn't match a route, send the front app
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+});
 
 /**
  * Start Express server.

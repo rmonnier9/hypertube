@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from './Dialog.js';
@@ -8,8 +9,24 @@ import Dialog from './Dialog.js';
 const SignupComponent = (props) => {
   const error = {};
   props.error.forEach((field) => {
-    error[field.param] = field.msg;
+    if (field.msg) {
+      error[field.param] = props.intl.formatMessage({ id: field.msg });
+    }
   });
+
+  const signUp = props.intl.formatMessage({ id: 'homepage.signUp' });
+  const yourEmail = props.intl.formatMessage({ id: 'homepage.yourEmail' });
+  const email = props.intl.formatMessage({ id: 'homepage.email' });
+  const yourPassword = props.intl.formatMessage({ id: 'homepage.yourPassword' });
+  const password = props.intl.formatMessage({ id: 'homepage.password' });
+  const confirmPassword = props.intl.formatMessage({ id: 'homepage.confirmPassword' });
+  const yourFirstName = props.intl.formatMessage({ id: 'homepage.yourFirstName' });
+  const firstName = props.intl.formatMessage({ id: 'profile.firstName' });
+  const lastName = props.intl.formatMessage({ id: 'profile.lastName' });
+  const yourLastName = props.intl.formatMessage({ id: 'homepage.yourLastName' });
+  const alreadyMember = props.intl.formatMessage({ id: 'homepage.alreadyMember' });
+  const next = props.intl.formatMessage({ id: 'general.next' });
+
   return (
     <div>
       <div className="homepage-background" />
@@ -18,52 +35,52 @@ const SignupComponent = (props) => {
           onSubmit={props.handleNextStep}
           onChange={props.handleChange}
         >
-          <h2 className="homepage-title" >Sign up</h2>
+          <h2 className="homepage-title">{signUp}</h2>
           <TextField
-            hintText="Your email"
+            hintText={yourEmail}
             name="email"
             errorText={error.email}
-            floatingLabelText="Email"
+            floatingLabelText={email}
             required
           />
           <br />
           <TextField
-            hintText="Your password"
+            hintText={yourPassword}
             type="password"
             name="password"
             errorText={error.newPassword}
-            floatingLabelText="Password"
+            floatingLabelText={password}
             required
           />
           <br />
           <TextField
-            hintText="Your password"
+            hintText={yourPassword}
             type="password"
             name="confirmPassword"
             errorText={error.confirmPassword}
-            floatingLabelText="Confirm password"
+            floatingLabelText={confirmPassword}
             required
           />
           <br />
           <TextField
-            hintText="Your first name"
+            hintText={yourFirstName}
             name="firstName"
             errorText={error.firstName}
-            floatingLabelText="First name"
+            floatingLabelText={firstName}
             required
           />
           <br />
           <TextField
-            hintText="Your last name"
+            hintText={yourLastName}
             name="lastName"
             errorText={error.lastName}
-            floatingLabelText="Last name"
+            floatingLabelText={lastName}
             required
           />
           <br />
-          <RaisedButton className="homepage-submit" type="submit" name="submit" label="Next" />
+          <RaisedButton className="homepage-submit" type="submit" name="submit" label={next} />
           <br />
-          <Link to="/signin" className="homepage-linkto">Already member?</Link>
+          <Link to="/signin" className="homepage-linkto">{alreadyMember}</Link>
           <Dialog
             preview={props.preview}
             handleUpload={props.handleUpload}
@@ -76,7 +93,8 @@ const SignupComponent = (props) => {
       </div>
     </div>
   );
-};
+}
+
 
 SignupComponent.PropTypes = {
   handleSubmit: PropTypes.func.required,
@@ -84,4 +102,4 @@ SignupComponent.PropTypes = {
   error: PropTypes.array.required,
 };
 
-export default SignupComponent;
+export default injectIntl(SignupComponent);

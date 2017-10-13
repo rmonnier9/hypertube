@@ -15,14 +15,14 @@ const passportConfig = (passport) => {
         return done(err);
       }
       if (!user) {
-        return done(null, false, [{ param: 'email', msg: `Email ${email} not found.`, value: email }]);
+        return done(null, false, [{ param: 'email', msg: 'error.noEmailUsed', value: email }]);
       }
       user.comparePassword(password, (err, isMatch) => {
         if (err) return done(err);
         if (isMatch) {
           return done(null, user);
         }
-        return done(null, false, [{ param: 'password', msg: 'Invalid password.' }]);
+        return done(null, false, [{ param: 'password', msg: 'error.incorrectPassword' }]);
       });
     });
   }));
@@ -68,7 +68,7 @@ const passportConfig = (passport) => {
   passport.use('42', new FortyTwoStrategy({
     clientID: process.env.FORTYTWO_ID,
     clientSecret: process.env.FORTYTWO_SECRET,
-    callbackURL: '/auth/fortytwo/callback',
+    callbackURL: '/oauth/42/callback',
   }, (accessToken, refreshToken, profile, done) => {
     User.findOne({ fortytwo: profile.id }, (err, existingUser) => {
       if (err) return done(err);
@@ -77,10 +77,12 @@ const passportConfig = (passport) => {
         if (err) return done(err);
         if (existingEmailUser) return done('email already used');
         const user = new User();
-        user.fortytwo = profile.id;
         user.email = profile.emails[0].value;
-        user.profile.picture = profile.photos[0].value;
-        user.tokens.push({ kind: 'fortytwo', accessToken });
+        user.fortytwo = profile.id;
+        user.tokens.push({ kind: '42', accessToken });
+        user.profile.firstName = profile.name.givenName;
+        user.profile.lastName = profile.name.familyName;
+        user.profile.pictureURL = profile.photos[0].value;
         user.save((err) => {
           done(err, user);
         });
@@ -94,7 +96,7 @@ const passportConfig = (passport) => {
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_ID,
     clientSecret: process.env.GOOGLE_SECRET,
-    callbackURL: '/auth/google/callback',
+    callbackURL: '/oauth/google/callback',
     passReqToCallback: true
   }, (req, accessToken, refreshToken, profile, done) => {
     User.findOne({ google: profile.id }, (err, existingUser) => {
@@ -102,17 +104,25 @@ const passportConfig = (passport) => {
       if (existingUser) return done(null, existingUser);
       User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
         if (err) return done(err);
-        if (existingEmailUser) return done('email already used');
-        const user = new User();
-        user.email = profile.emails[0].value;
-        user.google = profile.id;
-        user.tokens.push({ kind: 'google', accessToken });
-        user.profile.name = profile.displayName;
-        user.profile.gender = profile._json.gender;
-        user.profile.picture = profile._json.image.url;
-        user.save((err) => {
-          done(err, user);
-        });
+        if (existingEmailUser) {
+          existingEmailUser.google = profile.id;
+          existingEmailUser.tokens.push({ kind: 'google', accessToken });
+          existingEmailUser.save((err) => {
+            done(err, existingEmailUser);
+          });
+        } else {
+          const user = new User();
+          user.email = profile.emails[0].value;
+          user.google = profile.id;
+          user.tokens.push({ kind: 'google', accessToken });
+          user.profile.firstName = profile.name.givenName;
+          user.profile.lastName = profile.name.familyName;
+          user.profile.gender = profile._json.gender;
+          user.profile.pictureURL = profile._json.image.url;
+          user.save((err) => {
+            done(err, user);
+          });
+        }
       });
     });
   }));

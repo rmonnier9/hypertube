@@ -50,12 +50,10 @@ const sortAndCreateGenreTable = async () => {
     })
   ));
   const end = await Genre.insertMany(genres);
-  console.log(end);
 };
 
 export const operateOnGenreTable = async (req, res) => {
   // const finish = await Promise.all(changes.map(change => UpdateTradGenre(change)));
-  // console.log('end', finish);
   // getGenreTable();
   // sortAndCreateGenreTable();
   // showGenreTableTrad();

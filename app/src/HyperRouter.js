@@ -31,6 +31,7 @@ const MatchaRouter = ({ isAuthenticated, locale }) => (
         <PrivateRoute exact path="/clearAll" key={locale} isAuthenticated={isAuthenticated} component={Deleter} />
         <Route path="/signin" key={locale} component={Signin} />
         <Route path="/forgot" key={locale} component={Forgot} />
+        <Route path="/reset" key={locale} component={Reset} />
         <Route path="/signup" key={locale} component={Signup} />
         <Route key={locale} component={NotFound} />
       </Switch>

@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import queryString from 'query-string';
+// import queryString from 'query-string';
 
-import SubmitForm from '../../General/components/SubmitForm.js';
+// import SubmitForm from '../../General/components/SubmitForm.js';
 import Selectors from '../components/Selectors.js';
 
 class Filter extends Component {
 
   state = {
-    genre: 'all',
-    rating: 0,
-    sort: 'latest',
+    // genre: 'all',
+    // rating: 0,
+    // sort: 'seeds',
     genres: [],
   }
 
@@ -19,42 +19,50 @@ class Filter extends Component {
     const url = '/api/genres';
     axios({ url, method: 'GET' })
     .then(({ data: { genres } }) => {
-      this.setState({ genres });
+      // const parsed = queryString.parse(this.props.location.search);
+      // if (parsed.genre === undefined) {
+      //   this.setState({ genre: 'all', rating: 0, sort: 'seeds', genres });
+      // } else {
+        // this.setState({ ...parsed, genres });
+        this.setState({ genres });
+      // }
     });
   }
 
-  componentWillReceiveProps = (nextProps) => {
-    const parsed = queryString.parse(nextProps.location.search);
-    if (parsed.genre === undefined) {
-      this.setState({ genre: 'all', rating: 0, sort: 'latest' });
-    } else {
-      this.setState({ ...parsed });
-    }
-  }
+  // componentWillReceiveProps = (nextProps) => {
+    // const parsed = queryString.parse(nextProps.location.search);
+    // if (parsed.genre === undefined) {
+    //   this.setState({ genre: 'all', rating: 0, sort: 'seeds' });
+    // } else {
+      // this.setState({ ...parsed });
+    // }
+  // }
 
   saveState = (name, value) => {
-    this.setState({ [name]: value });
+    // this.setState({ [name]: value });
+    // console.log('save', name, value);
+    this.props.onFilter(name, value);
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    const { genre, rating, sort } = this.state;
-    const search = Object.assign({ genre }, { rating }, { sort });
-    this.props.onFilter(search);
-  }
+  // handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   const { genre, rating, sort } = this.state;
+  //   const search = Object.assign({ genre }, { rating }, { sort });
+  //   this.props.onFilter(search);
+  // }
 
   render() {
-    const filter = { ...this.state };
+    const { genres } = this.state;
+    const { genre, rating, sort } = this.props;
+    const filter = Object.assign({ genre }, { rating }, { sort }, { genres });
+    // console.log('test', filter);
+
     return (
-      <form className="selects-container" id="user-form" onSubmit={this.handleSubmit}>
+      <form className="selects-container" id="user-form">
         <Selectors
           locale={this.props.locale}
           filter={filter}
           onSelect={this.saveState}
-        />
-        <SubmitForm
-          className="btn btn-default gallery-search-button"
-          id="gallery.filter"
         />
       </form>
     );

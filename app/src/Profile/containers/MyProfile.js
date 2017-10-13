@@ -11,10 +11,11 @@ class MyProfile extends Component {
 
   state = {
     profileLoaded: false,
-    error: '',
+    error: [],
+    errorPic: [{ param: '', msg: '' }],
     status: 'closed',
     file: {},
-    picture: '',
+    pictureURL: '',
     otherUser: {},
   }
 
@@ -22,7 +23,7 @@ class MyProfile extends Component {
     const url = '/api/me';
     axios({ url, method: 'GET' })
     .then(({ data: { error, user } }) => {
-      if (error) {
+      if (error.length) {
         this.setState({ error });
       } else {
         this.user = user;
@@ -60,10 +61,11 @@ class MyProfile extends Component {
     event.preventDefault();
     const { file } = this.state;
     this.sendPicture(file)
-    .then(({ data: { error, picture } }) => {
-      if (error) this.setState({ status: 'open', error });
-      else {
-        this.setState({ status: 'closed', picture });
+    .then(({ data: { errorPic, pictureURL } }) => {
+      if (errorPic.length) {
+        this.setState({ status: 'open', errorPic });
+      } else {
+        this.setState({ status: 'closed', pictureURL, errorPic: [{ param: '', msg: '' }] });
       }
     });
   }
@@ -72,12 +74,13 @@ class MyProfile extends Component {
     const {
       profileLoaded,
       error,
-      picture,
+      errorPic,
+      pictureURL,
       status,
       file,
     } = this.state;
 
-    if (error) { return (<div>{error}</div>); }
+    if (error.length) { return (<div>{error}</div>); } // no error backend
     if (!profileLoaded) { return <Loading />; }
 
     return (
@@ -90,13 +93,14 @@ class MyProfile extends Component {
         </h1>
         <ProfilePic
           user={this.user}
-          picture={picture}
+          pictureURL={pictureURL}
           handleUpload={this.imageUpload}
           handleSubmit={this.handleSubmit}
           handleOpen={this.handleOpen}
           handleClose={this.handleClose}
           status={status}
           file={file}
+          errorPic={errorPic}
         />
         <UpdateMyInfos user={this.user} />
         <FindUser

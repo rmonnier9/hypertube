@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
 import moment from 'moment';
+import 'moment/min/locales';
+
 import '../css/comment.css';
 
-const dateFormat = 'MMM Do YYYY, h:mm a';
+const dateFormat = { 'en-en': 'MMM Do YYYY, h:mm a', 'fr-fr': 'D MMMM YYYY, H:mm' };
 
 const capFirst = string => (
   string.charAt(0).toUpperCase() + string.slice(1)
@@ -15,43 +18,47 @@ export const CommentBlock = ({ children }) => (
   </div>
 );
 
-const Comment = ({ comment }) => (
+const Comment = ({ comment, locale }) => (
   <div className="comment">
     <a title="View profile" href={`/profile/${comment.idUser}`}>
-      <img className="comment-avatar" src={`/static/uploads/${comment.picture}`} alt="" />
+      <img className="comment-avatar" src={comment.pictureURL} alt="" />
     </a>
     <div className="comment-text-container">
       <div className="comment-info">
         <div>{`${capFirst(comment.firstName)} ${capFirst(comment.lastName)} `}</div>
-        <div className="comment-date">{ moment(comment.date).format(dateFormat) }</div>
+        <div className="comment-date">{ moment(comment.date).locale(locale).format(dateFormat[locale]) }</div>
       </div>
       <p className="comment-text">{comment.text}</p>
     </div>
   </div>
 );
 
-class CommentList extends Component {
+const CommentList = (props) => {
+  const ifOne = props.intl.formatMessage({ id: 'comments.ifOne' });
+  const { comments } = props;
+  console.log(comments);
 
-  render() {
-    const ifOne = this.props.intl.formatMessage({ id: 'comments.ifOne' });
-    const { comments } = this.props;
-    if (!comments || !comments.length) {
-      return (
-        <CommentBlock>
-          { ifOne }
-        </CommentBlock>
-      );
-    }
+  if (!comments || !comments.length) {
     return (
-      <div>
-        {comments.map(comment => (
-          <CommentBlock key={comment.id}>
-            <Comment comment={comment} />
-          </CommentBlock>
-      ))}
-      </div>
+      <CommentBlock>
+        { ifOne }
+      </CommentBlock>
     );
   }
-}
 
-export default injectIntl(CommentList);
+  return (
+    <div>
+      {comments.map(comment => (
+        <CommentBlock key={comment.id}>
+          <Comment comment={comment} locale={props.locale} />
+        </CommentBlock>
+    ))}
+    </div>
+  );
+};
+
+const mapStateToProps = ({ i18n: { locale } }) => ({
+  locale,
+});
+
+export default connect(mapStateToProps)(injectIntl(CommentList));

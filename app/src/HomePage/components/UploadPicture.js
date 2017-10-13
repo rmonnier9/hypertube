@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
+import { injectIntl } from 'react-intl';
 
 class UploadPicture extends Component {
 
@@ -11,6 +12,9 @@ class UploadPicture extends Component {
     const preview = this.props.file.preview
      ? <img className="picture-preview" src={this.props.file.preview} alt="" />
      : null;
+
+    const upload = this.props.intl.formatMessage({ id: 'homepage.uploadProfilePic' });
+
     return (
       <div className="dropzone-container">
         {preview}
@@ -24,7 +28,7 @@ class UploadPicture extends Component {
             <i className="material-icons signup-camera-icon">camera_enhance</i>
           </div>
           <div>
-            <p>Upload a profile picture</p>
+            <p style={{ padding: '10px' }}>{upload}</p>
           </div>
         </Dropzone>
       </div>
@@ -32,4 +36,4 @@ class UploadPicture extends Component {
   }
 }
 
-export default UploadPicture;
+export default injectIntl(UploadPicture);

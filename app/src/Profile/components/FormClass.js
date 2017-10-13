@@ -2,9 +2,10 @@ import React from 'react';
 import TextInput from '../../General/components/TextInput.js';
 import SubmitForm from '../../General/components/SubmitForm.js';
 
-const FormClass = ({ form }) => {
+const FormClass = ({ form, onChange, onSubmit }) => {
   if (form.formId === null) return null;
-  const { onChange, onSubmit, formId, name, type, id } = form;
+
+  const { formId, name, type, id } = form;
   const TextInputDisplay = [];
   for (let i = 0; i < name.length; i += 1) {
     TextInputDisplay.push(

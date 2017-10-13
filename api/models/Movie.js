@@ -24,7 +24,7 @@ const torrentSchema = new mongoose.Schema({
     length: Number,
     name: String,
     downloaded: Boolean,
-  },
+  }, // movie downloaded
 });
 
 export const Torrent = mongoose.model('Torrent', torrentSchema);

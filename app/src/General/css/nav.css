@@ -17,7 +17,7 @@
   text-decoration: none;
 }
 
-.nav a, button.glyphicon-off, button.nav-lang {
+.nav a, button.glyphicon-off, span.glyphicon-off.off, button.nav-lang {
   text-transform: uppercase;
   text-shadow: none;
   border: none;
@@ -25,6 +25,10 @@
   background-color: transparent;
   padding: 15px;
   margin-right: 10px;
+}
+
+span.glyphicon-off.off {
+  color: transparent;
 }
 
 .nav > li > a:hover, .nav > li > a:focus {

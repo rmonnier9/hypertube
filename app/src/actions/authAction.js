@@ -47,11 +47,17 @@ const receiveLogout = () => ({
 // });
 
 // login action function, calls the API to get a token
-const loginUser = creds => (dispatch) => {
+const loginUser = (creds, oauth = false) => (dispatch) => {
   dispatch(requestLogin(creds));
 
-  return axios.post('/api/signin', creds)
-  .then(({ data: { error }, headers }) => {
+  let request;
+  if (oauth) {
+    request = axios.get(`/api/auth/${creds.provider}/callback?code=${creds.code}`);
+  } else {
+    request = axios.post('/api/signin', creds);
+  }
+
+  request.then(({ data: { error }, headers }) => {
     if (!error) {
       localStorage.setItem('x-access-token', headers['x-access-token']);
       localStorage.setItem('isAuthenticated', true);
@@ -62,7 +68,7 @@ const loginUser = creds => (dispatch) => {
       dispatch(loginError(error));
     }
   })
-  .catch(err => console.log('Error: ', err));
+  .catch((err) => {});
 };
 
 // logout action function, remove local storage
