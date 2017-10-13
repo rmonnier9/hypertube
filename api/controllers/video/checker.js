@@ -1,4 +1,4 @@
-import { Movie } from '../../models/Movie';
+import Movie from '../../models/Movie';
 
 // VIDEO CHECKER
 // check input and populate request object

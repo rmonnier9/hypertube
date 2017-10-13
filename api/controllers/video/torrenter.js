@@ -1,6 +1,6 @@
 import fs from 'fs';
 import torrentStream from 'torrent-stream';
-import { Movie } from '../../models/Movie';
+import Movie from '../../models/Movie';
 import mimeTypes from './mimeTypes';
 import getVideoStream from './streamer';
 import getFileExtension from './getFileExtension';

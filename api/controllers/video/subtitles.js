@@ -3,7 +3,7 @@ import fs from 'fs';
 import mkdirp from 'mkdirp';
 import srt2vtt from 'srt2vtt';
 import axios from 'axios';
-import { Movie } from '../../models/Movie';
+import Movie from '../../models/Movie';
 
 const OpenSubtitles = new OS({
   useragent: 'OSTestUserAgentTemp',
@@ -52,7 +52,10 @@ export const getSub = async (req, res) => {
   if (!idImdb || !hash) return res.send({ error: 'invalid parameters' });
   const results = await Movie.findOne({ idImdb, 'torrents.hash': hash });
   const torrent = results.torrents.filter(torrent => (torrent.hash === hash));
+  console.log('torrent sub', torrent.data);
   if (!torrent.data) return res.send({ error: 'nosub' });
   const { frSubFilePath, enSubFilePath } = torrent.data;
+  console.log('frSubFilePath', frSubFilePath);
+  console.log('enSubFilePath', enSubFilePath);
   return res.send({ error: '', frSubFilePath, enSubFilePath });
 };

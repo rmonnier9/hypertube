@@ -1,6 +1,6 @@
 import queryString from 'query-string';
 
-import { Movie } from '../models/Movie';
+import Movie from '../models/Movie';
 
 const getMatchObj = (query, lang) => {
   if (!query.name && !query.genre && !query.rating) return null;

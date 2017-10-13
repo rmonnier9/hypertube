@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Movie } from '../../models/Movie';
+import Movie from '../../models/Movie';
 
 const deleteFolderRecursive = (path) => {
   let files = [];

@@ -46,7 +46,7 @@ const videoStream = (req, res) => {
     const intervalId = setInterval(async () => {
       const stat = await fs.statAsync(path);
       console.log('videoStream Notice:', path, ' size:', stat.size);
-      if (stat.size > 50000000) {
+      if (stat.size > 15000000) {
         clearInterval(intervalId);
         resolve({ size: stat.size, modified: stat.mtime });
       } else {

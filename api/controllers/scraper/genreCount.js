@@ -1,4 +1,4 @@
-import { Movie } from '../../models/Movie';
+import Movie from '../../models/Movie';
 import Genre from '../../models/Genre';
 
 const changes = [

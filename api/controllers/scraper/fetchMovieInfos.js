@@ -1,7 +1,7 @@
 import axios from 'axios';
 import ptn from 'parse-torrent-name';
 import parseGenre from './genre';
-import { Movie, Torrent } from '../../models/Movie';
+import Movie, { Torrent } from '../../models/Movie';
 
 const keyMovieDb = '92d923e066d13a3034abbbfb0d5ea7ab';
 

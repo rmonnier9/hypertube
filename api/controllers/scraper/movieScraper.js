@@ -3,7 +3,7 @@ import { RateLimiter } from 'limiter';
 import moment from 'moment';
 
 import { fetchMovieInfosYifi, fetchMovieInfosEztv, parseTorrentEztv } from './fetchMovieInfos';
-import { Movie } from '../../models/Movie';
+import Movie from '../../models/Movie';
 
 const urlYify = 'https://yts.ag/api/v2/list_movies.json?sort=seeds&limit=50';
 const urlEztv = 'https://eztv.ag/api/get-torrents?limit=100';
