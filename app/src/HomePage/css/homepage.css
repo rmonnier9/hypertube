@@ -1,6 +1,14 @@
+@media screen and (max-width: 780px){
+  .dropzone-container { flex-direction: column; }
+}
+@media screen and (max-width: 500px){
+  .homepage-container { width: 300px !important; margin-top: 5vh !important; }
+}
+
 .homepage-container {
   margin: auto;
   margin-top: 15vh;
+  margin-bottom: 10vh;
   width: 450px;
   /*min-height: 400px;*/
   padding: 10px 25px 25px 25px;
