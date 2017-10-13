@@ -20,7 +20,7 @@ class Gallery extends Component {
     this.mounted = true;
     this.state = {
       // search,
-      genre: parsed.genre || 'all',
+      genre: parsed.genre || '',
       rating: parsed.rating || 0,
       sort: parsed.sort || '',
       name: parsed.name || '',
