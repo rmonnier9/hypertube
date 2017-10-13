@@ -39,7 +39,6 @@ const downloadHeader = (res, info) => {
 };
 
 const videoStream = (req, res) => {
-  console.log('torrentttttt', req.torrent);
   const { path, name } = req.torrent.data;
 
   return new Promise(((resolve, reject) => {
@@ -47,13 +46,13 @@ const videoStream = (req, res) => {
     const intervalId = setInterval(async () => {
       const stat = await fs.statAsync(path);
       console.log('videoStream Notice:', path, ' size:', stat.size);
-      if (stat.size > 5000000) {
+      if (stat.size > 50000000) {
         clearInterval(intervalId);
         resolve({ size: stat.size, modified: stat.mtime });
       } else {
         console.log('videoStream Notice: Movie file not yet big enough; fails:', fails);
         ++fails;
-        if (fails > 30) {
+        if (fails > 50) {
           clearInterval(intervalId);
           reject('Movie file never grew to at least 5mb');
         }

@@ -17,7 +17,10 @@ const torrentSchema = new mongoose.Schema({
   source: String, // yifi or eztv
   data: {
     torrentDate: Date,
+    lang: String,
     path: String,
+    frSub: String,
+    enSub: String,
     length: Number,
     name: String,
     downloaded: Boolean,
@@ -52,6 +55,4 @@ const movieSchema = new mongoose.Schema({
   thumb: String,
 });
 
-const Movie = mongoose.model('Movie', movieSchema);
-
-export default Movie;
+export const Movie = mongoose.model('Movie', movieSchema);

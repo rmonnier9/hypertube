@@ -15,9 +15,10 @@ const addToDb = async (movie) => {
   try {
     Movie.update(
       { idImdb },
-      { $push: { torrents: { $each: newTorrent } } });
+      { $push: { torrents: { $each: newTorrent } } },
+    );
   } catch (e) {
-    console.log('torrent dup');
+    console.log('torrent dup', e);
   }
 };
 
@@ -52,6 +53,7 @@ const cleanForEztv = async (torrents) => {
       consolidated[index].torrents.push(notCleaned[i].torrents[0]);
     }
   }
+  console.log('conso', consolidated);
   const newMovies = await Promise.all(consolidated.map(async (movie) => {
     const existingMovie = await Movie.findOne({ idImdb: movie.imdb_code });
     return new Promise((resolve, reject) => {
@@ -130,7 +132,6 @@ const ScraperEztvInit = async () => {
   //   console.log('delete error', e);
   // }
   const { data } = await axios.get(`${urlEztv}&page=1`);
-  console.log('dat', data);
   const { torrents_count: torrentsCount } = data;
   const max = Math.ceil(torrentsCount / 100);
   const now = moment();

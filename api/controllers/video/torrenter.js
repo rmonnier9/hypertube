@@ -1,10 +1,11 @@
 import fs from 'fs';
 import torrentStream from 'torrent-stream';
-import Movie from '../../models/Movie';
+import { Movie } from '../../models/Movie';
 import mimeTypes from './mimeTypes';
 import getVideoStream from './streamer';
 import getFileExtension from './getFileExtension';
 import startConversion from './startConversion';
+import { createSubFile } from './subtitles';
 
 const deleteFolderRecursive = async (path) => {
   if (fs.existsSync(path)) {
@@ -98,8 +99,11 @@ const videoTorrenter = async (req, res, next) => {
 
   const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;
   const file = await getFileStreamTorrent(pathFolder, req.torrent, res, req.idImdb);
+  const { frSubFilePath, enSubFilePath } = await createSubFile(req.idImdb, req.torrent.hash);
   req.torrent.data = {
     path: `${pathFolder}/${file.path}`,
+    enSub: enSubFilePath,
+    frSub: frSubFilePath,
     name: file.name,
     size: file.length,
     torrentDate: new Date(),

@@ -1,6 +1,6 @@
 import queryString from 'query-string';
 
-import Movie from '../models/Movie';
+import { Movie } from '../models/Movie';
 
 const getSortObj = (sort) => {
   let sortObj;
