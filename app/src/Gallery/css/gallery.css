@@ -5,7 +5,7 @@
 
 .card-container {
   margin: 10px;
-    animation: fadein 1s;
+  animation: fadein 1s;
 }
 
 .img-container {
@@ -39,7 +39,8 @@
 }
 
 .selector-box {
-  color: #101010;
+  color: black;
+  background-color: white;
   width: 100px;
 }
 

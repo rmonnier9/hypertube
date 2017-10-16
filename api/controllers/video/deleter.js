@@ -18,9 +18,10 @@ const deleteFolderRecursive = (path) => {
 };
 
 const deleteAll = async (req, res) => {
+  const { idImdb } = req.params;
   await deleteFolderRecursive('./torrents');
   await deleteFolderRecursive('./public/subs');
-  await Movie.updateMany({ 'torrents.data': { $exists: true } }, { $unset: { 'torrents.$.data': '' } });
+  await Movie.update({ idImdb, 'torrents.data': { $exists: true } }, { $unset: { 'torrents.$.data': '' } });
   return res.send({ err: '' });
 };
 

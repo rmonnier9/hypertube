@@ -1,17 +1,26 @@
+@media screen and (max-width: 780px){
+  .movie-poster { height: auto !important; max-width: 40% !important;}
+  .movie-container { flex-direction: column !important; align-items: center;}
+  .movie-infos { width: 100vw !important; }
+}
+
 .movie-container {
   color: #F5F5F5;
   display: flex;
   flex-direction: row;
   animation: fadein 1s;
+  padding-bottom: 20px;
 }
 
 .movie-poster {
   height: 90vh;
+  max-width: 100%;
 }
 
 .movie-infos {
   width: 900px;
   padding-left: 20px;
+  padding-right: 20px;
 }
 
 .movie-details {
@@ -47,7 +56,6 @@
 
 .torrents-table {
   width: 100%;
-  /*border: 1px solid grey;*/
   padding: 100px;
   box-shadow:inset 1px 1px 40px 0 rgba(100,100,100,.45);
 }

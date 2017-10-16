@@ -6,6 +6,7 @@
   max-width: 500px;
   border: 1px green solid;
   animation: fadein 1s;
+  margin-bottom: 20px;
 }
 
 .profile-title {

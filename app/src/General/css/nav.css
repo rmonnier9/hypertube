@@ -1,3 +1,7 @@
+@media screen and (max-width: 780px){
+  .container-fluid { max-height: 170px !important; }
+}
+
 .navbar {
   border-radius: 0;
   border-bottom: 1px solid #D8D8D8;
