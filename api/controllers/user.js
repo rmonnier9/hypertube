@@ -1,6 +1,7 @@
 import bluebird from 'bluebird';
 import mongoose from 'mongoose';
 import User from '../models/User';
+import Movie from '../models/Movie';
 import * as mail from './mail';
 import checkReq from './checkReq';
 
@@ -189,24 +190,32 @@ export const getAccount = (req, res, next) => {
  * Other user profile page.
  */
 export const getAccountById = (req, res, next) => {
+  // check if id sent is an Object id
   let objectId = req.params.id;
   try {
     objectId = mongoose.Types.ObjectId(req.params.id);
   } catch (err) { return res.send({ error: [{ param: 'user', msg: 'error.noUserProfile' }] }); }
+
+  // check if id sent is associated to a user
   User.findById(objectId, (err, user) => {
     if (err) { return next(err); }
     if (!user) {
       return res.send({ error: [{ param: 'user', msg: 'error.noUserProfile' }] });
     }
+    // get rid of password and email
     user.password = '';
     user.email = '';
-    return res.send({ error: [], user });
+    // find movies infos for all movies seen by user
+    Movie.find({ idImdb: { $in: user.profile.movies } }, (err, movies) => {
+      if (err) { return next(err); }
+      return res.send({ error: [], user, movies });
+    });
   });
 };
 
 /**
  * DELETE /me
- * Delete user account.
+ * Delete user account. // not implemented
  */
 export const deleteDeleteAccount = (req, res, next) => {
   User.remove({ _id: req.user.id }, (err) => {
