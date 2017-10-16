@@ -2,7 +2,6 @@ import fs from 'fs';
 import torrentStream from 'torrent-stream';
 import Movie from '../../models/Movie';
 import mimeTypes from './mimeTypes';
-import getVideoStream from './streamer';
 import getFileExtension from './getFileExtension';
 import startConversion from './startConversion';
 import { createSubFile } from './subtitles';
@@ -40,11 +39,7 @@ const setUpEngine = (engine, file, torrent) => {
   engine.on('idle', () => {
     console.log('torrentStream Notice: Engine', engine.infoHash, 'idle');
     console.log('torrentStream Notice: Engine', engine.infoHash, 'downloaded (',
-      engine.swarm.downloaded, '/', file.length, '); destroying');
-    engine.removeAllListeners();
-    engine.destroy();
-    console.log('torrentStream Notice: Torrent set as downloaded:', torrent.hash);
-    torrent.data.downloaded = true;
+      engine.swarm.downloaded, '/', file.length, ').');
   });
 };
 
@@ -109,8 +104,8 @@ const videoTorrenter = async (req, res, next) => {
     torrentDate: new Date(),
     downloaded: true,
   };
+  const stream = await startConversion(req.torrent, file.createReadStream());
   await Movie.updateOne({ idImdb: req.idImdb, 'torrents.hash': req.torrent.hash }, { $set: { 'torrents.$.data': req.torrent.data } });
-  await startConversion(req.torrent, file.createReadStream());
   return next();
 };
 
