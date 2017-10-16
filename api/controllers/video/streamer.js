@@ -26,14 +26,15 @@ const downloadHeader = (res, info) => {
     // Partial http response
     code = 206;
     header.Status = '206 Partial Content';
-    header['Content-Range'] = `bytes ${info.start}-${info.end}/${info.size}`;
+    // header['Content-Range'] = `bytes ${info.start}-${info.end}/${info.size}`;
+    header['Content-Range'] = `bytes ${info.start}-${info.end}/*`;
   }
 
-  header.Pragma = 'public';
   header['Last-Modified'] = info.modified.toUTCString();
   header['Content-Transfer-Encoding'] = 'binary';
   header['Content-Length'] = info.length;
-  header.Server = settings.server;
+  // header.Pragma = 'public';
+  // header.Server = settings.server;
 
   res.writeHead(code, header);
 };
@@ -63,7 +64,7 @@ const videoStream = (req, res) => {
       const info = {};
       info.name = name;
       info.start = 0;
-      info.end = size - 1;
+      info.end = size - 2;
       info.size = size;
       info.modified = modified;
       info.rangeRequest = false;

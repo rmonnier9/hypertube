@@ -11,6 +11,7 @@ import passport from 'passport';
 import expressValidator from 'express-validator';
 import expressStatusMonitor from 'express-status-monitor';
 import multer from 'multer';
+import cron from 'cron';
 import dotenv from 'dotenv/config';
 
 import passportConfig from './config/passport';
@@ -59,6 +60,12 @@ mongoose.connection.on('error', (err) => {
   console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
   process.exit();
 });
+
+const CronJob = cron.CronJob;
+const job = new CronJob('0 0 1 * * *', () => {
+  console.log('Deleting unwatched movies...');
+}, true, 'Europe/Paris');
+job.start();
 
 /**
  * Express configuration.
