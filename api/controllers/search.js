@@ -36,6 +36,11 @@ const getMatchObj = (query, lang) => {
       rating: { $gte: query.rating }
     });
   }
+  if (query.sort === 'oldest') {
+    matchObj.$and.push({
+      year: { $exists: true }
+    });
+  }
   return matchObj;
 };
 

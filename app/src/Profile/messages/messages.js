@@ -1,6 +1,10 @@
 import { defineMessages } from 'react-intl';
 
 export const searchMessageValue = defineMessages({
+  profile: {
+    id: 'profile.profile',
+    defaultMessage: 'Profile',
+  },
   searchMessage: {
     id: 'profile.searchMessage',
     defaultMessage: 'Enter a name to find another user',
@@ -40,5 +44,9 @@ export const searchMessageValue = defineMessages({
   contact: {
     id: 'profile.contact',
     defaultMessage: 'Contact',
+  },
+  noMovieSeen: {
+    id: 'profile.noMovieSeen',
+    defaultMessage: 'This user has not watched any movie yet.',
   },
 });

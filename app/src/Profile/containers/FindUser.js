@@ -4,7 +4,6 @@ import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import { injectIntl } from 'react-intl';
 import TextInput from '../../General/components/TextInput.js';
-import SubmitForm from '../../General/components/SubmitForm.js';
 
 class FindUser extends Component {
 
@@ -50,7 +49,6 @@ class FindUser extends Component {
     const { pathname } = this.props.location;
     const newUrl = `${pathname}?name=${search}`;
     this.props.history.push(newUrl);
-    this.showUsers(search);
   }
 
   saveState = (name, value) => {
@@ -92,10 +90,6 @@ class FindUser extends Component {
             autocomplete="off"
           />
         </form>
-        <SubmitForm
-          className="btn btn-default submit-button"
-          id="general.search"
-        />
         <div className="users-search-display">
           {usersDisplay}
         </div>
