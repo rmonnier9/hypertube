@@ -1,12 +1,13 @@
 import ffmpeg from 'fluent-ffmpeg';
 import getFileExtension from './getFileExtension';
-
+import Movie from '../../models/Movie';
 import mimeTypes from './mimeTypes';
 
 const ffmpegHash = {};
 
 const startConversion = (torrent, fileStream, res) => {
   const { data } = torrent;
+  const hash = torrent;
   const fileExtension = getFileExtension(data.name);
   const mime = mimeTypes[fileExtension];
   if (!mime) {
@@ -32,6 +33,10 @@ const startConversion = (torrent, fileStream, res) => {
     })
     .on('progress', (progress) => {
       console.log('fluent-ffmpeg Notice: Progress:', progress.timemark, 'converted');
+    })
+    .on('end', () => {
+      Movie.updateOne({ 'torrents.hash': hash }, { $set: { 'torrents.$.data.downloaded': true } });
+      console.log('Transcoding succeeded !');
     });
   if (res === false) {
     converter.output(data.path);

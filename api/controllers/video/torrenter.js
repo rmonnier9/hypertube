@@ -96,6 +96,10 @@ export const videoTorrenter = async (req, res) => {
   if (!req.torrent.data || !req.torrent.data.name) {
     return res.json({ error: 'Already has not started.' });
   }
+  if (req.torrent.data.downloaded) {
+    const stream = fs.createReadStream(req.torrent.data.path);
+    return stream.pipe(res);
+  }
   console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', req.torrent.title.en);
 
   const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;
