@@ -5,24 +5,12 @@ import mimeTypes from './mimeTypes';
 
 const ffmpegHash = {};
 
-const startConversion = (torrent, fileStream) => new Promise((resolve, reject) => {
+const startConversion = (torrent, fileStream, res) => {
   const { data } = torrent;
   const fileExtension = getFileExtension(data.name);
   const mime = mimeTypes[fileExtension];
   if (!mime) {
-    reject(new Error(`spiderStreamer: Invalid mime type: ${data.name}`));
-  }
-
-  // NO CONVERSION NEEDED
-  // if (mime === 'video/mp4' || mime === 'video/webm' || mime === 'video/ogg') {
-  //   console.log('spiderStreamer Notice: No conversion needed:', mime);
-  //   return resolve();
-  // }
-
-  // ALREADY CONVERTING
-  if (ffmpegHash[torrent.hash]) {
-    console.log('startConversion Notice: Already converting');
-    return resolve();
+    throw (new Error(`spiderStreamer: Invalid mime type: ${data.name}`));
   }
 
   // SET NEW PATH
@@ -41,12 +29,15 @@ const startConversion = (torrent, fileStream) => new Promise((resolve, reject) =
     .on('codecData', (codecData) => {
       console.log('fluent-ffmpeg Notice: CodecData:', codecData);
       ffmpegHash[torrent.hash] = codecData;
-      resolve();
     })
     .on('progress', (progress) => {
       console.log('fluent-ffmpeg Notice: Progress:', progress.timemark, 'converted');
-    })
-    .output(data.path);
+    });
+  if (res === false) {
+    converter.output(data.path);
+  } else {
+    converter.output(res);
+  }
   if (fileExtension === '.mkv') {
     converter.addOption('-vcodec')
       .addOption('copy')
@@ -61,6 +52,6 @@ const startConversion = (torrent, fileStream) => new Promise((resolve, reject) =
       .outputOptions('-movflags frag_keyframe+empty_moov')
       .run();
   }
-});
+};
 
 export default startConversion;
