@@ -44,7 +44,8 @@ const startConversion = (torrent, fileStream, res) => {
     converter.output(res);
   }
   if (fileExtension === '.mkv') {
-    converter.addOption('-vcodec')
+    converter.inputFormat('.mkv')
+      .addOption('-vcodec')
       .addOption('copy')
       .addOption('-acodec')
       .addOption('copy')
