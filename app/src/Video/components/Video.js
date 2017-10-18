@@ -7,7 +7,6 @@ class Video extends Component {
 
   state = { loaded: false, created: false, trackFr: null, trackEn: null, progress: 0 };
 
-
   componentDidMount() {
     const { id, hash } = this.props.match.params;
     const { locale } = this.props.intl;

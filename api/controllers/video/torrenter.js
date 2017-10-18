@@ -83,7 +83,7 @@ export const videoStartTorrenter = async (req, res) => {
     size: file.length,
     torrentDate: new Date(),
   };
-  startConversion(req.torrent, file.createReadStream(), false);
+  await startConversion(req.torrent, file.createReadStream(), false);
   await Movie.updateOne({ idImdb: req.idImdb, 'torrents.hash': req.torrent.hash }, { $set: { 'torrents.$.data': req.torrent.data } });
   return res.json({ error: '' });
 };

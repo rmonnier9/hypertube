@@ -28,6 +28,7 @@ class Gallery extends Component {
       hasMoreItems: true,
       nextHref: null,
       source: CancelToken.source(),
+      loaded: false,
     };
   }
 
@@ -39,7 +40,7 @@ class Gallery extends Component {
         this.setState({ error });
       } else {
         this.user = user;
-        // this.setState({ ...parsed });
+        this.setState({ loaded: true });
       }
     });
   }
@@ -166,7 +167,7 @@ class Gallery extends Component {
       rating,
       sort,
     } = this.state;
-    if (!this.mounted) return null;
+    if (!this.state.loaded) return null;
     return (
       <div>
         <Filter
