@@ -7,7 +7,7 @@ const ffmpegHash = {};
 
 const startConversion = (torrent, fileStream, res) => new Promise((resolve, reject) => {
   const { data } = torrent;
-  const hash = torrent;
+  const { hash } = torrent;
   const fileExtension = getFileExtension(data.name);
   const mime = mimeTypes[fileExtension];
   if (!mime) {
@@ -38,8 +38,8 @@ const startConversion = (torrent, fileStream, res) => new Promise((resolve, reje
     .on('progress', (progress) => {
       console.log('fluent-ffmpeg Notice: Progress:', progress.timemark, 'converted');
     })
-    .on('end', () => {
-      Movie.updateOne({ 'torrents.hash': hash }, { $set: { 'torrents.$.data.downloaded': true } });
+    .on('end', async () => {
+      await Movie.updateOne({ 'torrents.hash': hash }, { $set: { 'torrents.$.data.downloaded': true } });
       console.log('Transcoding succeeded !');
     });
   if (res === false) {
