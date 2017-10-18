@@ -49,4 +49,8 @@ export const searchMessageValue = defineMessages({
     id: 'profile.noMovieSeen',
     defaultMessage: 'This user has not watched any movie yet.',
   },
+  movieSeen: {
+    id: 'profile.movieSeen',
+    defaultMessage: 'Movies seen',
+  },
 });

@@ -1,3 +1,22 @@
+@media screen and (max-width: 1100px){
+  .one-profile-movies { width: 35% !important; }
+  .movie-list-container-profile { flex-direction: column; align-items: center; }
+
+}
+
+@media screen and (max-width: 768px){
+  .one-profile-container { flex-direction: column !important; align-items: center; }
+  .one-profile-movies { width: 500px !important; margin-left: 0 !important; }
+  .movie-list-container-profile { flex-direction: column; align-items: center; }
+}
+
+@media screen and (max-width: 510px){
+  .one-profile-container { flex-direction: column !important; align-items: center; }
+  .one-profile-movies { width: 350px !important; margin-left: 0 !important; }
+  .profile-container { width: 350px !important; }
+  .movie-list-container-profile { flex-direction: column; align-items: center; }
+}
+
 .my-profile {
   margin: auto;
 }
@@ -14,6 +33,7 @@
 
 .one-profile-movies {
   display: flex;
+  flex-direction: column;
   align-items: center;
   width: 50%;
   border: 1px green solid;
@@ -27,6 +47,29 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+.one-profile-seen {
+  font-size: 1.2em;
+  padding: 17px;
+}
+
+.one-profile-comments {
+  width: 80%;
+}
+
+.movie-comment-block {
+  margin-top: 10px;
+}
+
+.movie-comment-title {
+  overflow-wrap: break-word;
+  color: #F5F5F5;
+}
+
+.movie-comment-title:hover {
+  text-decoration: underline;
+  text-decoration-color: green;
 }
 
 .profile-title {

@@ -2,6 +2,7 @@ import bluebird from 'bluebird';
 import mongoose from 'mongoose';
 import User from '../models/User';
 import Movie from '../models/Movie';
+import { ListComment } from '../models/Comment';
 import * as mail from './mail';
 import checkReq from './checkReq';
 
@@ -194,10 +195,12 @@ export const getAccountById = (req, res, next) => {
   let objectId = req.params.id;
   try {
     objectId = mongoose.Types.ObjectId(req.params.id);
-  } catch (err) { return res.send({ error: [{ param: 'user', msg: 'error.noUserProfile' }] }); }
+  } catch (err) {
+    return res.send({ error: [{ param: 'user', msg: 'error.noUserProfile' }] });
+  }
 
   // check if id sent is associated to a user
-  User.findById(objectId, (err, user) => {
+  User.findById(objectId, async (err, user) => {
     if (err) { return next(err); }
     if (!user) {
       return res.send({ error: [{ param: 'user', msg: 'error.noUserProfile' }] });
@@ -206,10 +209,29 @@ export const getAccountById = (req, res, next) => {
     user.password = '';
     user.email = '';
     // find movies infos for all movies seen by user
-    Movie.find({ idImdb: { $in: user.profile.movies } }, (err, movies) => {
-      if (err) { return next(err); }
+    let movies = [];
+    try {
+      movies = await Movie.find({ idImdb: { $in: user.profile.movies } });
+    } catch (err) {
       return res.send({ error: [], user, movies });
+    }
+    // find comments of user on all movies
+    const commentsData = await ListComment.find({ 'comments.idUser': user._id });
+    // find movies associated to comments to get their infos
+    const movieList = commentsData.map(comment => comment.idImdb);
+    const movieListInfo = await Movie.find({ idImdb: { $in: movieList } });
+    const comments = commentsData.map((comment) => {
+      const movie = movieListInfo.find(movie => movie.idImdb === comment.idImdb);
+      return ({
+        idImdb: comment.idImdb,
+        comments: comment.comments,
+        thumb: movie.thumb,
+        title: movie.title,
+      });
     });
+    // get latest comments first
+    comments.reverse();
+    return res.send({ error: [], user, movies, comments });
   });
 };
 
