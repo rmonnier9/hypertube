@@ -76,6 +76,7 @@ export const videoStartTorrenter = async (req, res) => {
   const { frSubFilePath, enSubFilePath } = await createSubFile(req.idImdb, req.torrent.hash);
   req.torrent.data = {
     path: `${pathFolder}/${file.path}`,
+    oldPath: `${pathFolder}/${file.path}`,
     enSubFilePath,
     frSubFilePath,
     name: file.name,

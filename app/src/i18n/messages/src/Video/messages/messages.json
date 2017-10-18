@@ -1,0 +1,14 @@
+[
+  {
+    "id": "video.starting",
+    "defaultMessage": "Starting the transfer"
+  },
+  {
+    "id": "video.getSub",
+    "defaultMessage": "Getting the subtitles"
+  },
+  {
+    "id": "video.loading",
+    "defaultMessage": "Your movie should begin shortly, current loading:"
+  }
+]
