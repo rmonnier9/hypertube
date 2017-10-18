@@ -11,36 +11,43 @@ class Video extends Component {
     const { id, hash } = this.props.match.params;
     const { locale } = this.props.intl;
     const lang = locale === 'fr-fr' ? 'fr' : 'en';
-    this.url = `http://localhost:3000/api/movie/stream/${id}/${hash}`;
+    this.stream = `http://localhost:3000/api/movie/stream/${id}/${hash}`;
+    const create = `http://localhost:3000/api/movie/create/${id}/${hash}`;
+    axios.get(create)
+      .then(({ data: { error } }) => {
+        if (!error) {
+          axios.get(`/api/movie/subtitle/${id}/${hash}`)
+            .then(({ data: { frSubFilePath, enSubFilePath } }) => {
+              console.log('fr', frSubFilePath);
+              console.log('en', enSubFilePath);
+              this.trackFr = this.makeTrack(lang, 'Français', 'fr', frSubFilePath);
+              this.trackEn = this.makeTrack(lang, 'English', 'en', enSubFilePath);
+              this.setState({ loaded: true });
+            });
+        }
+      });
+  }
 
-    // need to wait for the sub file to be created before requesting it
-    setTimeout(() => {
-      axios.get(`/api/movie/subtitle/${id}/${hash}`)
-        .then(({ data: { error, frSubFilePath, enSubFilePath } }) => {
-          const trackFr = this.makeTrack(lang, 'Français', 'fr', frSubFilePath);
-          const trackEn = this.makeTrack(lang, 'English', 'en', enSubFilePath);
-          this.setState({ trackEn, trackFr });
-        });
-    }, 6000);
-    this.setState({ loaded: true });
+  componentWillUnmount() {
+    if (this.inter) clearInterval(this.inter);
   }
 
   makeTrack = (primary, label, lang, subPath) => {
-    if (!subPath) {
+    if (!subPath || subPath === 'none') {
       const newLabel = lang === 'fr' ? `${label} indisponible` : `${label} unavailable`;
       return <track kind="subtitles" label={newLabel} srcLang={lang} src={subPath} />;
     }
-    if (primary === lang) return <track kind="subtitles" label={label} srcLang={lang} src={subPath} default />;
-    return <track kind="subtitles" label={label} srcLang={lang} src={subPath} />;
+    if (primary === lang) return <track kind="subtitles" label={label} srcLang={lang} src={`/static/${subPath}`} default />;
+    return <track kind="subtitles" label={label} srcLang={lang} src={`/static/${subPath}`} />;
   }
 
   render() {
-    if (!this.state.loaded) return null;
+    if (!this.state.loaded) return <span>Your movie should begin shortly</span>;
     return (
-      <video autoPlay id="videoPlayer" controls>
-        <source src={this.url} type="video/mp4" />
-        { this.state.trackEn }
-        { this.state.trackFr }
+      <video id="videoPlayer" autoPlay controls>
+        <source src={this.stream} type="video/mp4" />
+        { this.trackEn }
+        { this.trackFr }
       </video>
     );
   }

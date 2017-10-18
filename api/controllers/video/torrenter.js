@@ -6,29 +6,9 @@ import getFileExtension from './getFileExtension';
 import startConversion from './startConversion';
 import { createSubFile } from './subtitles';
 
-const deleteFolderRecursive = async (path) => {
-  if (fs.existsSync(path)) {
-    fs.readdirSync(path).forEach((file) => {
-      const curPath = `${path}/${file}`;
-      if (fs.lstatSync(curPath).isDirectory()) { // recurse
-        deleteFolderRecursive(curPath);
-      } else { // delete file
-        fs.unlinkSync(curPath);
-      }
-    });
-    fs.rmdirSync(path);
-    return 'ok';
-  }
-};
-
-const eraseForTest = async (idImdb, hash) => {
-  await Movie.update({ idImdb, 'torrents.hash': hash }, { $unset: { 'torrents.$.data': '' } });
-  await deleteFolderRecursive('./torrents');
-};
-
 const engineHash = {};
 
-const setUpEngine = (engine, file, torrent) => {
+const setUpEngine = (engine, file) => {
   engine.on('download', (pieceIndex) => {
     if (pieceIndex % 10 === 0) {
       const completion = Math.round((100 * engine.swarm.downloaded) / file.length);
@@ -43,11 +23,11 @@ const setUpEngine = (engine, file, torrent) => {
   });
 };
 
-const getFileStreamTorrent = (torrentPath, torrent) => new Promise((resolve, reject) => {
+const getFileStreamTorrent = (torrentPath, hash) => new Promise((resolve, reject) => {
   let engine;
   let file;
 
-  const magnet = `magnet:?xt=urn:btih:${torrent.hash}`;
+  const magnet = `magnet:?xt=urn:btih:${hash}`;
   // DOWNLOAD HAD ALREADY STARTED
   if (engineHash[torrentPath]) {
     engine = engineHash[torrentPath].engine;
@@ -78,35 +58,46 @@ const getFileStreamTorrent = (torrentPath, torrent) => new Promise((resolve, rej
       reject(new Error('no valid movie file found.'));
     }
     file.select();
-    setUpEngine(engine, file, torrent);
+    setUpEngine(engine, file);
     engineHash[torrentPath] = { engine, file };
     resolve(file);
   });
 });
 
 // ROUTE CONTROLLER
-const videoTorrenter = async (req, res, next) => {
+export const videoStartTorrenter = async (req, res) => {
   // If download had aleady started
-  if (req.torrent.data && req.torrent.data.downloaded) {
-    return next();
+  if (req.torrent.data && req.torrent.data.name) {
+    return res.json({ error: '' });
   }
   console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', req.torrent.title.en);
-
   const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;
-  const file = await getFileStreamTorrent(pathFolder, req.torrent, res, req.idImdb);
+  const file = await getFileStreamTorrent(pathFolder, req.torrent.hash);
   const { frSubFilePath, enSubFilePath } = await createSubFile(req.idImdb, req.torrent.hash);
   req.torrent.data = {
     path: `${pathFolder}/${file.path}`,
-    enSub: enSubFilePath,
-    frSub: frSubFilePath,
+    enSubFilePath,
+    frSubFilePath,
     name: file.name,
     size: file.length,
     torrentDate: new Date(),
-    downloaded: true,
   };
-  const stream = await startConversion(req.torrent, file.createReadStream());
+  await startConversion(req.torrent, file.createReadStream(), false);
   await Movie.updateOne({ idImdb: req.idImdb, 'torrents.hash': req.torrent.hash }, { $set: { 'torrents.$.data': req.torrent.data } });
-  return next();
+  return res.json({ error: '' });
 };
 
-export default videoTorrenter;
+// ROUTE CONTROLLER
+export const videoTorrenter = async (req, res) => {
+  // If download had aleady started
+  if (!req.torrent.data || !req.torrent.data.path) {
+    return res.json({ error: 'Downloading has not started.' });
+  }
+  if (req.torrent.data.downloaded) {
+    const stream = fs.createReadStream(req.torrent.data.path);
+    return stream.pipe(res);
+  }
+  const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;
+  const file = await getFileStreamTorrent(pathFolder, req.torrent.hash);
+  startConversion(req.torrent, file.createReadStream(), res);
+};
