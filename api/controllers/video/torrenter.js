@@ -68,8 +68,7 @@ const getFileStreamTorrent = (torrentPath, hash) => new Promise((resolve, reject
 export const videoStartTorrenter = async (req, res) => {
   // If download had aleady started
   if (req.torrent.data && req.torrent.data.name) {
-    const { size } = await fs.statAsync(req.torrent.data.path);
-    return res.json({ progress: size / 15000000 });
+    return res.json({ error: '' });
   }
   console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', req.torrent.title.en);
   const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;
@@ -77,8 +76,8 @@ export const videoStartTorrenter = async (req, res) => {
   const { frSubFilePath, enSubFilePath } = await createSubFile(req.idImdb, req.torrent.hash);
   req.torrent.data = {
     path: `${pathFolder}/${file.path}`,
-    enSub: enSubFilePath,
-    frSub: frSubFilePath,
+    enSubFilePath,
+    frSubFilePath,
     name: file.name,
     size: file.length,
     torrentDate: new Date(),
@@ -92,7 +91,7 @@ export const videoStartTorrenter = async (req, res) => {
 export const videoTorrenter = async (req, res) => {
   // If download had aleady started
   if (!req.torrent.data || !req.torrent.data.path) {
-    return res.json({ error: 'Already has not started.' });
+    return res.json({ error: 'Downloading has not started.' });
   }
   if (req.torrent.data.downloaded) {
     const stream = fs.createReadStream(req.torrent.data.path);

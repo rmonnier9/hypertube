@@ -51,7 +51,11 @@ export const getSub = async (req, res) => {
   if (!idImdb || !hash) return res.send({ error: 'invalid parameters' });
   const results = await Movie.findOne({ idImdb, 'torrents.hash': hash });
   const torrent = results.torrents.filter(torrent => (torrent.hash === hash));
-  if (!torrent.data) return res.send({ error: 'nosub' });
-  const { frSubFilePath, enSubFilePath } = torrent.data;
+  console.log('Sub torrent', torrent);
+  if (!torrent[0].data) return res.send({ error: 'nosub' });
+  console.log('FR');
+  const { frSubFilePath, enSubFilePath } = torrent[0].data;
+  console.log('FR', frSubFilePath);
+  console.log('EN', enSubFilePath);
   return res.send({ error: '', frSubFilePath, enSubFilePath });
 };
