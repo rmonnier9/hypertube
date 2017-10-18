@@ -84,7 +84,6 @@ export const videoStartTorrenter = async (req, res) => {
     torrentDate: new Date(),
   };
   startConversion(req.torrent, file.createReadStream(), false);
-  console.log(req.torrent.hash, req.idImdb, req.torrent.data);
   await Movie.updateOne({ idImdb: req.idImdb, 'torrents.hash': req.torrent.hash }, { $set: { 'torrents.$.data': req.torrent.data } });
   return res.json({ error: '' });
 };
@@ -92,16 +91,13 @@ export const videoStartTorrenter = async (req, res) => {
 // ROUTE CONTROLLER
 export const videoTorrenter = async (req, res) => {
   // If download had aleady started
-  console.log(req.torrent.data);
-  if (!req.torrent.data || !req.torrent.data.name) {
+  if (!req.torrent.data || !req.torrent.data.path) {
     return res.json({ error: 'Already has not started.' });
   }
   if (req.torrent.data.downloaded) {
     const stream = fs.createReadStream(req.torrent.data.path);
     return stream.pipe(res);
   }
-  console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', req.torrent.title.en);
-
   const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;
   const file = await getFileStreamTorrent(pathFolder, req.torrent.hash);
   startConversion(req.torrent, file.createReadStream(), res);
