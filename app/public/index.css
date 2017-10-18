@@ -1,14 +1,38 @@
-html, body {
+html {
   height: 100%;
-  margin: 0;
   padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
 
 body {
   color: #F5F5F5;
+  position: relative;
   background-color: #101010;
-  box-sizing: border-box;
+  padding-bottom: 60px;
+  min-height: 100%;
   font-family: Helvetica, sans-serif;
+}
+
+footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  text-align: center;
+  animation: fadein 5s;
+}
+
+.fa-github {
+  color: #F5F5F5;
+  font-size: 1.6em;
 }
 
 @keyframes fadein {

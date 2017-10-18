@@ -1,4 +1,4 @@
-@media screen and (max-width: 780px){
+@media screen and (max-width: 768px){
   .movie-poster { height: auto !important; max-width: 40% !important;}
   .movie-container { flex-direction: column !important; align-items: center;}
   .movie-infos { width: 100vw !important; }
