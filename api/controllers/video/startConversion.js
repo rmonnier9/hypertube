@@ -5,13 +5,13 @@ import mimeTypes from './mimeTypes';
 
 const ffmpegHash = {};
 
-const startConversion = (torrent, fileStream, res) => {
+const startConversion = (torrent, fileStream, res) => new Promise((resolve, reject) => {
   const { data } = torrent;
   const hash = torrent;
   const fileExtension = getFileExtension(data.name);
   const mime = mimeTypes[fileExtension];
   if (!mime) {
-    throw (new Error(`spiderStreamer: Invalid mime type: ${data.name}`));
+    reject(new Error(`spiderStreamer: Invalid mime type: ${data.name}`));
   }
 
   // SET NEW PATH
@@ -30,6 +30,7 @@ const startConversion = (torrent, fileStream, res) => {
     .on('codecData', (codecData) => {
       console.log('fluent-ffmpeg Notice: CodecData:', codecData);
       ffmpegHash[torrent.hash] = codecData;
+      resolve();
     })
     .on('progress', (progress) => {
       console.log('fluent-ffmpeg Notice: Progress:', progress.timemark, 'converted');
@@ -58,6 +59,6 @@ const startConversion = (torrent, fileStream, res) => {
       .outputOptions('-movflags frag_keyframe+empty_moov')
       .run();
   }
-};
+});
 
 export default startConversion;
