@@ -68,8 +68,8 @@ const getFileStreamTorrent = (torrentPath, hash) => new Promise((resolve, reject
 export const videoStartTorrenter = async (req, res) => {
   // If download had aleady started
   if (req.torrent.data && req.torrent.data.name) {
-    // code to return progress
-    return res.json({ error: 'Already started.' });
+    const { size } = await fs.statAsync(req.torrent.data.path);
+    return res.json({ progress: size / 15000000 });
   }
   console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', req.torrent.title.en);
   const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;

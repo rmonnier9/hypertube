@@ -5,24 +5,43 @@ import axios from 'axios';
 
 class Video extends Component {
 
-  state = { loaded: false, trackFr: null, trackEn: null };
+  state = { loaded: false, created: false, trackFr: null, trackEn: null, progress: 0 };
+
 
   componentDidMount() {
     const { id, hash } = this.props.match.params;
     const { locale } = this.props.intl;
     const lang = locale === 'fr-fr' ? 'fr' : 'en';
-    this.url = `http://localhost:3000/api/movie/stream/${id}/${hash}`;
+    this.stream = `http://localhost:3000/api/movie/stream/${id}/${hash}`;
+    const create = `http://localhost:3000/api/movie/create/${id}/${hash}`;
+    axios.get(create)
+      .then(({ data: { error } }) => {
+        if (!error) {
+          this.setState({ created: true });
+          axios.get(`/api/movie/subtitle/${id}/${hash}`)
+            .then(({ data: { frSubFilePath, enSubFilePath } }) => {
+              this.trackFr = this.makeTrack(lang, 'Français', 'fr', frSubFilePath);
+              this.trackEn = this.makeTrack(lang, 'English', 'en', enSubFilePath);
+            });
+        }
+      });
+    this.inter = setInterval(() => {
+      if (this.state.created) {
+        axios.get(create)
+          .then(({ data: { progress, error } }) => {
+            if (error) console.log(error);
+            else if (progress >= 1) {
+              clearInterval(this.inter);
+              this.setState({ loaded: true });
+            }
+            this.setState({ progress });
+          });
+      }
+    }, 5000);
+  }
 
-    // need to wait for the sub file to be created before requesting it
-    setTimeout(() => {
-      axios.get(`/api/movie/subtitle/${id}/${hash}`)
-        .then(({ data: { error, frSubFilePath, enSubFilePath } }) => {
-          const trackFr = this.makeTrack(lang, 'Français', 'fr', frSubFilePath);
-          const trackEn = this.makeTrack(lang, 'English', 'en', enSubFilePath);
-          this.setState({ trackEn, trackFr });
-        });
-    }, 6000);
-    this.setState({ loaded: true });
+  componentWillUnmount() {
+    if (this.inter) clearInterval(this.inter);
   }
 
   makeTrack = (primary, label, lang, subPath) => {
@@ -35,12 +54,13 @@ class Video extends Component {
   }
 
   render() {
-    if (!this.state.loaded) return null;
+    const { progress } = this.state;
+    if (!this.state.loaded) return <span>Current progress: {progress * 100} %</span>;
     return (
-      <video autoPlay id="videoPlayer" controls>
-        <source src={this.url} type="video/mp4" />
-        { this.state.trackEn }
-        { this.state.trackFr }
+      <video id="videoPlayer" autoPlay controls>
+        <source src={this.stream} type="video/mp4" />
+        { this.trackEn }
+        { this.trackFr }
       </video>
     );
   }

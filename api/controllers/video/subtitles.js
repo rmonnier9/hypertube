@@ -13,7 +13,6 @@ const OpenSubtitles = new OS({
 
 const convert = (path) => {
   const newPath = `${path.slice(0, -4)}.vtt`;
-  console.log('newPath', newPath);
   const srtData = fs.readFileSync(path);
   srt2vtt(srtData, (err, vttData) => {
     if (err) throw new Error(err);
@@ -52,10 +51,7 @@ export const getSub = async (req, res) => {
   if (!idImdb || !hash) return res.send({ error: 'invalid parameters' });
   const results = await Movie.findOne({ idImdb, 'torrents.hash': hash });
   const torrent = results.torrents.filter(torrent => (torrent.hash === hash));
-  console.log('torrent sub', torrent.data);
   if (!torrent.data) return res.send({ error: 'nosub' });
   const { frSubFilePath, enSubFilePath } = torrent.data;
-  console.log('frSubFilePath', frSubFilePath);
-  console.log('enSubFilePath', enSubFilePath);
   return res.send({ error: '', frSubFilePath, enSubFilePath });
 };
