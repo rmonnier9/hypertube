@@ -5,7 +5,6 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
-export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
 const requestLogin = creds => ({
   type: LOGIN_REQUEST,
@@ -39,13 +38,6 @@ const receiveLogout = () => ({
   isAuthenticated: false,
 });
 
-// const logoutError = message => ({
-//   type: LOGOUT_FAILURE,
-//   isFetching: false,
-//   isAuthenticated: true,
-//   message,
-// });
-
 // login action function, calls the API to get a token
 const loginUser = (creds, oauth = false) => (dispatch) => {
   dispatch(requestLogin(creds));
@@ -58,11 +50,14 @@ const loginUser = (creds, oauth = false) => (dispatch) => {
   }
 
   request.then(({ data: { error }, headers }) => {
-    if (!error) {
-      localStorage.setItem('x-access-token', headers['x-access-token']);
+    const accessToken = headers['x-access-token'];
+    const langUser = headers['lang-user'];
+
+    if (!error && accessToken && langUser) {
+      axios.defaults.headers.common['x-access-token'] = accessToken;
+      localStorage.setItem('x-access-token', accessToken);
       localStorage.setItem('isAuthenticated', true);
-      localStorage.setItem('lang-user', headers['lang-user']);
-      axios.defaults.headers.common['x-access-token'] = headers['x-access-token'];
+      localStorage.setItem('lang-user', langUser);
       dispatch(receiveLogin());
     } else {
       dispatch(loginError(error));

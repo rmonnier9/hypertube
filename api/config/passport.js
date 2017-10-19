@@ -3,6 +3,9 @@ import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import { Strategy as FortyTwoStrategy } from 'passport-42';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { Strategy as GithubStrategy } from 'passport-github';
+import { Strategy as LinkedInStrategy } from 'passport-linkedin-oauth2';
+
 import User from '../models/User';
 
 const passportConfig = (passport) => {
@@ -150,12 +153,6 @@ const passportConfig = (passport) => {
         if (existingEmailUser) {
           existingEmailUser.facebook = profile.id;
           existingEmailUser.tokens.push({ kind: 'facebook', accessToken });
-          existingEmailUser.save((err) => {
-            done(err, existingEmailUser);
-          });
-        } else {
-          const user = new User();
-          user.email = profile.emails[0].value;
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken });
           if (profile.name.givenName !== undefined && profile.name.familyName !== undefined) {
@@ -167,6 +164,71 @@ const passportConfig = (passport) => {
             user.profile.lastName = name[1];
           }
           user.profile.pictureURL = profile.photos[0].value;
+          user.save((err) => {
+            done(err, user);
+          });
+        }
+      });
+    });
+  }));
+
+  passport.use(new GithubStrategy({
+    clientID: process.env.GITHUB_ID,
+    clientSecret: process.env.GITHUB_SECRET,
+    callbackURL: '/oauth',
+    scope: 'user:email',
+  }, (accessToken, refreshToken, profile, done) => {
+    User.findOne({ github: profile.id }, (err, existingUser) => {
+      if (err) { return done(err); }
+      if (existingUser) return done(null, existingUser);
+      User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
+        if (err) return done(err);
+        if (existingEmailUser) {
+          existingEmailUser.github = profile.id;
+          existingEmailUser.tokens.push({ kind: 'github', accessToken });
+          existingEmailUser.save((err) => {
+            done(err, existingEmailUser);
+          });
+        } else {
+          const user = new User();
+          user.email = profile.emails[0].value;
+          user.github = profile.id;
+          user.tokens.push({ kind: 'github', accessToken });
+          user.profile.pictureURL = profile._json.avatar_url;
+          user.save((err) => {
+            done(err, user);
+          });
+        }
+      });
+    });
+  }));
+
+
+  passport.use(new LinkedInStrategy({
+    clientID: process.env.LINKEDIN_ID,
+    clientSecret: process.env.LINKEDIN_SECRET,
+    callbackURL: '/oauth',
+    scope: ['r_emailaddress', 'r_basicprofile'],
+  }, (req, accessToken, refreshToken, profile, done) => {
+  User.findOne({ linkedin: profile.id }, (err, existingUser) => {
+    if (err) { return done(err); }
+    if (existingUser) return done(null, existingUser);
+    User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
+      if (err) return done(err);
+      if (existingEmailUser) {
+        existingEmailUser.linkedin = profile.id;
+        existingEmailUser.tokens.push({ kind: 'linkedin', accessToken });
+          existingEmailUser.save((err) => {
+            done(err, existingEmailUser);
+          });
+        } else {
+          const user = new User();
+          user.email = profile.emails[0].value;
+          user.linkedin = profile.id;
+          user.tokens.push({ kind: 'linkedin', accessToken });
+          user.profile.firstName = profile.name.givenName;
+          user.profile.lastName = profile.name.familyName;
+          user.profile.pictureURL = profile._json.publicProfileUrl;
           user.save((err) => {
             done(err, user);
           });

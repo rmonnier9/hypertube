@@ -86,7 +86,7 @@ const SigninComponent = (props) => {
       </div>
     </div>
   );
-}
+};
 
 
 SigninComponent.PropTypes = {

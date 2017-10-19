@@ -19,7 +19,6 @@ const torrentSchema = new mongoose.Schema({
     torrentDate: Date,
     lang: String,
     path: String,
-    oldPath: String,
     frSubFilePath: String,
     enSubFilePath: String,
     length: Number,

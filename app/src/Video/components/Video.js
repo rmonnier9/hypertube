@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import { injectIntl } from 'react-intl';
 import axios from 'axios';
@@ -6,32 +7,35 @@ import Loader from '../../General/components/Loader';
 
 class Video extends Component {
 
-  state = { status: 'start', progress: 0, trackFr: null, trackEn: null };
+  state = {
+    status: 'start', progress: 0, trackFr: null, trackEn: null,
+  };
 
   componentDidMount() {
     const { id, hash } = this.props.match.params;
     const { locale } = this.props.intl;
     const lang = locale === 'fr-fr' ? 'fr' : 'en';
     this.stream = `http://localhost:3000/api/movie/stream/${id}/${hash}`;
-    const create = `http://localhost:3000/api/movie/create/${id}/${hash}`;
-    const check = `http://localhost:3000/api/movie/progress/${id}/${hash}`;
-    axios.get(create)
-      .then(({ data: { error } }) => {
-        if (!error) {
-          this.setState({ status: 'created' });
-          axios.get(`/api/movie/subtitle/${id}/${hash}`)
-            .then(({ data: { frSubFilePath, enSubFilePath } }) => {
-              this.trackFr = this.makeTrack(lang, 'Français', 'fr', frSubFilePath);
-              this.trackEn = this.makeTrack(lang, 'English', 'en', enSubFilePath);
-              this.setState({ status: 'progress' });
-            });
-        }
-      });
+    const startTorrent = `http://localhost:3000/api/movie/startTorrent/${id}/${hash}`;
+    const getStatus = `http://localhost:3000/api/movie/getStatus/${id}/${hash}`;
+    axios.get(startTorrent)
+    .then(({ data: { err } }) => {
+      if (!err) {
+        this.setState({ status: 'created' });
+        axios.get(`/api/movie/subtitle/${id}/${hash}`)
+        .then(({ data: { frSubFilePath, enSubFilePath } }) => {
+          this.trackFr = this.makeTrack(lang, 'Français', 'fr', frSubFilePath);
+          this.trackEn = this.makeTrack(lang, 'English', 'en', enSubFilePath);
+          this.setState({ status: 'progress' });
+        });
+      }
+    });
     this.inter = setInterval(() => {
       if (this.state.status === 'progress') {
-        axios.get(check)
-          .then(({ data: { progress } }) => {
-            if (progress >= 100) {
+        axios.get(getStatus)
+          .then(({ data: { progress, err } }) => {
+            if (err) { console.log(err); }
+            else if (progress >= 100) {
               clearInterval(this.inter);
               this.setState({ status: 'loaded' });
             }
