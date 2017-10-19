@@ -58,11 +58,14 @@ const loginUser = (creds, oauth = false) => (dispatch) => {
   }
 
   request.then(({ data: { error }, headers }) => {
-    if (!error) {
-      localStorage.setItem('x-access-token', headers['x-access-token']);
+    const accessToken = headers['x-access-token'];
+    const langUser = headers['lang-user'];
+
+    if (!error && accessToken && langUser) {
+      axios.defaults.headers.common['x-access-token'] = accessToken;
+      localStorage.setItem('x-access-token', accessToken);
       localStorage.setItem('isAuthenticated', true);
-      localStorage.setItem('lang-user', headers['lang-user']);
-      axios.defaults.headers.common['x-access-token'] = headers['x-access-token'];
+      localStorage.setItem('lang-user', langUser);
       dispatch(receiveLogin());
     } else {
       dispatch(loginError(error));
