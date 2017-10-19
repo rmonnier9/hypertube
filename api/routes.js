@@ -17,6 +17,8 @@ const routes = async (app, passport, upload) => {
   app.get('/api/auth/42/callback', authentication.fortytwo);
   app.get('/api/auth/google', passport.authenticate('google', { scope: 'profile email' }));
   app.get('/api/auth/google/callback', authentication.google);
+  app.get('/api/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
+  app.get('/api/auth/facebook/callback', authentication.facebook);
   app.use('/oauth', (req, res) => {
     res.end();
   });

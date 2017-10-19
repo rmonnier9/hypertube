@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import logo42 from '../images/42_Logo.png';
 
 const SigninComponent = (props) => {
   const error = {};
@@ -51,20 +52,33 @@ const SigninComponent = (props) => {
           <br />
           <RaisedButton className="homepage-submit" type="submit" name="submit" label={enter} />
           <br />
-          <span
-            role="button"
-            onClick={props.handleOAuth('google')}
-          >
-            Google Auth
-          </span>
-          <br />
-          <span
-            role="button"
-            onClick={props.handleOAuth('42')}
-          >
-            42 Auth
-          </span>
-          <br />
+          <ul className="social-icons">
+            <li>
+              <span role="button" className="social-icon" onClick={props.handleOAuth('facebook')}>
+                <i className="fa fa-facebook" />
+              </span>
+            </li>
+            <li>
+              <span role="button" className="social-icon" onClick={props.handleOAuth('google')}>
+                <i className="fa fa-google" />
+              </span>
+            </li>
+            <li>
+              <span role="button" className="social-icon" onClick={props.handleOAuth('linkedin')}>
+                <i className="fa fa-linkedin" />
+              </span>
+            </li>
+            <li>
+              <span role="button" className="social-icon" onClick={props.handleOAuth('github')}>
+                <i className="fa fa-github" />
+              </span>
+            </li>
+            <li>
+              <span role="button" className="social-icon" onClick={props.handleOAuth('42')}>
+                <img className="logo-42" src={logo42} alt="42" />
+              </span>
+            </li>
+          </ul>
           <Link to="/forgot" className="homepage-linkto">{forgot}</Link>
           <br />
           <Link to="/signup" className="homepage-linkto">{signUp}</Link>

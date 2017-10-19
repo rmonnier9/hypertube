@@ -10,11 +10,9 @@
   margin-top: 15vh;
   margin-bottom: 10vh;
   width: 450px;
-  /*min-height: 400px;*/
   padding: 10px 25px 25px 25px;
   border-style: solid;
   border-width: 2px;
-  /*border-radius: 10px;*/
   background-color: #F5F5F5;
   border-color: green;
   position: relative;
@@ -31,7 +29,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: url('../images/BlackAndGreen.jpg');
+  background: url('../images/HomePage.jpg');
   background-size: cover;
   opacity: 1;
   width: 100%;
@@ -43,9 +41,82 @@
   border-radius: 10px;
 }
 
+ul.social-icons {
+    padding: 0;
+    list-style: none;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    /*width: 350px;
+    display: block;
+    margin: 0 auto;*/
+}
+
+.social-icons li {
+  vertical-align: top;
+  display: inline;
+  height: 100px;
+  color: whitesmoke;
+  margin: 2px;
+  font-size: 1.4em;
+}
+
+.fa-facebook {
+  padding: 10px 14.5px;
+  transition: .5s;
+  background-color: #322f30;
+}
+
+.fa-facebook:hover {
+  background-color: #3d5b99;
+}
+
+.fa-linkedin {
+  padding: 10px 12px;
+  transition: .5s;
+  background-color: #322f30;
+}
+.fa-linkedin:hover {
+  background-color: #0073a4;
+}
+
+.fa-google {
+  padding: 10px 12px;
+  transition: .5s;
+  background-color: #322f30;
+}
+
+.fa-google:hover {
+  background-color: #e25714;
+}
+
+.logo-42 {
+  height: 39px;
+  width: 40.8px;
+  padding: 9px 7px;
+  transition: .5s;
+  margin-top: -2px;
+  background-color: #322f30;
+}
+
+.logo-42:hover {
+  background-color: #00babc;
+}
+
+.fa-google:hover {
+  background-color: #e25714;
+}
+
+.social-icon > .fa-github {
+  padding: 10px 12px;
+  transition: .5s;
+  background-color: #322f30;
+}
+.social-icon > .fa-github:hover {
+  background-color: black;
+}
+
 a.homepage-linkto {
   color: #101010;
-  /*font-size: 1.1em;*/
 }
 
 a.homepage-linkto:hover {

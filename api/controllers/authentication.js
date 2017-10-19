@@ -47,7 +47,7 @@ export const fortytwo = async (req, res, next) => {
 };
 
 /**
- * POST /api/auth/google/callback
+ * GET /api/auth/google/callback
  * Sign in using Google.
  */
 export const google = async (req, res, next) => {
@@ -57,6 +57,25 @@ export const google = async (req, res, next) => {
       return res.send({ error: info });
     }
     const token = jwt.sign({ _id: user._id, email: user.email, provider: 'google' }, process.env.SESSION_SECRET);
+    const { lang } = user.profile;
+    res.set('Access-Control-Expose-Headers', 'x-access-token');
+    res.set('x-access-token', token);
+    res.set('lang-user', lang || 'en-en');
+    res.send({ error: '' });
+  })(req, res, next);
+};
+
+/**
+ * GET /api/auth/facebook/callback
+ * Sign in using Facebook.
+ */
+export const facebook = async (req, res, next) => {
+  passport.authenticate('facebook', (err, user, info) => {
+    if (err) { return next(err); }
+    if (!user) {
+      return res.send({ error: info });
+    }
+    const token = jwt.sign({ _id: user._id, email: user.email, provider: 'facebook' }, process.env.SESSION_SECRET);
     const { lang } = user.profile;
     res.set('Access-Control-Expose-Headers', 'x-access-token');
     res.set('x-access-token', token);
