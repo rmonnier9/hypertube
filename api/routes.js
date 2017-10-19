@@ -28,8 +28,9 @@ const routes = async (app, passport, upload) => {
   app.post('/api/signup/upload', upload.single('imageUploaded'), picture.postSignupPicture);
   app.post('/api/forgot', user.postForgot);
   app.post('/api/reset/:token', user.postReset);
-  app.get('/api/movie/create/:idImdb/:hash', video.checker, video.videoStartTorrenter);
-  app.get('/api/movie/stream/:idImdb/:hash', video.checker, video.videoTorrenter);
+  app.get('/api/movie/startTorrent/:idImdb/:hash', video.checker, video.startTorrent);
+  app.get('/api/movie/getStatus/:idImdb/:hash', video.checker, video.getLoadingStatus);
+  app.get('/api/movie/stream/:idImdb/:hash', video.checker, video.streamer);
   app.get('/api/movie/subtitle/:idImdb/:hash', video.getSub);
   app.get('/api/movie/clear/:idImdb', deleteOne);
 

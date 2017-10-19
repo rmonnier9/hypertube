@@ -94,7 +94,12 @@ routes(app, passport, upload);
 /**
  * Error Handler. only use in development
  */
-app.use(errorHandler());
+ // custom error handling
+app.use((err, req, res, next) => { res.end(); });
+if (process.env.NODE_ENV === 'development') {
+  // only use in development
+  app.use(errorHandler());
+}
 
 // if a request doesn't match a route, send the front app
 app.get('*', (req, res) => {

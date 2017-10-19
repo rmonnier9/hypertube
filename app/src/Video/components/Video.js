@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import { injectIntl } from 'react-intl';
 import axios from 'axios';
@@ -5,30 +6,37 @@ import axios from 'axios';
 
 class Video extends Component {
 
-  state = { loaded: false, created: false, trackFr: null, trackEn: null, progress: 0 };
+  state = {
+    loaded: false,
+    created: false,
+    trackFr: null,
+    trackEn: null,
+    progress: 0,
+  };
 
   componentDidMount() {
     const { id, hash } = this.props.match.params;
     const { locale } = this.props.intl;
     const lang = locale === 'fr-fr' ? 'fr' : 'en';
     this.stream = `http://localhost:3000/api/movie/stream/${id}/${hash}`;
-    const create = `http://localhost:3000/api/movie/create/${id}/${hash}`;
-    axios.get(create)
-      .then(({ data: { error } }) => {
-        if (!error) {
+    const startTorrent = `http://localhost:3000/api/movie/startTorrent/${id}/${hash}`;
+    const getStatus = `http://localhost:3000/api/movie/getStatus/${id}/${hash}`;
+    axios.get(startTorrent)
+    .then(({ data: { err } }) => {
+      if (!err) {
+        axios.get(`/api/movie/subtitle/${id}/${hash}`)
+        .then(({ data: { frSubFilePath, enSubFilePath } }) => {
+          this.trackFr = this.makeTrack(lang, 'Français', 'fr', frSubFilePath);
+          this.trackEn = this.makeTrack(lang, 'English', 'en', enSubFilePath);
           this.setState({ created: true });
-          axios.get(`/api/movie/subtitle/${id}/${hash}`)
-            .then(({ data: { frSubFilePath, enSubFilePath } }) => {
-              this.trackFr = this.makeTrack(lang, 'Français', 'fr', frSubFilePath);
-              this.trackEn = this.makeTrack(lang, 'English', 'en', enSubFilePath);
-            });
-        }
-      });
+        });
+      }
+    });
     this.inter = setInterval(() => {
       if (this.state.created) {
-        axios.get(create)
-          .then(({ data: { progress, error } }) => {
-            if (error) console.log(error);
+        axios.get(getStatus)
+          .then(({ data: { progress, err } }) => {
+            if (err) { console.log(err); }
             else if (progress >= 1) {
               clearInterval(this.inter);
               this.setState({ loaded: true });

@@ -1,14 +1,15 @@
 import fs from 'fs';
 import torrentStream from 'torrent-stream';
+import devNull from 'dev-null';
 import Movie from '../../models/Movie';
 import mimeTypes from './mimeTypes';
 import getFileExtension from './getFileExtension';
-import startConversion from './startConversion';
+import streamConversion from './streamConversion';
 import { createSubFile } from './subtitles';
 
 const engineHash = {};
 
-const setUpEngine = (engine, file) => {
+const setUpEngine = (engine, file, hash) => {
   engine.on('download', (pieceIndex) => {
     if (pieceIndex % 10 === 0) {
       const completion = Math.round((100 * engine.swarm.downloaded) / file.length);
@@ -17,9 +18,8 @@ const setUpEngine = (engine, file) => {
     }
   });
   engine.on('idle', () => {
-    console.log('torrentStream Notice: Engine', engine.infoHash, 'idle');
-    console.log('torrentStream Notice: Engine', engine.infoHash, 'downloaded (',
-      engine.swarm.downloaded, '/', file.length, ').');
+    console.log('torrentStream Notice: Engine', engine.infoHash, 'downloaded (', engine.swarm.downloaded, '/', file.length, ').');
+    Movie.updateOne({ 'torrents.hash': hash }, { $set: { 'torrents.$.data.downloaded': true } });
   });
 };
 
@@ -28,14 +28,13 @@ const getFileStreamTorrent = (torrentPath, hash) => new Promise((resolve, reject
   let file;
 
   const magnet = `magnet:?xt=urn:btih:${hash}`;
-  // DOWNLOAD HAD ALREADY STARTED
-  if (engineHash[torrentPath]) {
-    engine = engineHash[torrentPath].engine;
-    file = engineHash[torrentPath].file;
+  // Download has already started
+  if (engineHash[hash]) {
+    engine = engineHash[hash].engine;
+    file = engineHash[hash].file;
     resolve(file);
   }
 
-  // DOWNLOAD HAD NOT ALREADY STARTED
   engine = torrentStream(magnet, { path: torrentPath });
   engine.on('ready', () => {
     engine.files.forEach((current) => {
@@ -43,12 +42,9 @@ const getFileStreamTorrent = (torrentPath, hash) => new Promise((resolve, reject
       const fileExtension = getFileExtension(current.name);
       if (!mimeTypes[fileExtension]) {
         // Ignore non-movie files
-        console.log('Skipping item: non-movie file', current.name, '| size:', current.length);
       } else if (file && current.length < file.length) {
         // Already a bigger movie file
-        console.log('Skipping item: not the biggest file', current.name, '| size:', current.length);
       } else {
-        console.log('Movie file found:', current.name, '| size:', current.length);
         file = current;
       }
     });
@@ -58,20 +54,19 @@ const getFileStreamTorrent = (torrentPath, hash) => new Promise((resolve, reject
       reject(new Error('no valid movie file found.'));
     }
     file.select();
-    setUpEngine(engine, file);
-    engineHash[torrentPath] = { engine, file };
+    setUpEngine(engine, file, hash);
+    engineHash[hash] = { engine, file };
     resolve(file);
   });
 });
 
 // ROUTE CONTROLLER
-export const videoStartTorrenter = async (req, res) => {
+export const startTorrent = async (req, res) => {
   // If download had aleady started
   if (req.torrent.data && req.torrent.data.name) {
-    const { size } = await fs.statAsync(req.torrent.data.path);
-    return res.json({ progress: size / 15000000 });
+    return res.send({ err: 'Download has already started' });
   }
-  console.log('spiderTorrent Notice: Movie not yet torrented; torrenting:', req.torrent.title.en);
+
   const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;
   const file = await getFileStreamTorrent(pathFolder, req.torrent.hash);
   const { frSubFilePath, enSubFilePath } = await createSubFile(req.idImdb, req.torrent.hash);
@@ -83,22 +78,39 @@ export const videoStartTorrenter = async (req, res) => {
     size: file.length,
     torrentDate: new Date(),
   };
-  await startConversion(req.torrent, file.createReadStream(), false);
+
+  // Start sequential download for the first 50MB by piping them to /dev/null
+  const stream = file.createReadStream({ start: 0, end: 50000000 });
+  stream.pipe(devNull());
+
+  // Add movie data to DB
   await Movie.updateOne({ idImdb: req.idImdb, 'torrents.hash': req.torrent.hash }, { $set: { 'torrents.$.data': req.torrent.data } });
-  return res.json({ error: '' });
+
+  return res.send({ error: '' });
 };
 
 // ROUTE CONTROLLER
-export const videoTorrenter = async (req, res) => {
+export const getLoadingStatus = async (req, res) => {
+  if (!req.torrent.data || !req.torrent.data.name) {
+    return res.send({ err: 'Download has not started.' });
+  }
+  const { size } = await fs.statAsync(req.torrent.data.path);
+  return res.send({ progress: size / 30000000, err: '' });
+};
+
+// ROUTE CONTROLLER
+export const streamer = async (req, res) => {
   // If download had aleady started
-  if (!req.torrent.data || !req.torrent.data.path) {
-    return res.json({ error: 'Already has not started.' });
+  if (!req.torrent.data || !req.torrent.data.path || !engineHash[req.torrent.hash]) {
+    return res.json({ err: 'Download has not been started.' });
   }
+  let stream;
   if (req.torrent.data.downloaded) {
-    const stream = fs.createReadStream(req.torrent.data.path);
-    return stream.pipe(res);
+    stream = fs.createReadStream(req.torrent.data.path);
+  } else {
+    const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;
+    const file = await getFileStreamTorrent(pathFolder, req.torrent.hash);
+    stream = file.createReadStream();
   }
-  const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;
-  const file = await getFileStreamTorrent(pathFolder, req.torrent.hash);
-  startConversion(req.torrent, file.createReadStream(), res);
+  streamConversion(req.torrent, stream, res);
 };

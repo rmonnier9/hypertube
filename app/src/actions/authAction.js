@@ -5,7 +5,6 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
-export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
 const requestLogin = creds => ({
   type: LOGIN_REQUEST,
@@ -38,13 +37,6 @@ const receiveLogout = () => ({
   isFetching: false,
   isAuthenticated: false,
 });
-
-// const logoutError = message => ({
-//   type: LOGOUT_FAILURE,
-//   isFetching: false,
-//   isAuthenticated: true,
-//   message,
-// });
 
 // login action function, calls the API to get a token
 const loginUser = (creds, oauth = false) => (dispatch) => {

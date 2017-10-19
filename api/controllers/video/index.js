@@ -1,6 +1,5 @@
 import checker from './checker';
-import { videoStartTorrenter, videoTorrenter } from './torrenter';
-import streamer from './streamer';
+import { startTorrent, getLoadingStatus, streamer } from './torrenter';
 import { getSub } from './subtitles';
 
-export { checker, videoStartTorrenter, videoTorrenter, streamer, getSub };
+export { checker, startTorrent, getLoadingStatus, streamer, getSub };
