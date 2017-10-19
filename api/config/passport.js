@@ -146,13 +146,17 @@ const passportConfig = (passport) => {
   }, (accessToken, refreshToken, profile, done) => {
     User.findOne({ facebookId: profile.id }, (err, existingUser) => {
       if (err) return done(err);
-      if (existingUser) return done(null, existingUser);
-      console.log(profile._json);
       User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
         if (err) return done(err);
+        if (existingUser) return done(null, existingUser);
         if (existingEmailUser) {
           existingEmailUser.facebook = profile.id;
           existingEmailUser.tokens.push({ kind: 'facebook', accessToken });
+          existingEmailUser.save((err) => {
+            done(err, existingEmailUser);
+          });
+        } else {
+          const user = new User();
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken });
           if (profile.name.givenName !== undefined && profile.name.familyName !== undefined) {
@@ -210,14 +214,14 @@ const passportConfig = (passport) => {
     callbackURL: '/oauth',
     scope: ['r_emailaddress', 'r_basicprofile'],
   }, (req, accessToken, refreshToken, profile, done) => {
-  User.findOne({ linkedin: profile.id }, (err, existingUser) => {
-    if (err) { return done(err); }
-    if (existingUser) return done(null, existingUser);
-    User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
-      if (err) return done(err);
-      if (existingEmailUser) {
-        existingEmailUser.linkedin = profile.id;
-        existingEmailUser.tokens.push({ kind: 'linkedin', accessToken });
+    User.findOne({ linkedin: profile.id }, (err, existingUser) => {
+      if (err) { return done(err); }
+      if (existingUser) return done(null, existingUser);
+      User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
+        if (err) return done(err);
+        if (existingEmailUser) {
+          existingEmailUser.linkedin = profile.id;
+          existingEmailUser.tokens.push({ kind: 'linkedin', accessToken });
           existingEmailUser.save((err) => {
             done(err, existingEmailUser);
           });
