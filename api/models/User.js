@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   fortytwo: String,
   linkedin: String,
   tokens: Array,
+  github: String,
 
   profile: {
     lang: String,

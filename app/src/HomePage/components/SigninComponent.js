@@ -67,6 +67,13 @@ const SigninComponent = (props) => {
           <br />
           <span
             role="button"
+            onClick={props.handleOAuth('github')}
+          >
+            Github Auth
+          </span>
+          <br />
+          <span
+            role="button"
             onClick={props.handleOAuth('linkedin')}
           >
               Linkedin Auth
@@ -79,7 +86,7 @@ const SigninComponent = (props) => {
       </div>
     </div>
   );
-}
+};
 
 
 SigninComponent.PropTypes = {

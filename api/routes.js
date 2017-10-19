@@ -17,6 +17,8 @@ const routes = async (app, passport, upload) => {
   app.get('/api/auth/42/callback', authentication.fortytwo);
   app.get('/api/auth/google', passport.authenticate('google', { scope: 'profile email' }));
   app.get('/api/auth/google/callback', authentication.google);
+  app.get('/api/auth/github', passport.authenticate('github'));
+  app.get('/api/auth/github/callback', authentication.github);
   app.get('/api/auth/linkedin', passport.authenticate('linkedin'));
   app.get('/api/auth/linkedin/callback', authentication.linkedin);
   app.use('/oauth', (req, res) => {

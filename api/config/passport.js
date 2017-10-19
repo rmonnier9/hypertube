@@ -2,7 +2,9 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import { Strategy as FortyTwoStrategy } from 'passport-42';
+import { Strategy as GithubStrategy } from 'passport-github';
 import { Strategy as LinkedInStrategy } from 'passport-linkedin-oauth2';
+
 import User from '../models/User';
 
 const passportConfig = (passport) => {
@@ -127,6 +129,38 @@ const passportConfig = (passport) => {
       });
     });
   }));
+
+  passport.use(new GithubStrategy({
+    clientID: process.env.GITHUB_ID,
+    clientSecret: process.env.GITHUB_SECRET,
+    callbackURL: '/oauth',
+    scope: 'user:email',
+  }, (accessToken, refreshToken, profile, done) => {
+    User.findOne({ github: profile.id }, (err, existingUser) => {
+      if (err) { return done(err); }
+      if (existingUser) return done(null, existingUser);
+      User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
+        if (err) return done(err);
+        if (existingEmailUser) {
+          existingEmailUser.github = profile.id;
+          existingEmailUser.tokens.push({ kind: 'github', accessToken });
+          existingEmailUser.save((err) => {
+            done(err, existingEmailUser);
+          });
+        } else {
+          const user = new User();
+          user.email = profile.emails[0].value;
+          user.github = profile.id;
+          user.tokens.push({ kind: 'github', accessToken });
+          user.profile.pictureURL = profile._json.avatar_url;
+          user.save((err) => {
+            done(err, user);
+          });
+        }
+      });
+    });
+  }));
+
 
   passport.use(new LinkedInStrategy({
     clientID: process.env.LINKEDIN_ID,
