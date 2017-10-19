@@ -65,6 +65,13 @@ const SigninComponent = (props) => {
             42 Auth
           </span>
           <br />
+          <span
+            role="button"
+            onClick={props.handleOAuth('github')}
+          >
+            Github Auth
+          </span>
+          <br />
           <Link to="/forgot" className="homepage-linkto">{forgot}</Link>
           <br />
           <Link to="/signup" className="homepage-linkto">{signUp}</Link>
