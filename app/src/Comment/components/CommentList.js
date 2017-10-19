@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -20,9 +21,9 @@ export const CommentBlock = ({ children }) => (
 
 const Comment = ({ comment, locale }) => (
   <div className="comment">
-    <a title="View profile" href={`/profile/${comment.idUser}`}>
+    <Link title="View profile" to={`/profile/${comment.idUser}`}>
       <img className="comment-avatar" src={comment.pictureURL} alt="" />
-    </a>
+    </Link>
     <div className="comment-text-container">
       <div className="comment-info">
         <div>{`${capFirst(comment.firstName)} ${capFirst(comment.lastName)} `}</div>
@@ -36,7 +37,6 @@ const Comment = ({ comment, locale }) => (
 const CommentList = (props) => {
   const ifOne = props.intl.formatMessage({ id: 'comments.ifOne' });
   const { comments } = props;
-  console.log(comments);
 
   if (!comments || !comments.length) {
     return (

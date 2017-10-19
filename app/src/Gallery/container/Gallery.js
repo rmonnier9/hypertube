@@ -59,26 +59,9 @@ class Gallery extends Component {
     });
   }
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   const { search } = nextState;
-  //   if (search || (!search && this.state.search)) return true;
-  //   const { nextHref } = nextState;
-  //   const { nextHref: oldHref } = this.state;
-  //   const nextstart = !nextHref ? 0 : nextHref.split('=').pop();
-  //   const oldstart = !oldHref ? 0 : oldHref.split('=').pop();
-  //   if (nextstart <= oldstart) return false;
-  //   return true;
-  // }
-
   componentWillUnmount() {
     this.mounted = false;
   }
-
-  // saveState = (name, value) => {
-    // console.log(name, value);
-    // this.setState({ [name]: value }, this.filter());
-    // this.filter();
-  // }
 
   getSearchURL = () => {
     const { search } = this.props.location;

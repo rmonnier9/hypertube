@@ -1,0 +1,78 @@
+[
+  {
+    "id": "homepage.forgotPasswordLink",
+    "defaultMessage": "Forgot password?"
+  },
+  {
+    "id": "homepage.signUpLink",
+    "defaultMessage": "Sign up?"
+  },
+  {
+    "id": "homepage.welcomeTo",
+    "defaultMessage": "Welcome to"
+  },
+  {
+    "id": "homepage.signUp",
+    "defaultMessage": "Sign up"
+  },
+  {
+    "id": "homepage.yourEmail",
+    "defaultMessage": "Your email"
+  },
+  {
+    "id": "homepage.email",
+    "defaultMessage": "Email"
+  },
+  {
+    "id": "homepage.yourPassword",
+    "defaultMessage": "Your password"
+  },
+  {
+    "id": "homepage.password",
+    "defaultMessage": "Password"
+  },
+  {
+    "id": "homepage.confirmPassword",
+    "defaultMessage": "Confirm password"
+  },
+  {
+    "id": "homepage.yourFirstName",
+    "defaultMessage": "Your first name"
+  },
+  {
+    "id": "homepage.yourLastName",
+    "defaultMessage": "Your last name"
+  },
+  {
+    "id": "homepage.alreadyMember",
+    "defaultMessage": "Already member?"
+  },
+  {
+    "id": "homepage.changePassword",
+    "defaultMessage": "Change password"
+  },
+  {
+    "id": "homepage.logIn",
+    "defaultMessage": "Log in?"
+  },
+  {
+    "id": "homepage.forgotPassword",
+    "defaultMessage": "Forgot password"
+  },
+  {
+    "id": "homepage.confirmForgotPassword",
+    "defaultMessage": "An email has been sent to reset your password."
+  },
+  {
+    "id": "homepage.confirmResetPassword",
+    "defaultMessage": "Your password has been changed. You can now log in."
+  },
+  {
+    "id": "homepage.nevermind",
+    "defaultMessage": "Nevermind, I remember..."
+  },
+  {
+    "id": "homepage.uploadProfilePic",
+    "defaultMessage": "Upload a profile picture"
+  }
+]

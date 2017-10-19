@@ -1,4 +1,4 @@
-import fs from 'fs';
+import bluebird from 'bluebird';
 import torrentStream from 'torrent-stream';
 import devNull from 'dev-null';
 import Movie from '../../models/Movie';
@@ -6,6 +6,8 @@ import mimeTypes from './mimeTypes';
 import getFileExtension from './getFileExtension';
 import streamConversion from './streamConversion';
 import { createSubFile } from './subtitles';
+
+const fs = bluebird.promisifyAll(require('fs'));
 
 const engineHash = {};
 
@@ -24,18 +26,17 @@ const setUpEngine = (engine, file, hash) => {
 };
 
 const getFileStreamTorrent = (torrentPath, hash) => new Promise((resolve, reject) => {
-  let engine;
   let file;
 
   const magnet = `magnet:?xt=urn:btih:${hash}`;
   // Download has already started
   if (engineHash[hash]) {
-    engine = engineHash[hash].engine;
-    file = engineHash[hash].file;
+    file = engineHash[hash];
+    console.log(engineHash, file);
     resolve(file);
   }
 
-  engine = torrentStream(magnet, { path: torrentPath });
+  const engine = torrentStream(magnet, { path: torrentPath });
   engine.on('ready', () => {
     engine.files.forEach((current) => {
       // Look for valid movie file extension and select the biggest file
@@ -55,7 +56,7 @@ const getFileStreamTorrent = (torrentPath, hash) => new Promise((resolve, reject
     }
     file.select();
     setUpEngine(engine, file, hash);
-    engineHash[hash] = { engine, file };
+    engineHash[hash] = file;
     resolve(file);
   });
 });
@@ -64,7 +65,7 @@ const getFileStreamTorrent = (torrentPath, hash) => new Promise((resolve, reject
 export const startTorrent = async (req, res) => {
   // If download had aleady started
   if (req.torrent.data && req.torrent.data.name) {
-    return res.send({ err: 'Download has already started' });
+    return res.send({ err: '' });
   }
 
   const pathFolder = `./torrents/${req.idImdb}/${req.torrent.hash}`;
@@ -72,8 +73,8 @@ export const startTorrent = async (req, res) => {
   const { frSubFilePath, enSubFilePath } = await createSubFile(req.idImdb, req.torrent.hash);
   req.torrent.data = {
     path: `${pathFolder}/${file.path}`,
-    enSub: enSubFilePath,
-    frSub: frSubFilePath,
+    enSubFilePath,
+    frSubFilePath,
     name: file.name,
     size: file.length,
     torrentDate: new Date(),
@@ -94,8 +95,13 @@ export const getLoadingStatus = async (req, res) => {
   if (!req.torrent.data || !req.torrent.data.name) {
     return res.send({ err: 'Download has not started.' });
   }
-  const { size } = await fs.statAsync(req.torrent.data.path);
-  return res.send({ progress: size / 30000000, err: '' });
+
+  try {
+    const { size } = await fs.statAsync(req.torrent.data.path);
+    return res.send({ progress: Math.round((size / 30000000) * 100), err: '' });
+  } catch (e) {
+    res.send({ err: 'File system doesnt match database.' });
+  }
 };
 
 // ROUTE CONTROLLER

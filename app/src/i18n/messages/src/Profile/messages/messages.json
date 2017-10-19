@@ -1,5 +1,9 @@
 [
   {
+    "id": "profile.profile",
+    "defaultMessage": "Profile"
+  },
+  {
     "id": "profile.searchMessage",
     "defaultMessage": "Enter a name to find another user"
   },
@@ -38,5 +42,9 @@
   {
     "id": "profile.contact",
     "defaultMessage": "Contact"
+  },
+  {
+    "id": "profile.noMovieSeen",
+    "defaultMessage": "This user has not watched any movie yet."
   }
 ]

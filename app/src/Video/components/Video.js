@@ -2,16 +2,13 @@
 import React, { Component } from 'react';
 import { injectIntl } from 'react-intl';
 import axios from 'axios';
+import Loader from '../../General/components/Loader';
 
 
 class Video extends Component {
 
   state = {
-    loaded: false,
-    created: false,
-    trackFr: null,
-    trackEn: null,
-    progress: 0,
+    status: 'start', progress: 0, trackFr: null, trackEn: null,
   };
 
   componentDidMount() {
@@ -24,22 +21,23 @@ class Video extends Component {
     axios.get(startTorrent)
     .then(({ data: { err } }) => {
       if (!err) {
+        this.setState({ status: 'created' });
         axios.get(`/api/movie/subtitle/${id}/${hash}`)
         .then(({ data: { frSubFilePath, enSubFilePath } }) => {
           this.trackFr = this.makeTrack(lang, 'Français', 'fr', frSubFilePath);
           this.trackEn = this.makeTrack(lang, 'English', 'en', enSubFilePath);
-          this.setState({ created: true });
+          this.setState({ status: 'progress' });
         });
       }
     });
     this.inter = setInterval(() => {
-      if (this.state.created) {
+      if (this.state.status === 'progress') {
         axios.get(getStatus)
           .then(({ data: { progress, err } }) => {
             if (err) { console.log(err); }
-            else if (progress >= 1) {
+            else if (progress >= 100) {
               clearInterval(this.inter);
-              this.setState({ loaded: true });
+              this.setState({ status: 'loaded' });
             }
             this.setState({ progress });
           });
@@ -52,17 +50,24 @@ class Video extends Component {
   }
 
   makeTrack = (primary, label, lang, subPath) => {
-    if (!subPath) {
+    if (!subPath || subPath === 'none') {
       const newLabel = lang === 'fr' ? `${label} indisponible` : `${label} unavailable`;
       return <track kind="subtitles" label={newLabel} srcLang={lang} src={subPath} />;
     }
-    if (primary === lang) return <track kind="subtitles" label={label} srcLang={lang} src={subPath} default />;
-    return <track kind="subtitles" label={label} srcLang={lang} src={subPath} />;
+    if (primary === lang) return <track kind="subtitles" label={label} srcLang={lang} src={`/static/${subPath}`} default />;
+    return <track kind="subtitles" label={label} srcLang={lang} src={`/static/${subPath}`} />;
   }
 
   render() {
-    const { progress } = this.state;
-    if (!this.state.loaded) return <span>Current progress: {progress * 100} %</span>;
+    const { progress, status } = this.state;
+    const starting = this.props.intl.formatMessage({ id: 'video.starting' });
+    const getSub = this.props.intl.formatMessage({ id: 'video.getSub' });
+    const loading = this.props.intl.formatMessage({ id: 'video.loading' });
+    if (status !== 'loaded') {
+      if (status === 'start') return <span>{starting}<Loader /></span>;
+      else if (status === 'created') return <span>{getSub}<Loader /></span>;
+      return <span>{loading}{progress}%<Loader /></span>;
+    }
     return (
       <video id="videoPlayer" autoPlay controls>
         <source src={this.stream} type="video/mp4" />

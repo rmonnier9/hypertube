@@ -1,0 +1,66 @@
+[
+  {
+    "id": "error.incorrectPassword",
+    "defaultMessage": "Incorrect password."
+  },
+  {
+    "id": "error.noBlankPassword",
+    "defaultMessage": "Password cannot be blank."
+  },
+  {
+    "id": "error.noPasswordLength",
+    "defaultMessage": "Password must be between 4 and 12 characters."
+  },
+  {
+    "id": "error.noPasswordComplex",
+    "defaultMessage": "Password must contain at least one uppercase, one lowercase and one digit."
+  },
+  {
+    "id": "error.noPasswordMatch",
+    "defaultMessage": "Passwords do not match."
+  },
+  {
+    "id": "error.noFirstNameLength",
+    "defaultMessage": "First name can't be more than 20 letters long."
+  },
+  {
+    "id": "error.noLastNameLength",
+    "defaultMessage": "Last name can't be more than 20 letters long."
+  },
+  {
+    "id": "error.notEmail",
+    "defaultMessage": "Email is not valid."
+  },
+  {
+    "id": "error.emailUsed",
+    "defaultMessage": "The email address you have entered is already associated with an account."
+  },
+  {
+    "id": "error.noEmailUsed",
+    "defaultMessage": "There is no account with this email."
+  },
+  {
+    "id": "error.noUserName",
+    "defaultMessage": "No account with that name."
+  },
+  {
+    "id": "error.noUserProfile",
+    "defaultMessage": "This user profile cannot be found or does not exist."
+  },
+  {
+    "id": "error.imageOnly",
+    "defaultMessage": "Please upload an image only."
+  },
+  {
+    "id": "error.noMovie",
+    "defaultMessage": "This movie cannot be found or does not exist."
+  },
+  {
+    "id": "error.noToken",
+    "defaultMessage": "Password reset token is invalid or has expired."
+  },
+  {
+    "id": "error.invalid",
+    "defaultMessage": "Invalid action requested."
+  }
+]

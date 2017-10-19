@@ -7,6 +7,7 @@ import PrivateRoute from './PrivateRoute';
 
 import NotFound from './General/components/NotFound.js';
 import Header from './General/components/Header';
+import Footer from './General/components/Footer';
 import MyProfile from './Profile/containers/MyProfile';
 import OneProfile from './Profile/containers/OneProfile';
 import Signin from './HomePage/containers/Signin';
@@ -35,6 +36,7 @@ const MatchaRouter = ({ isAuthenticated, locale }) => (
         <Route path="/signup" key={locale} component={Signup} />
         <Route key={locale} component={NotFound} />
       </Switch>
+      <Footer />
     </div>
   </Router>
   );

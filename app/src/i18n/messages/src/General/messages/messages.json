@@ -8,6 +8,34 @@
     "defaultMessage": "Save"
   },
   {
+    "id": "general.enter",
+    "defaultMessage": "Enter"
+  },
+  {
+    "id": "general.next",
+    "defaultMessage": "Next"
+  },
+  {
+    "id": "general.send",
+    "defaultMessage": "Send"
+  },
+  {
+    "id": "general.submit",
+    "defaultMessage": "Submit"
+  },
+  {
+    "id": "general.cancel",
+    "defaultMessage": "cancel"
+  },
+  {
+    "id": "general.pageNotFound",
+    "defaultMessage": "Page Not Found"
+  },
+  {
+    "id": "general.noPage",
+    "defaultMessage": "Sorry, but the page you were trying to view does not exist."
+  },
+  {
     "id": "nav.myprofile",
     "defaultMessage": "MY PROFIL"
   },
