@@ -41,6 +41,10 @@ export const errorValue = defineMessages({
     id: 'error.noEmailUsed',
     defaultMessage: 'There is no account with this email.',
   },
+  noPassword: {
+    id: 'error.noPassword',
+    defaultMessage: 'You have no password set up with us. Please connect with one of the websites below and set up your password when connected, or click on "Forgot password?"',
+  },
   noUserName: {
     id: 'error.noUserName',
     defaultMessage: 'No account with that name.',

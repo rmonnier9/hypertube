@@ -264,7 +264,7 @@ export const postReset = async (req, res, next) => {
       if (!user) {
         return res.send({ error: [{ param: 'token', msg: 'error.noToken' }] });
       }
-      user.password = req.body.password;
+      user.password = req.body.newPassword;
       user.passwordResetToken = undefined;
       user.passwordResetExpires = undefined;
       user.save((err) => {
@@ -302,7 +302,7 @@ export const postForgot = async (req, res, next) => {
         user.passwordResetExpires = Date.now() + 3600000; // 1 hour
         user.save((err) => {
           if (err) { return next(err); }
-          const header = req.headers['x-forwarded-host'];
+          const header = req.headers['x-forwarded-host'] || req.headers.host;
           mail.sendForgotPasswordEmail(user, header);
           return res.send({ error: [] });
         });
