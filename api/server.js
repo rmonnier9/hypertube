@@ -13,6 +13,7 @@ import expressStatusMonitor from 'express-status-monitor';
 import multer from 'multer';
 import cron from 'cron';
 import dotenv from 'dotenv/config';
+import Movie from './models/Movie';
 
 import passportConfig from './config/passport';
 import routes from './routes';
@@ -62,9 +63,9 @@ mongoose.connection.on('error', (err) => {
 });
 
 const CronJob = cron.CronJob;
-const job = new CronJob('0 0 1 * * *', () => {
-  console.log('Deleting unwatched movies...');
-}, true, 'Europe/Paris');
+const job = new CronJob('0 0 1 1 *', () => {
+  Movie.deleteMany({ 'torrents.data.lastSeen': { $lte: new Date(Date.now() - 30 * 24 * 3600 * 1000) } }, () => { console.log('Unwatched movies deleted.'); });
+}, null, true, 'Europe/Paris');
 job.start();
 
 /**
