@@ -37,6 +37,7 @@
 
 .comment-text {
   margin-top: 3px;
+  overflow-wrap: break-word
 }
 
 .comment-icon {

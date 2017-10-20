@@ -14,6 +14,7 @@ class Signup extends Component {
     confirmPassword: '',
     firstName: '',
     lastName: '',
+    login: '',
     error: [{ param: '', msg: '' }],
     errorPic: [{ param: '', msg: '' }],
     status: 'closed',
@@ -55,13 +56,14 @@ class Signup extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const { email, password, confirmPassword, firstName, lastName, file } = this.state;
+    const { email, password, confirmPassword, firstName, lastName, login, file } = this.state;
     const data = {
       email: email.trim(),
       newPassword: password.trim(),
       confirmPassword: confirmPassword.trim(),
       firstName: firstName.trim(),
       lastName: lastName.trim(),
+      login: login.trim(),
     };
     this.sendInfo(data)
       .then(({ data: { error } }) => {

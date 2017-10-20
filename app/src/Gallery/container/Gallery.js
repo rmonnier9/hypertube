@@ -18,7 +18,6 @@ class Gallery extends Component {
     this.lang = props.locale.split('-')[0];
     this.mounted = true;
     this.state = {
-      // search,
       genre: parsed.genre || '',
       rating: parsed.rating || 0,
       sort: parsed.sort || '',
@@ -90,9 +89,9 @@ class Gallery extends Component {
     })
     .catch((error) => {
       if (axios.isCancel(error)) {
-        // console.log('Request canceled', error.message);
+        console.log('Request canceled', error.message);
       } else {
-        // console.log(error);
+        console.log(error);
       }
     });
   }

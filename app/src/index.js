@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { connect, Provider } from 'react-redux';
-import { createLogger } from 'redux-logger';
+// import { createLogger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import axios from 'axios';
@@ -27,13 +27,13 @@ if (token) {
   axios.defaults.headers.common['x-access-token'] = token;
 }
 
-const loggerMiddleware = createLogger();
+// const loggerMiddleware = createLogger();
 
 const store = createStore(
   rootReducer,
   applyMiddleware(
     thunkMiddleware, // lets us dispatch() functions
-    loggerMiddleware, // neat middleware that logs actions
+    // loggerMiddleware, // neat middleware that logs actions
   ),
 );
 
