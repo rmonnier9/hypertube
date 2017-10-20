@@ -78,7 +78,9 @@ class Movie extends Component {
     });
 
     const timeObj = timing(movie.runtime);
-    const time = `${timeObj.hours}h${timeObj.minutes}`;
+    const time = movie.runtime !== -1 ? `${timeObj.hours}h${timeObj.minutes}` : '';
+    const year = movie.year !== -1 ? movie.year : '';
+    const rating = movie.rating !== -1 ? movie.rating : 0;
 
     const idImdb = this.movie.idImdb;
     const { movies } = this.user.profile;
@@ -103,13 +105,13 @@ class Movie extends Component {
         <div className="movie-infos">
           <h1>{ movie.title[lang] } {movieSeen}</h1>
           <div>
-            <span className="movie-year">{ movie.year }</span>
+            <span className="movie-year">{ year }</span>
             <span>{ time } </span>
           </div>
           <div>
             <span>
               <i className="glyphicon glyphicon-star" />
-              <span className="movie-rating">{ movie.rating }</span>
+              <span className="movie-rating">{ rating }</span>
               <span>{'/'}10</span>
             </span>
           </div>

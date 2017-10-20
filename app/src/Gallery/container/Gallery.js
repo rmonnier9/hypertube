@@ -89,9 +89,9 @@ class Gallery extends Component {
     })
     .catch((error) => {
       if (axios.isCancel(error)) {
-        console.log('Request canceled', error.message);
+        // console.log('Request canceled', error.message);
       } else {
-        console.log(error);
+        // console.log(error);
       }
     });
   }

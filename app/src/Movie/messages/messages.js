@@ -25,6 +25,10 @@ export const movieValue = defineMessages({
     id: 'movie.play',
     defaultMessage: 'Play',
   },
+  season: {
+    id: 'movie.season',
+    defaultMessage: 'Season',
+  },
   tooltipSeen: {
     id: 'movie.tooltipSeen',
     defaultMessage: 'Seen',

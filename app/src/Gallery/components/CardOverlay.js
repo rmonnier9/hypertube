@@ -6,8 +6,9 @@ import '../css/CardOverlay.css';
 class CardOverlay extends Component {
 
   render() {
-    const { rating, year, idImdb } = this.props.movie;
+    const { rating, idImdb } = this.props.movie;
     const { movies } = this.props.user.profile;
+    const year = this.props.movie.year !== -1 ? this.props.movie.year : '';
     const link = `/movie/${idImdb}`;
 
     const movieSeen = (movies.includes(idImdb)

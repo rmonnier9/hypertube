@@ -38,7 +38,7 @@ const getMatchObj = (query, lang) => {
   }
   if (query.sort === 'oldest') {
     matchObj.$and.push({
-      year: { $exists: true }
+      year: { $ne: -1 }
     });
   }
   return matchObj;
