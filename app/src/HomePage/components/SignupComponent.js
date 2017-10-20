@@ -79,7 +79,7 @@ const SignupComponent = (props) => {
           />
           <br />
           <RaisedButton className="homepage-submit" type="submit" name="submit" label={next} />
-          <br />
+          <br /><br />
           <Link to="/signin" className="homepage-linkto">{alreadyMember}</Link>
           <Dialog
             preview={props.preview}

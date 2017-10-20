@@ -82,17 +82,24 @@ const passportConfig = (passport) => {
       if (existingUser) return done(null, existingUser);
       User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
         if (err) return done(err);
-        if (existingEmailUser) return done('email already used');
-        const user = new User();
-        user.email = profile.emails[0].value;
-        user.fortytwo = profile.id;
-        user.tokens.push({ kind: '42', accessToken });
-        user.profile.firstName = profile.name.givenName;
-        user.profile.lastName = profile.name.familyName;
-        user.profile.pictureURL = profile.photos[0].value;
-        user.save((err) => {
-          done(err, user);
-        });
+        if (existingEmailUser) {
+          existingEmailUser.fortytwo = profile.id;
+          existingEmailUser.tokens.push({ kind: '42', accessToken });
+          existingEmailUser.save((err) => {
+            done(err, existingEmailUser);
+          });
+        } else {
+          const user = new User();
+          user.email = profile.emails[0].value;
+          user.fortytwo = profile.id;
+          user.tokens.push({ kind: '42', accessToken });
+          user.profile.firstName = profile.name.givenName;
+          user.profile.lastName = profile.name.familyName;
+          user.profile.pictureURL = profile.photos[0].value;
+          user.save((err) => {
+            done(err, user);
+          });
+        }
       });
     });
   }));
@@ -142,7 +149,7 @@ const passportConfig = (passport) => {
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
     callbackURL: '/oauth/facebook/callback',
-    profileFields: ['id', 'displayName', 'picture', 'email'],
+    profileFields: ['id', 'displayName', 'picture.type(large)', 'email'],
   }, (accessToken, refreshToken, profile, done) => {
     User.findOne({ facebookId: profile.id }, (err, existingUser) => {
       if (err) return done(err);
@@ -158,6 +165,7 @@ const passportConfig = (passport) => {
         } else {
           const user = new User();
           user.facebook = profile.id;
+          user.email = profile.emails[0].value;
           user.tokens.push({ kind: 'facebook', accessToken });
           if (profile.name.givenName !== undefined && profile.name.familyName !== undefined) {
             user.profile.firstName = profile.name.givenName;

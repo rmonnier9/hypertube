@@ -42,13 +42,10 @@
 }
 
 ul.social-icons {
-    padding: 0;
-    list-style: none;
-    margin-top: 10px;
-    margin-bottom: 40px;
-    /*width: 350px;
-    display: block;
-    margin: 0 auto;*/
+  padding: 0;
+  list-style: none;
+  margin-top: 10px;
+  margin-bottom: 40px;
 }
 
 .social-icons li {
@@ -116,7 +113,7 @@ ul.social-icons {
 }
 
 a.homepage-linkto {
-  color: #101010;
+  color: green;
 }
 
 a.homepage-linkto:hover {

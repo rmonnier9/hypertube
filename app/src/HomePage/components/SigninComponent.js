@@ -14,6 +14,39 @@ const SigninComponent = (props) => {
     }
   });
 
+  const social = [
+    { type: 'facebook', class: 'fa fa-facebook' },
+    { type: 'google', class: 'fa fa-google' },
+    { type: 'linkedin', class: 'fa fa-linkedin' },
+    { type: 'github', class: 'fa fa-github' },
+  ];
+
+  const icons = social.map(icon => (
+    <li>
+      <span
+        role="button"
+        tabIndex={0}
+        className="social-icon"
+        onClick={props.handleOAuth(icon.type)}
+      >
+        <i className={icon.class} />
+      </span>
+    </li>
+  ));
+
+  icons.push(
+    <li>
+      <span
+        role="button"
+        tabIndex={0}
+        className="social-icon"
+        onClick={props.handleOAuth('42')}
+      >
+        <img className="logo-42" src={logo42} alt="42" />
+      </span>
+    </li>,
+  );
+
   const welcome = props.intl.formatMessage({ id: 'homepage.welcomeTo' });
   const yourEmail = props.intl.formatMessage({ id: 'homepage.yourEmail' });
   const email = props.intl.formatMessage({ id: 'homepage.email' });
@@ -53,31 +86,7 @@ const SigninComponent = (props) => {
           <RaisedButton className="homepage-submit" type="submit" name="submit" label={enter} />
           <br />
           <ul className="social-icons">
-            <li>
-              <span role="button" className="social-icon" onClick={props.handleOAuth('facebook')}>
-                <i className="fa fa-facebook" />
-              </span>
-            </li>
-            <li>
-              <span role="button" className="social-icon" onClick={props.handleOAuth('google')}>
-                <i className="fa fa-google" />
-              </span>
-            </li>
-            <li>
-              <span role="button" className="social-icon" onClick={props.handleOAuth('linkedin')}>
-                <i className="fa fa-linkedin" />
-              </span>
-            </li>
-            <li>
-              <span role="button" className="social-icon" onClick={props.handleOAuth('github')}>
-                <i className="fa fa-github" />
-              </span>
-            </li>
-            <li>
-              <span role="button" className="social-icon" onClick={props.handleOAuth('42')}>
-                <img className="logo-42" src={logo42} alt="42" />
-              </span>
-            </li>
+            {icons}
           </ul>
           <Link to="/forgot" className="homepage-linkto">{forgot}</Link>
           <br />
