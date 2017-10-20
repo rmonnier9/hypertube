@@ -16,12 +16,18 @@ export const postSignupPicture = async (req, res, next) => {
   const oldPath = path.resolve(__dirname, `../public/uploads/tmp/${filename}`);
   const newPath = path.resolve(__dirname, `../public/uploads/${filename}`);
 
-  await sharp(oldPath)
-    .resize(240, 240, {
-      kernel: sharp.kernel.lanczos2,
-      interpolator: sharp.interpolator.nohalo,
-    })
-    .toFile(newPath);
+  try {
+    await sharp(oldPath)
+      .resize(240, 240, {
+        kernel: sharp.kernel.lanczos2,
+        interpolator: sharp.interpolator.nohalo,
+      })
+      .toFile(newPath)
+      .catch(e => console.log(e));
+  } catch (e) {
+    fs.unlinkSync(oldPath);
+    return res.send({ errorPic: [{ param: 'picture', msg: 'error.imageOnly' }] });
+  }
   if (fs.existsSync(oldPath)) {
     fs.unlinkSync(oldPath);
   }
@@ -49,12 +55,17 @@ export const newPicture = async (req, res, next) => {
   const tmpPath = path.resolve(__dirname, `../public/uploads/tmp/${filename}`);
   const newPath = path.resolve(__dirname, `../public/uploads/${filename}`);
 
-  await sharp(tmpPath)
-    .resize(240, 240, {
-      kernel: sharp.kernel.lanczos2,
-      interpolator: sharp.interpolator.nohalo,
-    })
-    .toFile(newPath);
+  try {
+    await sharp(tmpPath)
+      .resize(240, 240, {
+        kernel: sharp.kernel.lanczos2,
+        interpolator: sharp.interpolator.nohalo,
+      })
+      .toFile(newPath);
+  } catch (e) {
+    fs.unlinkSync(tmpPath);
+    return res.send({ errorPic: [{ param: 'picture', msg: 'error.imageOnly' }] });
+  }
   if (fs.existsSync(tmpPath)) {
     fs.unlinkSync(tmpPath);
   }
