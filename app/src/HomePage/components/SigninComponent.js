@@ -22,7 +22,7 @@ const SigninComponent = (props) => {
   ];
 
   const icons = social.map(icon => (
-    <li>
+    <li key={icon.type}>
       <span
         role="button"
         tabIndex={0}

@@ -45,10 +45,10 @@ export default class EngineManager {
     return this.engineHash[hash].file;
   }
 
-  getPath(hash) {
+  getEngin(hash) {
     if (!this.engineHash[hash]) return null;
 
-    return this.engineHash[hash].path;
+    return this.engineHash[hash].engine;
   }
 
   getFileStreamTorrent(torrentPath, hash) {

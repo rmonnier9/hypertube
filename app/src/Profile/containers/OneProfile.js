@@ -6,6 +6,8 @@ import Card from '../../Gallery/components/Card';
 import CommentProfile from '../../Comment/components/CommentProfile';
 import '../css/profile.css';
 
+const DEFAULT_IMG = '/static/uploads/empty_profile.png';
+
 class OneProfile extends Component {
 
   state = {
@@ -44,7 +46,7 @@ class OneProfile extends Component {
 
     if (!profileLoaded) { return <Loading />; }
 
-    const { firstName, lastName, picture } = this.user.profile;
+    const { firstName, lastName, pictureURL } = this.user.profile;
 
     const profile = this.props.intl.formatMessage({ id: 'profile.profile' });
     const movieSeen = this.props.intl.formatMessage({ id: 'profile.movieSeen' });
@@ -81,7 +83,12 @@ class OneProfile extends Component {
           <div className="profile-container">
             <h1 className="profile-title">{profile}</h1>
             <div>
-              <img className="profile-pic" src={`/static/uploads/${picture}`} alt="profile-pic" />
+              <img
+                className="profile-pic"
+                src={pictureURL}
+                alt="profile-pic"
+                onError={e => (e.target.src = DEFAULT_IMG)}
+              />
             </div>
             <div className="infos-container one-user-profile">
               <span className="infos-title"><b>Name</b></span>
