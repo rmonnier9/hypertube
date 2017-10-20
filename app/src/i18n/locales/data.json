@@ -87,7 +87,7 @@
     "profile.name": "Nom",
     "profile.contact": "Contact",
     "profile.noMovieSeen": "Cet utilisateur n'a regardé aucun film.",
-    "profile.movieSeen": "Films vus",
+    "profile.movieSeen": "Films et séries vus",
     "video.starting": "Début du transfert",
     "video.getSub": "Téléchargement des sous-titres",
     "video.loading": "Votre film devrait commencer bientôt, Téléchargé :"
@@ -180,7 +180,7 @@
     "profile.name": "Name",
     "profile.contact": "Contact",
     "profile.noMovieSeen": "This user has not watched any movie yet.",
-    "profile.movieSeen": "Movies seen",
+    "profile.movieSeen": "Movies & series seen",
     "video.starting": "Starting the transfer",
     "video.getSub": "Getting the subtitles",
     "video.loading": "Your movie should begin shortly, current loading:"

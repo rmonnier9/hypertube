@@ -51,6 +51,6 @@ export const searchMessageValue = defineMessages({
   },
   movieSeen: {
     id: 'profile.movieSeen',
-    defaultMessage: 'Movies seen',
+    defaultMessage: 'Movies & series seen',
   },
 });
