@@ -12,6 +12,7 @@ class OneProfile extends Component {
 
   state = {
     profileLoaded: false,
+    error: [{ param: '', msg: '' }],
   }
 
   componentDidMount() {
