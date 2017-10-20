@@ -66,5 +66,6 @@ export const streamer = async (req, res) => {
     const file = await engineManager.getFileStreamTorrent(pathFolder, req.torrent.hash);
     stream = file.createReadStream();
   }
+  Movie.updateOne({ 'torrents.hash': req.torrent.hash }, { $set: { 'torrents.$.data.lastSeen': new Date() } });
   streamConversion(req.torrent, stream, res);
 };
