@@ -55,7 +55,7 @@ export const getLoadingStatus = async (req, res) => {
 // ROUTE CONTROLLER
 export const streamer = async (req, res) => {
   // If download had aleady started
-  if (!req.torrent.data || !req.torrent.data.path || !engineManager.getEngine(req.torrent.hash)) {
+  if (!req.torrent.data || !req.torrent.data.path || !engineManager.getFile(req.torrent.hash)) {
     return res.json({ err: 'Download has not been started.' });
   }
   let stream;

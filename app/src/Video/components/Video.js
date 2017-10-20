@@ -15,9 +15,9 @@ class Video extends Component {
     const { id, hash } = this.props.match.params;
     const { locale } = this.props.intl;
     const lang = locale === 'fr-fr' ? 'fr' : 'en';
-    this.stream = `http://localhost:3000/api/movie/stream/${id}/${hash}`;
-    const startTorrent = `http://localhost:3000/api/movie/startTorrent/${id}/${hash}`;
-    const getStatus = `http://localhost:3000/api/movie/getStatus/${id}/${hash}`;
+    this.stream = `/api/movie/stream/${id}/${hash}`;
+    const startTorrent = `/api/movie/startTorrent/${id}/${hash}`;
+    const getStatus = `/api/movie/getStatus/${id}/${hash}`;
     axios.get(startTorrent)
     .then(({ data: { err } }) => {
       if (!err) {
@@ -66,7 +66,7 @@ class Video extends Component {
     if (status !== 'loaded') {
       if (status === 'start') return <span>{starting}<Loader /></span>;
       else if (status === 'created') return <span>{getSub}<Loader /></span>;
-      return <span>{loading}{progress}%<Loader /></span>;
+      return <span>{loading} {progress}%<Loader /></span>;
     }
     return (
       <video id="videoPlayer" autoPlay controls>
