@@ -24,7 +24,7 @@ const startConversion = (torrent, fileStream, res) => new Promise((resolve, reje
     .on('start', (cmd) => { console.log('fluent-ffmpeg Notice: Started:', cmd); })
     .on('progress', (progress) => { console.log('fluent-ffmpeg Notice: Progress:', progress.timemark, 'converted'); })
     .on('error', (err, stdout, stderr) => {
-      // console.log('ffmpeg, file:', data.path, ' Error:', '\nErr:', err, '\nStdOut:', stdout, '\nStdErr:', stderr);
+      console.log('ffmpeg, file:', data.path, ' Error:', '\nErr:', err, '\nStdOut:', stdout, '\nStdErr:', stderr);
     });
 
   if (fileExtension === '.mkv') {
@@ -39,6 +39,9 @@ const startConversion = (torrent, fileStream, res) => new Promise((resolve, reje
       .videoCodec('libx264')
       .run();
   }
+  res.on('close', () => {
+    converter.kill();
+  });
 });
 
 export default startConversion;
