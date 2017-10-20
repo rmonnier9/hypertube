@@ -24,8 +24,8 @@ export default class EngineManager {
     engine.on('download', (pieceIndex) => {
       if (pieceIndex % 10 === 0) {
         const completion = Math.round((100 * engine.swarm.downloaded) / file.length);
-        console.log('Completion ', completion, ' %');
-        console.log('torrentStream Notice: Engine', engine.infoHash, 'downloaded piece: Index:', pieceIndex, '(', engine.swarm.downloaded, '/', file.length, ')');
+        // console.log('Completion ', completion, ' %');
+        // console.log('torrentStream Notice: Engine', engine.infoHash, 'downloaded piece: Index:', pieceIndex, '(', engine.swarm.downloaded, '/', file.length, ')');
       }
     });
 

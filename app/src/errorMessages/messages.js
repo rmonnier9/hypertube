@@ -73,6 +73,10 @@ export const errorValue = defineMessages({
     id: 'error.invalid',
     defaultMessage: 'Invalid action requested.',
   },
+  dbDiffFileSystem: {
+    id: 'error.dbDiffFileSystem',
+    defaultMessage: 'File system doesnt match database.',
+  },
 });
 
 export default errorValue;
