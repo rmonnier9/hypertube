@@ -64,7 +64,7 @@ mongoose.connection.on('error', (err) => {
 
 const CronJob = cron.CronJob;
 const job = new CronJob('0 0 1 1 *', () => {
-  Movie.deleteMany({ 'torrents.data.lastSeen': { $lte: new Date(Date.now() - 30 * 24 * 3600 * 1000) } }, () => { console.log('Unwatched movies deleted.'); });
+  Movie.deleteMany({ 'torrents.data.lastSeen': { $lte: new Date(Date.now() - (30 * 24 * 3600 * 1000)) } }, () => { console.log('Unwatched movies deleted.'); });
 }, null, true, 'Europe/Paris');
 job.start();
 
@@ -95,7 +95,8 @@ routes(app, passport, upload);
 /**
  * Error Handler. only use in development
  */
- // custom error handling
+
+// custom error handling
 app.use((err, req, res, next) => { res.end(); });
 if (process.env.NODE_ENV === 'development') {
   // only use in development
