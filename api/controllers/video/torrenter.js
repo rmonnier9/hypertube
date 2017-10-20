@@ -52,7 +52,7 @@ export const getLoadingStatus = async (req, res) => {
     const { size } = await fs.statAsync(req.torrent.data.path);
     return res.send({ progress: Math.round((size / 30000000) * 100), err: '' });
   } catch (e) {
-    res.send({ err: 'File system doesnt match database.' });
+    return res.send({ err: 'error.dbDiffFileSystem' });
   }
 };
 

@@ -8,7 +8,7 @@ import Loader from '../../General/components/Loader';
 class Video extends Component {
 
   state = {
-    status: 'start', progress: 0, trackFr: null, trackEn: null,
+    status: 'start', progress: 0, trackFr: null, trackEn: null, error: '0',
   };
 
   componentDidMount() {
@@ -34,8 +34,10 @@ class Video extends Component {
       if (this.state.status === 'progress') {
         axios.get(getStatus)
           .then(({ data: { progress, err } }) => {
-            if (err) { console.log(err); }
-            else if (progress >= 100) {
+            if (err) {
+              clearInterval(this.inter);
+              this.setState({ status: 'error', error: err });
+            } else if (progress >= 100) {
               clearInterval(this.inter);
               this.setState({ status: 'loaded' });
             }
@@ -58,6 +60,16 @@ class Video extends Component {
     return <track kind="subtitles" label={label} srcLang={lang} src={`/static/${subPath}`} />;
   }
 
+  deleter = (e) => {
+    e.preventDefault();
+    const { id, hash } = this.props.match.params;
+    const url = `/api/movie/clear/${id}/${hash}`;
+    axios.get(url)
+      .then(() => {
+        window.location.reload();
+      });
+  }
+
   render() {
     const { progress, status } = this.state;
     const starting = this.props.intl.formatMessage({ id: 'video.starting' });
@@ -66,6 +78,10 @@ class Video extends Component {
     if (status !== 'loaded') {
       if (status === 'start') return <span>{starting}<Loader /></span>;
       else if (status === 'created') return <span>{getSub}<Loader /></span>;
+      else if (status === 'error') {
+        const err = this.props.intl.formatMessage({ id: this.state.error });
+        return <span>{err} <a href="" onClick={this.deleter}>click here to fix</a></span>;
+      }
       return <span>{loading} {progress}%<Loader /></span>;
     }
     return (

@@ -56,6 +56,6 @@ const movieSchema = new mongoose.Schema({
   thumb: String,
 });
 
-const Movie = mongoose.model('Movie', movieSchema);
+const Movie = mongoose.model('Movietest', movieSchema);
 
 export default Movie;
