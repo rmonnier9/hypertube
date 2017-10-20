@@ -44,7 +44,7 @@ const routes = async (app, passport, upload) => {
   app.get('/api/movie/startTorrent/:idImdb/:hash', video.checker, video.startTorrent);
   app.get('/api/movie/getStatus/:idImdb/:hash', video.checker, video.getLoadingStatus);
   app.get('/api/movie/subtitle/:idImdb/:hash', video.getSub);
-  app.get('/api/movie/clear/:idImdb', deleteOne);
+  app.get('/api/movie/clear/:idImdb/:hash', deleteOne);
   app.get('/api/me', user.getMyAccount);
   app.post('/api/me', user.postUpdateProfile);
   app.delete('/api/me', user.deleteDeleteAccount); // not implemented
