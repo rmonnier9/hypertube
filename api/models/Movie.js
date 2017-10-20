@@ -16,6 +16,7 @@ const torrentSchema = new mongoose.Schema({
   peers: Number,
   source: String, // yifi or eztv
   data: {
+    lastSeen: Date,
     torrentDate: Date,
     lang: String,
     path: String,

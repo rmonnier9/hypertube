@@ -1,6 +1,7 @@
 import bluebird from 'bluebird';
 import devNull from 'dev-null';
 import Movie from '../../models/Movie';
+import User from '../../models/User';
 import streamConversion from './streamConversion';
 import { createSubFile } from './subtitles';
 import EngineManager from './EngineManager';
@@ -12,6 +13,9 @@ const fs = bluebird.promisifyAll(require('fs'));
 // ROUTE CONTROLLER
 export const startTorrent = async (req, res) => {
   // If download had aleady started
+  const { _id } = req.user;
+  if (!_id) return res.send({ err: 'Undefined user trying to start torrent' });
+  await User.updateOne({ _id }, { $addToSet: { 'profile.movies': req.idImdb } });
   if (req.torrent.data && req.torrent.data.name) {
     return res.send({ err: '' });
   }
@@ -66,5 +70,6 @@ export const streamer = async (req, res) => {
     const file = await engineManager.getFileStreamTorrent(pathFolder, req.torrent.hash);
     stream = file.createReadStream();
   }
+  await Movie.updateOne({ 'torrents.hash': req.torrent.hash }, { $set: { 'torrents.$.data.lastSeen': new Date() } });
   streamConversion(req.torrent, stream, res);
 };
