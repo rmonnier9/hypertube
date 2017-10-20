@@ -209,23 +209,25 @@ export const getAccountById = (req, res, next) => {
     // get rid of password and email
     user.password = '';
     user.email = '';
-    // find movies infos for all movies seen by user
-    let movies = [];
-    try {
+
+    let movies;
+    if (!user.profile.movies || user.profile.movies.length === 0) {
+      movies = [];
+    } else {
       movies = await Movie.find({ idImdb: { $in: user.profile.movies } });
-    } catch (err) {
-      return res.send({ error: [], user, movies });
     }
-    // find comments of user on all movies
+
+    // get user comments on all movies
     const commentsData = await ListComment.find({ 'comments.idUser': user._id });
-    // find movies associated to comments to get their infos
+
+    // get movies associated to comments to get their infos
     const movieList = commentsData.map(comment => comment.idImdb);
     const movieListInfo = await Movie.find({ idImdb: { $in: movieList } });
     const comments = commentsData.map((comment) => {
       const movie = movieListInfo.find(movie => movie.idImdb === comment.idImdb);
       return ({
         idImdb: comment.idImdb,
-        comments: comment.comments,
+        comments: comment.comments.filter(comment => (comment.idUser == user._id)),
         thumb: movie.thumb,
         title: movie.title,
       });

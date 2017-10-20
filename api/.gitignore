@@ -13,7 +13,9 @@ logs
 results
 
 #Build
-public/css/main.css
+build
+torrents
+public/subs
 
 # API keys and secrets
 .env
