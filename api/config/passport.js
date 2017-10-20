@@ -240,7 +240,7 @@ const passportConfig = (passport) => {
           user.tokens.push({ kind: 'linkedin', accessToken });
           user.profile.firstName = profile.name.givenName;
           user.profile.lastName = profile.name.familyName;
-          user.profile.pictureURL = profile._json.publicProfileUrl;
+          user.profile.pictureURL = profile._json.pictureUrl;
           user.save((err) => {
             done(err, user);
           });
