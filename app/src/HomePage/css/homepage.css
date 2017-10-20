@@ -20,6 +20,7 @@
   text-align: center;
   color: #101010;
   animation: fadein 1s;
+  border-radius: 3%;
 }
 
 .homepage-background {

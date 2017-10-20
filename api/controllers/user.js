@@ -25,6 +25,7 @@ export const postSignup = async (req, res, next) => {
     profile: {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
+      login: req.body.login,
     }
   });
 

@@ -68,7 +68,7 @@ class OneProfile extends Component {
     let Comments = '';
     if (this.comments.length !== 0) {
       Comments =
-      (<div className="profile-container">
+      (<div className="profile-container comment-box">
         <div className="one-profile-seen">
           <i className="glyphicon glyphicon-comment comment-icon" />
           {comments}

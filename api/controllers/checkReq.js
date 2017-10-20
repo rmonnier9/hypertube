@@ -7,6 +7,9 @@ const checkReq = async (req) => {
     req.checkBody('email', 'error.notEmail').isEmail();
     req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
   }
+  if (req.body.login !== undefined) {
+    req.checkBody('login', 'error.noLoginLength').len({ min: 4, max: 12 });
+  }
   if (req.body.password !== undefined) {
     req.checkBody('password', 'error.noBlankPassword').notEmpty();
   }

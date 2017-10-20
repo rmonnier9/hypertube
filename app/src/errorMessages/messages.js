@@ -29,6 +29,10 @@ export const errorValue = defineMessages({
     id: 'error.noLastNameLength',
     defaultMessage: 'Last name can\'t be more than 20 letters long.',
   },
+  noLoginLength: {
+    id: 'error.noLoginLength',
+    defaultMessage: 'Login must be between 4 and 12 characters.',
+  },
   notEmail: {
     id: 'error.notEmail',
     defaultMessage: 'Email is not valid.',

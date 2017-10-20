@@ -35,7 +35,7 @@ const SigninComponent = (props) => {
   ));
 
   icons.push(
-    <li>
+    <li key="42">
       <span
         role="button"
         tabIndex={0}
