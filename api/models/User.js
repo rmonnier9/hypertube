@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
   tokens: Array,
 
   profile: {
+    login: { type: String, default: '' },
     lang: String,
     firstName: String,
     lastName: String,

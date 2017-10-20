@@ -25,6 +25,14 @@ export const homeValue = defineMessages({
     id: 'homepage.email',
     defaultMessage: 'Email',
   },
+  yourLogin: {
+    id: 'homepage.yourLogin',
+    defaultMessage: 'Your login',
+  },
+  login: {
+    id: 'homepage.login',
+    defaultMessage: 'Login',
+  },
   yourPassword: {
     id: 'homepage.yourPassword',
     defaultMessage: 'Your password',

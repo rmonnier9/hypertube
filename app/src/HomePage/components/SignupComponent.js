@@ -17,6 +17,8 @@ const SignupComponent = (props) => {
   const signUp = props.intl.formatMessage({ id: 'homepage.signUp' });
   const yourEmail = props.intl.formatMessage({ id: 'homepage.yourEmail' });
   const email = props.intl.formatMessage({ id: 'homepage.email' });
+  const yourLogin = props.intl.formatMessage({ id: 'homepage.yourLogin' });
+  const login = props.intl.formatMessage({ id: 'homepage.login' });
   const yourPassword = props.intl.formatMessage({ id: 'homepage.yourPassword' });
   const password = props.intl.formatMessage({ id: 'homepage.password' });
   const confirmPassword = props.intl.formatMessage({ id: 'homepage.confirmPassword' });
@@ -41,6 +43,14 @@ const SignupComponent = (props) => {
             name="email"
             errorText={error.email}
             floatingLabelText={email}
+            required
+          />
+          <br />
+          <TextField
+            hintText={yourLogin}
+            name="login"
+            errorText={error.login}
+            floatingLabelText={login}
             required
           />
           <br />
