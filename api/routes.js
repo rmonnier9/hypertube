@@ -17,6 +17,8 @@ const routes = async (app, passport, upload) => {
   app.get('/api/auth/42/callback', authentication.fortytwo);
   app.get('/api/auth/google', passport.authenticate('google', { scope: 'profile email' }));
   app.get('/api/auth/google/callback', authentication.google);
+  app.get('/api/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
+  app.get('/api/auth/facebook/callback', authentication.facebook);
   app.get('/api/auth/github', passport.authenticate('github'));
   app.get('/api/auth/github/callback', authentication.github);
   app.get('/api/auth/linkedin', passport.authenticate('linkedin'));
@@ -32,9 +34,9 @@ const routes = async (app, passport, upload) => {
   app.post('/api/signup/upload', upload.single('imageUploaded'), picture.postSignupPicture);
   app.post('/api/forgot', user.postForgot);
   app.post('/api/reset/:token', user.postReset);
-  app.get('/api/movie/create/:idImdb/:hash', video.checker, video.videoStartTorrenter);
-  app.get('/api/movie/progress/:idImdb/:hash', video.checker, video.getProgress);
-  app.get('/api/movie/stream/:idImdb/:hash', video.checker, video.videoTorrenter);
+  app.get('/api/movie/startTorrent/:idImdb/:hash', video.checker, video.startTorrent);
+  app.get('/api/movie/getStatus/:idImdb/:hash', video.checker, video.getLoadingStatus);
+  app.get('/api/movie/stream/:idImdb/:hash', video.checker, video.streamer);
   app.get('/api/movie/subtitle/:idImdb/:hash', video.getSub);
   app.get('/api/movie/clear/:idImdb', deleteOne);
 

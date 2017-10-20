@@ -208,23 +208,25 @@ export const getAccountById = (req, res, next) => {
     // get rid of password and email
     user.password = '';
     user.email = '';
-    // find movies infos for all movies seen by user
-    let movies = [];
-    try {
+
+    let movies;
+    if (!user.profile.movies || user.profile.movies.length === 0) {
+      movies = [];
+    } else {
       movies = await Movie.find({ idImdb: { $in: user.profile.movies } });
-    } catch (err) {
-      return res.send({ error: [], user, movies });
     }
-    // find comments of user on all movies
+
+    // get user comments on all movies
     const commentsData = await ListComment.find({ 'comments.idUser': user._id });
-    // find movies associated to comments to get their infos
+
+    // get movies associated to comments to get their infos
     const movieList = commentsData.map(comment => comment.idImdb);
     const movieListInfo = await Movie.find({ idImdb: { $in: movieList } });
     const comments = commentsData.map((comment) => {
       const movie = movieListInfo.find(movie => movie.idImdb === comment.idImdb);
       return ({
         idImdb: comment.idImdb,
-        comments: comment.comments,
+        comments: comment.comments.filter(comment => (comment.idUser == user._id)),
         thumb: movie.thumb,
         title: movie.title,
       });
@@ -264,7 +266,7 @@ export const postReset = async (req, res, next) => {
       if (!user) {
         return res.send({ error: [{ param: 'token', msg: 'error.noToken' }] });
       }
-      user.password = req.body.password;
+      user.password = req.body.newPassword;
       user.passwordResetToken = undefined;
       user.passwordResetExpires = undefined;
       user.save((err) => {
@@ -302,7 +304,7 @@ export const postForgot = async (req, res, next) => {
         user.passwordResetExpires = Date.now() + 3600000; // 1 hour
         user.save((err) => {
           if (err) { return next(err); }
-          const header = req.headers['x-forwarded-host'];
+          const header = req.headers['x-forwarded-host'] || req.headers.host;
           mail.sendForgotPasswordEmail(user, header);
           return res.send({ error: [] });
         });

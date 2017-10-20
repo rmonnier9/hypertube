@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import logo42 from '../images/42_Logo.png';
 
 const SigninComponent = (props) => {
   const error = {};
@@ -12,6 +13,39 @@ const SigninComponent = (props) => {
       error[field.param] = props.intl.formatMessage({ id: field.msg });
     }
   });
+
+  const social = [
+    { type: 'facebook', class: 'fa fa-facebook' },
+    { type: 'google', class: 'fa fa-google' },
+    { type: 'linkedin', class: 'fa fa-linkedin' },
+    { type: 'github', class: 'fa fa-github' },
+  ];
+
+  const icons = social.map(icon => (
+    <li key={icon.type}>
+      <span
+        role="button"
+        tabIndex={0}
+        className="social-icon"
+        onClick={props.handleOAuth(icon.type)}
+      >
+        <i className={icon.class} />
+      </span>
+    </li>
+  ));
+
+  icons.push(
+    <li>
+      <span
+        role="button"
+        tabIndex={0}
+        className="social-icon"
+        onClick={props.handleOAuth('42')}
+      >
+        <img className="logo-42" src={logo42} alt="42" />
+      </span>
+    </li>,
+  );
 
   const welcome = props.intl.formatMessage({ id: 'homepage.welcomeTo' });
   const yourEmail = props.intl.formatMessage({ id: 'homepage.yourEmail' });
@@ -51,34 +85,9 @@ const SigninComponent = (props) => {
           <br />
           <RaisedButton className="homepage-submit" type="submit" name="submit" label={enter} />
           <br />
-          <span
-            role="button"
-            onClick={props.handleOAuth('google')}
-          >
-            Google Auth
-          </span>
-          <br />
-          <span
-            role="button"
-            onClick={props.handleOAuth('42')}
-          >
-            42 Auth
-          </span>
-          <br />
-          <span
-            role="button"
-            onClick={props.handleOAuth('github')}
-          >
-            Github Auth
-          </span>
-          <br />
-          <span
-            role="button"
-            onClick={props.handleOAuth('linkedin')}
-          >
-              Linkedin Auth
-          </span>
-          <br />
+          <ul className="social-icons">
+            {icons}
+          </ul>
           <Link to="/forgot" className="homepage-linkto">{forgot}</Link>
           <br />
           <Link to="/signup" className="homepage-linkto">{signUp}</Link>

@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { injectIntl } from 'react-intl';
 import TextInput from '../../General/components/TextInput.js';
 
+const DEFAULT_IMG = '/static/uploads/empty_profile.png';
+
 class FindUser extends Component {
 
   state = {
@@ -68,8 +70,9 @@ class FindUser extends Component {
           <Link to={`/profile/${id}`} className="one-user-search-display" key={id}>
             <img
               className="profile-pic-search"
-              src={user.profile.pictureURL || '/static/uploads/empty_profile.png'}
+              src={user.profile.pictureURL || DEFAULT_IMG}
               alt="profile-pic"
+              onError={e => (e.target.src = DEFAULT_IMG)}
             />
             <span>{user.profile.firstName} </span>
             <span>{user.profile.lastName}</span>

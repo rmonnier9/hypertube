@@ -1,13 +1,14 @@
 import OS from 'opensubtitles-api';
-import fs from 'fs';
+import bluebird from 'bluebird';
 import mkdirp from 'mkdirp';
 import srt2vtt from 'srt2vtt';
 import axios from 'axios';
 import Movie from '../../models/Movie';
 
+const fs = bluebird.promisifyAll(require('fs'));
 const OpenSubtitles = new OS({
   useragent: 'OSTestUserAgentTemp',
-  ssl: true
+  ssl: true,
 });
 
 
@@ -35,6 +36,16 @@ const getSubPath = async (url, id, hash, name) => {
   return 'none';
 };
 
+export const getSub = async (req, res) => {
+  const { idImdb, hash } = req.params;
+  if (!idImdb || !hash) return res.send({ error: 'invalid parameters' });
+  const results = await Movie.findOne({ idImdb, 'torrents.hash': hash });
+  const torrent = results.torrents.filter(torrent => (torrent.hash === hash));
+  if (!torrent.data) return res.send({ error: 'nosub' });
+  const { frSubFilePath, enSubFilePath } = torrent.data;
+  return res.send({ error: '', frSubFilePath, enSubFilePath });
+};
+
 export const createSubFile = async (idImdb, hash) => {
   const subtitleInfo = await OpenSubtitles.search({ imdbid: idImdb });
   const frObject = subtitleInfo.fr;
@@ -44,14 +55,4 @@ export const createSubFile = async (idImdb, hash) => {
   const frSubFilePath = await getSubPath(frUrl, idImdb, hash, 'frsub');
   const enSubFilePath = await getSubPath(enUrl, idImdb, hash, 'ensub');
   return { frSubFilePath, enSubFilePath };
-};
-
-export const getSub = async (req, res) => {
-  const { idImdb, hash } = req.params;
-  if (!idImdb || !hash) return res.send({ error: 'invalid parameters' });
-  const results = await Movie.findOne({ idImdb, 'torrents.hash': hash });
-  const torrent = results.torrents.filter(torrent => (torrent.hash === hash));
-  if (!torrent[0].data) return res.send({ error: 'nosub' });
-  const { frSubFilePath, enSubFilePath } = torrent[0].data;
-  return res.send({ error: '', frSubFilePath, enSubFilePath });
 };

@@ -2,6 +2,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import { Strategy as FortyTwoStrategy } from 'passport-42';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { Strategy as GithubStrategy } from 'passport-github';
 import { Strategy as LinkedInStrategy } from 'passport-linkedin-oauth2';
 
@@ -19,6 +20,9 @@ const passportConfig = (passport) => {
       }
       if (!user) {
         return done(null, false, [{ param: 'email', msg: 'error.noEmailUsed', value: email }]);
+      }
+      if (!user.password) {
+        return done(null, false, [{ param: 'password', msg: 'error.noPassword' }]);
       }
       user.comparePassword(password, (err, isMatch) => {
         if (err) return done(err);
@@ -78,17 +82,24 @@ const passportConfig = (passport) => {
       if (existingUser) return done(null, existingUser);
       User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
         if (err) return done(err);
-        if (existingEmailUser) return done('email already used');
-        const user = new User();
-        user.email = profile.emails[0].value;
-        user.fortytwo = profile.id;
-        user.tokens.push({ kind: '42', accessToken });
-        user.profile.firstName = profile.name.givenName;
-        user.profile.lastName = profile.name.familyName;
-        user.profile.pictureURL = profile.photos[0].value;
-        user.save((err) => {
-          done(err, user);
-        });
+        if (existingEmailUser) {
+          existingEmailUser.fortytwo = profile.id;
+          existingEmailUser.tokens.push({ kind: '42', accessToken });
+          existingEmailUser.save((err) => {
+            done(err, existingEmailUser);
+          });
+        } else {
+          const user = new User();
+          user.email = profile.emails[0].value;
+          user.fortytwo = profile.id;
+          user.tokens.push({ kind: '42', accessToken });
+          user.profile.firstName = profile.name.givenName;
+          user.profile.lastName = profile.name.familyName;
+          user.profile.pictureURL = profile.photos[0].value;
+          user.save((err) => {
+            done(err, user);
+          });
+        }
       });
     });
   }));
@@ -122,6 +133,49 @@ const passportConfig = (passport) => {
           user.profile.lastName = profile.name.familyName;
           user.profile.gender = profile._json.gender;
           user.profile.pictureURL = profile._json.image.url;
+          user.save((err) => {
+            done(err, user);
+          });
+        }
+      });
+    });
+  }));
+
+  /**
+  * Sign in with Facebook.
+  */
+
+  passport.use('facebook', new FacebookStrategy({
+    clientID: process.env.FACEBOOK_APP_ID,
+    clientSecret: process.env.FACEBOOK_APP_SECRET,
+    callbackURL: '/oauth/facebook/callback',
+    profileFields: ['id', 'displayName', 'picture.type(large)', 'email'],
+  }, (accessToken, refreshToken, profile, done) => {
+    User.findOne({ facebookId: profile.id }, (err, existingUser) => {
+      if (err) return done(err);
+      User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
+        if (err) return done(err);
+        if (existingUser) return done(null, existingUser);
+        if (existingEmailUser) {
+          existingEmailUser.facebook = profile.id;
+          existingEmailUser.tokens.push({ kind: 'facebook', accessToken });
+          existingEmailUser.save((err) => {
+            done(err, existingEmailUser);
+          });
+        } else {
+          const user = new User();
+          user.facebook = profile.id;
+          user.email = profile.emails[0].value;
+          user.tokens.push({ kind: 'facebook', accessToken });
+          if (profile.name.givenName !== undefined && profile.name.familyName !== undefined) {
+            user.profile.firstName = profile.name.givenName;
+            user.profile.lastName = profile.name.familyName;
+          } else {
+            const name = profile.displayName.split(' ');
+            user.profile.firstName = name[0];
+            user.profile.lastName = name[1];
+          }
+          user.profile.pictureURL = profile.photos[0].value;
           user.save((err) => {
             done(err, user);
           });
@@ -186,7 +240,7 @@ const passportConfig = (passport) => {
           user.tokens.push({ kind: 'linkedin', accessToken });
           user.profile.firstName = profile.name.givenName;
           user.profile.lastName = profile.name.familyName;
-          user.profile.pictureURL = profile._json.publicProfileUrl;
+          user.profile.pictureURL = profile._json.pictureUrl;
           user.save((err) => {
             done(err, user);
           });
@@ -195,6 +249,7 @@ const passportConfig = (passport) => {
     });
   }));
 };
+
 
 /**
  * Authorization Required middleware.

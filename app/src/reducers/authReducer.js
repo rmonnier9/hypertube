@@ -1,6 +1,6 @@
 import {
   LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
-  LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE,
+  LOGOUT_REQUEST, LOGOUT_SUCCESS,
 } from '../actions/authAction';
 
 export default function auth(state = {
@@ -32,12 +32,6 @@ export default function auth(state = {
       return Object.assign({}, state, {
         isFetching: true,
         isAuthenticated: false,
-      });
-    case LOGOUT_FAILURE:
-      return Object.assign({}, state, {
-        isFetching: false,
-        isAuthenticated: true,
-        message: action.message,
       });
     default:
       return state;

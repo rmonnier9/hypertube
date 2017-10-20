@@ -4,15 +4,16 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
-  password: String,
+  password: { type: String, default: '' },
   passwordResetToken: String,
   passwordResetExpires: Date,
 
   google: String,
   fortytwo: String,
+  facebook: String,
   linkedin: String,
-  tokens: Array,
   github: String,
+  tokens: Array,
 
   profile: {
     lang: String,
