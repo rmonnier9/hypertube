@@ -9,7 +9,6 @@
   display: flex;
   flex-direction: row;
   animation: fadein 1s;
-  padding-bottom: 20px;
 }
 
 .movie-poster {

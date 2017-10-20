@@ -1,5 +1,6 @@
 @media screen and (max-width: 780px){
   .dropzone-container { flex-direction: column; }
+  .homepage-container { margin-top: 5vh !important; }
 }
 @media screen and (max-width: 500px){
   .homepage-container { width: 300px !important; margin-top: 5vh !important; }

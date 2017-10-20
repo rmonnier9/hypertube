@@ -30,6 +30,7 @@ class CommentInput extends Component {
             type="text"
             onChange={this.saveInput}
             placeholder="comments.typeComment"
+            maxLength="1000"
           />
         </form>
       </CommentBlock>

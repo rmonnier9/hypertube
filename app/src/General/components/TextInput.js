@@ -12,12 +12,17 @@ class TextInput extends Component {
 
   render() {
     const { currentValue, name, type, id = '' } = this.props;
+
     const className = this.props.className || '';
     const autocomplete = this.props.autocomplete || '';
-    const placeholder = this.props.placeholder || '';
+    const maxLength = this.props.maxLength || '';
     const classNameInput = `form-control ${className}`;
+
     const label = !id ? '' : this.props.intl.formatMessage({ id });
+
+    const placeholder = this.props.placeholder || '';
     const placeholderValue = !placeholder ? '' : this.props.intl.formatMessage({ id: placeholder });
+
     return (
       <div className="">
         <label htmlFor={name} className="input-label">{label}</label>
@@ -29,6 +34,7 @@ class TextInput extends Component {
           onChange={this.handleChange}
           autoComplete={autocomplete}
           placeholder={placeholderValue}
+          maxLength={maxLength}
         />
       </div>
     );

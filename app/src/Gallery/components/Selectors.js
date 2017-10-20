@@ -3,7 +3,6 @@ import { injectIntl } from 'react-intl';
 
 class Selectors extends Component {
 
-
   handleSelect = (event) => {
     const name = event.target.name;
     const value = event.target.value;

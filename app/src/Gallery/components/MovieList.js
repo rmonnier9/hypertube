@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import Card from './Card.js';
 
@@ -25,8 +24,5 @@ class MovieList extends Component {
     );
   }
 }
-
-MovieList.PropTypes = {
-};
 
 export default injectIntl(MovieList);
