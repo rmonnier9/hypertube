@@ -69,7 +69,9 @@ class MyInfosForms extends Component {
     const email = change.email !== '' ? change.email : user.email;
     const firstName = change.firstName !== '' ? change.firstName : user.profile.firstName;
     const lastName = change.lastName !== '' ? change.lastName : user.profile.lastName;
+
     const login = user.profile.login || '';
+    const logIn = login ? this.props.intl.formatMessage({ id: 'homepage.login' }) : '';
 
     const displayForm = form.formId === null ? null : (
       <div className="infos-form top">
@@ -83,7 +85,7 @@ class MyInfosForms extends Component {
 
     const changePassword = this.props.intl.formatMessage({ id: 'profile.changePassword' });
     const name = this.props.intl.formatMessage({ id: 'profile.name' });
-    const logIn = this.props.intl.formatMessage({ id: 'homepage.login' });
+
     const contact = this.props.intl.formatMessage({ id: 'profile.contact' });
     const errorMessage = error[0].msg ? this.props.intl.formatMessage({ id: error[0].msg }) : '';
 
