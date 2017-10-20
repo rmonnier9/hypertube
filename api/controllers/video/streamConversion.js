@@ -22,9 +22,9 @@ const startConversion = (torrent, fileStream, res) => new Promise((resolve, reje
       resolve();
     })
     .on('start', (cmd) => { console.log('fluent-ffmpeg Notice: Started:', cmd); })
-    .on('progress', (progress) => { console.log('fluent-ffmpeg Notice: Progress:', progress.timemark, 'converted'); })
+    // .on('progress', (progress) => { console.log('fluent-ffmpeg Notice: Progress:', progress.timemark, 'converted'); })
     .on('error', (err, stdout, stderr) => {
-      console.log('ffmpeg, file:', data.path, ' Error:', '\nErr:', err, '\nStdOut:', stdout, '\nStdErr:', stderr);
+    //   console.log('ffmpeg, file:', data.path, ' Error:', '\nErr:', err, '\nStdOut:', stdout, '\nStdErr:', stderr);
     });
 
   if (fileExtension === '.mkv') {
