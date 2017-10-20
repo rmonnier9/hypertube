@@ -1,7 +1,6 @@
 @media screen and (max-width: 1100px){
   .one-profile-movies { width: 35% !important; }
   .movie-list-container-profile { flex-direction: column; align-items: center; }
-
 }
 
 @media screen and (max-width: 768px){
@@ -54,12 +53,16 @@
   padding: 17px;
 }
 
+.comment-box {
+  padding-bottom: 20px;
+}
+
 .one-profile-comments {
   width: 80%;
 }
 
 .movie-comment-block {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .movie-comment-title {
