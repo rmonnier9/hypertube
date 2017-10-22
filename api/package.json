@@ -1,12 +1,12 @@
 {
-  "name": "hackathon-starter",
-  "version": "4.3.0",
-  "description": "A boilerplate for Node.js web applications",
+  "name": "hypertube",
+  "version": "1.0.1",
+  "description": "A streaming video webapp.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "https://github.com/rmonnier/hypertube"
   },
-  "author": "Sahat Yalkabov",
+  "authors": "Céline Begne, Simon Chevallier, Robin Monnier, Etienne Pillot",
   "license": "MIT",
   "scripts": {
     "start": "nodemon --inspect server.js",
