@@ -1,12 +1,13 @@
-import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
-import { Strategy as FortyTwoStrategy } from 'passport-42';
-import { Strategy as FacebookStrategy } from 'passport-facebook';
-import { Strategy as GithubStrategy } from 'passport-github';
-import { Strategy as LinkedInStrategy } from 'passport-linkedin-oauth2';
+const LocalStrategy = require('passport-local').Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const FortyTwoStrategy = require('passport-42').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+const GithubStrategy = require('passport-github').Strategy;
+const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 
-import User from '../models/User';
+const User = require('../models/User');
 
 const passportConfig = (passport) => {
   /**
@@ -254,7 +255,7 @@ const passportConfig = (passport) => {
 /**
  * Authorization Required middleware.
  */
-export const isAuthorized = (req, res, next) => {
+const isAuthorized = (req, res, next) => {
   const provider = req.path.split('/').slice(-1)[0];
   const token = req.user.tokens.find(token => token.kind === provider);
   if (token) {
@@ -264,4 +265,4 @@ export const isAuthorized = (req, res, next) => {
   }
 };
 
-export default passportConfig;
+module.exports = passportConfig;

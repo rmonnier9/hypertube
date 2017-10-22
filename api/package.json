@@ -9,15 +9,12 @@
   "author": "Sahat Yalkabov",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon --exec 'babel-node --inspect server.js'",
+    "start": "nodemon --inspect server.js",
     "test": "mocha --reporter spec",
     "eslint": "eslint **/*.js"
   },
   "dependencies": {
     "axios": "^0.16.2",
-    "babel-cli": "^6.24.0",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-preset-env": "^1.5.1",
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",

@@ -1,12 +1,12 @@
-import * as user from './controllers/user';
-import * as movie from './controllers/movie';
-import * as authentication from './controllers/authentication';
-import * as picture from './controllers/picture';
-import * as search from './controllers/search';
-import * as comment from './controllers/comment';
-import * as genre from './controllers/scraper/genreCount';
-import * as video from './controllers/video';
-import deleteOne from './controllers/video/deleter';
+const user = require('./controllers/user');
+const movie = require('./controllers/movie');
+const authentication = require('./controllers/authentication');
+const picture = require('./controllers/picture');
+const search = require('./controllers/search');
+const comment = require('./controllers/comment');
+const genre = require('./controllers/scraper/genreCount');
+const video = require('./controllers/video');
+const deleteOne = require('./controllers/video/deleter');
 
 const routes = async (app, passport, upload) => {
   /**
@@ -62,4 +62,4 @@ const routes = async (app, passport, upload) => {
   app.get('/api/gallery/search', search.getSearch);
 };
 
-export default routes;
+module.exports = routes;

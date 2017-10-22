@@ -1,5 +1,5 @@
-import fs from 'fs';
-import Movie from '../../models/Movie';
+const fs = require('fs');
+const Movie = require('../../models/Movie');
 
 const deleteFolderRecursive = (path) => {
   let files = [];
@@ -30,4 +30,4 @@ const deleteAll = async (req, res) => {
   return res.send({ err: '' });
 };
 
-export default deleteAll;
+module.exports = deleteAll;

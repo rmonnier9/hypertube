@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const torrentSchema = new mongoose.Schema({
   hash: { type: String, unique: true }, // for key
@@ -28,8 +28,6 @@ const torrentSchema = new mongoose.Schema({
   }, // movie downloaded
 });
 
-export const Torrent = mongoose.model('Torrent', torrentSchema);
-
 const movieSchema = new mongoose.Schema({
   idImdb: { type: String, unique: true },
   torrents: [
@@ -58,4 +56,4 @@ const movieSchema = new mongoose.Schema({
 
 const Movie = mongoose.model('Movietest', movieSchema);
 
-export default Movie;
+module.exports = Movie;

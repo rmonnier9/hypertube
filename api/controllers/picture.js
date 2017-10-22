@@ -1,15 +1,15 @@
-import sharp from 'sharp';
-import path from 'path';
-import fs from 'fs';
+const sharp = require('sharp');
+const path = require('path');
+const fs = require('fs');
 
-import User from '../models/User';
+const User = require('../models/User');
 
 /**
  * POST /signup/upload
  * Save profile picture on signup.
  */
 
-export const postSignupPicture = async (req, res, next) => {
+exports.postSignupPicture = async (req, res, next) => {
   const { filename } = req.file;
   const { email } = req.headers;
 
@@ -50,7 +50,7 @@ export const postSignupPicture = async (req, res, next) => {
  * Update profile picture on profile.
  */
 
-export const newPicture = async (req, res, next) => {
+exports.newPicture = async (req, res, next) => {
   const { filename } = req.file;
   const tmpPath = path.resolve(__dirname, `../public/uploads/tmp/${filename}`);
   const newPath = path.resolve(__dirname, `../public/uploads/${filename}`);

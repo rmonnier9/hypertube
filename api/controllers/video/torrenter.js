@@ -1,17 +1,17 @@
-import bluebird from 'bluebird';
-import devNull from 'dev-null';
-import Movie from '../../models/Movie';
-import User from '../../models/User';
-import streamConversion from './streamConversion';
-import { createSubFile } from './subtitles';
-import EngineManager from './EngineManager';
+const bluebird = require('bluebird');
+const devNull = require('dev-null');
+const Movie = require('../../models/Movie');
+const User = require('../../models/User');
+const streamConversion = require('./streamConversion');
+const { createSubFile } = require('./subtitles');
+const EngineManager = require('./EngineManager');
 
 const engineManager = new EngineManager();
 
 const fs = bluebird.promisifyAll(require('fs'));
 
 // ROUTE CONTROLLER
-export const startTorrent = async (req, res) => {
+exports.startTorrent = async (req, res) => {
   // If download had aleady started
   const { _id } = req.user;
   if (!_id) return res.send({ err: 'Undefined user trying to start torrent' });
@@ -43,7 +43,7 @@ export const startTorrent = async (req, res) => {
 };
 
 // ROUTE CONTROLLER
-export const getLoadingStatus = async (req, res) => {
+exports.getLoadingStatus = async (req, res) => {
   if (!req.torrent.data || !req.torrent.data.name) {
     return res.send({ err: 'Download has not started.' });
   }
@@ -57,7 +57,7 @@ export const getLoadingStatus = async (req, res) => {
 };
 
 // ROUTE CONTROLLER
-export const streamer = async (req, res) => {
+exports.streamer = async (req, res) => {
   // If download had aleady started
   if (!req.torrent.data || !req.torrent.data.path || !engineManager.getFile(req.torrent.hash)) {
     return res.json({ err: 'Download has not been started.' });

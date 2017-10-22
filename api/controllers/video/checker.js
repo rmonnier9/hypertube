@@ -1,4 +1,4 @@
-import Movie from '../../models/Movie';
+const Movie = require('../../models/Movie');
 
 // VIDEO CHECKER
 // check input and populate request object
@@ -25,4 +25,4 @@ const videoChecker = async (req, res, next) => {
   next();
 };
 
-export default videoChecker;
+module.exports = videoChecker;

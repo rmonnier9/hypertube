@@ -1,6 +1,6 @@
-import moment from 'moment';
-import { Comment, ListComment } from '../models/Comment';
-import User from '../models/User';
+const moment = require('moment');
+const { Comment, ListComment } = require('../models/Comment');
+const User = require('../models/User');
 
 const createCommentObject = async ({ comment }, idUser) => {
   const newComment = new Comment({
@@ -32,7 +32,7 @@ const addUserProps = async ({ comments }) => (
  * Post comment on the specified movie
  */
 
-export const addComment = async (req, res) => {
+exports.addComment = async (req, res) => {
   const { idImdb } = req.params;
   const newComment = await createCommentObject(req.body, req.user.id);
   const list = await ListComment.findOneAndUpdate(
@@ -51,7 +51,7 @@ export const addComment = async (req, res) => {
  * Get comments on the specified movie
  */
 
-export const getComment = async (req, res) => {
+exports.getComment = async (req, res) => {
   const { idImdb } = req.params;
   const list = await ListComment.findOne({ idImdb });
   if (!list) return res.send({ error: '', comments: [] });

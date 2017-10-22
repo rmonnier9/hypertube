@@ -1,11 +1,11 @@
-import OS from 'opensubtitles-api';
-import bluebird from 'bluebird';
-import mkdirp from 'mkdirp';
-import srt2vtt from 'srt2vtt';
-import axios from 'axios';
-import Movie from '../../models/Movie';
-
+const OS = require('opensubtitles-api');
+const bluebird = require('bluebird');
+const mkdirp = require('mkdirp');
+const srt2vtt = require('srt2vtt');
+const axios = require('axios');
+const Movie = require('../../models/Movie');
 const fs = bluebird.promisifyAll(require('fs'));
+
 const OpenSubtitles = new OS({
   useragent: 'OSTestUserAgentTemp',
   ssl: true,
@@ -36,7 +36,7 @@ const getSubPath = async (url, id, hash, name) => {
   return 'none';
 };
 
-export const getSub = async (req, res) => {
+exports.getSub = async (req, res) => {
   const { idImdb, hash } = req.params;
   if (!idImdb || !hash) return res.send({ error: 'invalid parameters' });
   const results = await Movie.findOne({ idImdb, 'torrents.hash': hash });
@@ -46,7 +46,7 @@ export const getSub = async (req, res) => {
   return res.send({ error: '', frSubFilePath, enSubFilePath });
 };
 
-export const createSubFile = async (idImdb, hash) => {
+exports.createSubFile = async (idImdb, hash) => {
   const subtitleInfo = await OpenSubtitles.search({ imdbid: idImdb });
   const frObject = subtitleInfo.fr;
   const enObject = subtitleInfo.en;

@@ -1,10 +1,10 @@
-import bluebird from 'bluebird';
-import mongoose from 'mongoose';
-import User from '../models/User';
-import Movie from '../models/Movie';
-import { ListComment } from '../models/Comment';
-import * as mail from './mail';
-import checkReq from './checkReq';
+const bluebird = require('bluebird');
+const mongoose = require('mongoose');
+const User = require('../models/User');
+const Movie = require('../models/Movie');
+const { ListComment } = require('../models/Comment');
+const mail = require('./mail');
+const checkReq = require('./checkReq');
 
 const crypto = bluebird.promisifyAll(require('crypto'));
 
@@ -12,7 +12,7 @@ const crypto = bluebird.promisifyAll(require('crypto'));
  * POST /signup/info
  * Create new account and sign in.
  */
-export const postSignup = async (req, res, next) => {
+exports.postSignup = async (req, res, next) => {
   const error = await checkReq(req);
 
   if (error.length) {
@@ -46,7 +46,7 @@ export const postSignup = async (req, res, next) => {
  * GET /me
  * Profile page.
  */
-export const getMyAccount = (req, res, next) => {
+exports.getMyAccount = (req, res, next) => {
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
     user.password = '';
@@ -58,7 +58,7 @@ export const getMyAccount = (req, res, next) => {
  * POST /me
  * Update profile information.
  */
-export const postUpdateProfile = async (req, res, next) => {
+exports.postUpdateProfile = async (req, res, next) => {
   const { id } = req.body;
   switch (id) {
     case 'name-form': {
@@ -143,7 +143,7 @@ export const postUpdateProfile = async (req, res, next) => {
  * GET /profile/:name
  * Search profiles.
  */
-export const getAccount = (req, res, next) => {
+exports.getAccount = (req, res, next) => {
   const { name } = req.params;
   const nameTab = name.split(' ');
 
@@ -191,7 +191,7 @@ export const getAccount = (req, res, next) => {
  * GET /profile/id/:id
  * Other user profile page.
  */
-export const getAccountById = (req, res, next) => {
+exports.getAccountById = (req, res, next) => {
   // check if id sent is an Object id
   let objectId = req.params.id;
   try {
@@ -242,7 +242,7 @@ export const getAccountById = (req, res, next) => {
  * DELETE /me
  * Delete user account. // not implemented
  */
-export const deleteDeleteAccount = (req, res, next) => {
+exports.deleteDeleteAccount = (req, res, next) => {
   User.remove({ _id: req.user.id }, (err) => {
     if (err) { return next(err); }
     res.send({ error: '' });
@@ -253,7 +253,7 @@ export const deleteDeleteAccount = (req, res, next) => {
  * POST /reset/:token
  * Process the reset password request.
  */
-export const postReset = async (req, res, next) => {
+exports.postReset = async (req, res, next) => {
   const error = await checkReq(req);
 
   if (error.length) {
@@ -283,7 +283,7 @@ export const postReset = async (req, res, next) => {
  * POST /forgot
  * Create a random token, then the send user an email with a reset link.
  */
-export const postForgot = async (req, res, next) => {
+exports.postForgot = async (req, res, next) => {
   const error = await checkReq(req);
 
   if (error.length) {

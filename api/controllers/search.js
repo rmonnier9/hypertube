@@ -1,6 +1,6 @@
-import queryString from 'query-string';
+const queryString = require('query-string');
 
-import Movie from '../models/Movie';
+const Movie = require('../models/Movie');
 
 const getMatchObj = (query, lang) => {
   if (!query.name && !query.genre && !query.rating) return null;
@@ -83,7 +83,7 @@ const getSortObj = (sort, suggestionDefaultSort, lang) => {
  * Search movies into database.
  */
 
-export const getSearch = async (req, res) => {
+exports.getSearch = async (req, res) => {
   const { query } = req;
   const { lang = 'en' } = query;
 
@@ -119,5 +119,3 @@ export const getSearch = async (req, res) => {
   // send response and end request
   return res.send(resObj);
 };
-
-export default getSearch;

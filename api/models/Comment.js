@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const commentSchema = new mongoose.Schema({
   idUser: String,
@@ -6,11 +6,15 @@ const commentSchema = new mongoose.Schema({
   text: String,
 });
 
-export const Comment = mongoose.model('Comment', commentSchema);
+const Comment = mongoose.model('Comment', commentSchema);
+
+module.export = Comment;
 
 const ListCommentSchema = new mongoose.Schema({
   idImdb: { type: String, unique: true },
   comments: [commentSchema],
 });
 
-export const ListComment = mongoose.model('ListComment', ListCommentSchema);
+const ListComment = mongoose.model('ListComment', ListCommentSchema);
+
+module.exports = ListComment;

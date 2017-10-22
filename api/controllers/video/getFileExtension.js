@@ -10,4 +10,4 @@ const getFileExtension = (filename) => {
   return '';
 };
 
-export default getFileExtension;
+module.exports = getFileExtension;

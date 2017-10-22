@@ -1,6 +1,6 @@
-import ffmpeg from 'fluent-ffmpeg';
-import getFileExtension from './getFileExtension';
-import mimeTypes from './mimeTypes';
+const ffmpeg = require('fluent-ffmpeg');
+const getFileExtension = require('./getFileExtension');
+const mimeTypes = require('./mimeTypes');
 
 const ffmpegHash = {};
 
@@ -44,4 +44,4 @@ const startConversion = (torrent, fileStream, res) => new Promise((resolve, reje
   });
 });
 
-export default startConversion;
+module.exports = startConversion;

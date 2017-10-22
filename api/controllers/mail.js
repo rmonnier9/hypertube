@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
   service: 'SendGrid',
@@ -20,13 +20,13 @@ const mail = (to, subject, text) => {
   });
 };
 
-const sendWelcomeMail = (email) => {
+exports.sendWelcomeMail = (email) => {
   const subject = 'Hypertube - Account created !';
   const content = 'Welcome to Hypertube !';
   mail(email, subject, content);
 };
 
-const sendResetPasswordEmail = (user) => {
+exports.sendResetPasswordEmail = (user) => {
   let subject;
   let content;
   switch (user.profile.lang) {
@@ -43,7 +43,7 @@ const sendResetPasswordEmail = (user) => {
   mail(user.email, subject, content);
 };
 
-const sendForgotPasswordEmail = (user, header) => {
+exports.sendForgotPasswordEmail = (user, header) => {
   const token = user.passwordResetToken;
   let subject;
   let content;
@@ -59,5 +59,3 @@ const sendForgotPasswordEmail = (user, header) => {
   }
   mail(user.email, subject, content);
 };
-
-export { sendWelcomeMail, sendResetPasswordEmail, sendForgotPasswordEmail };

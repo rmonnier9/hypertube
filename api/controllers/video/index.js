@@ -1,5 +1,5 @@
-import checker from './checker';
-import { startTorrent, getLoadingStatus, streamer } from './torrenter';
-import { getSub } from './subtitles';
+const checker = require('./checker');
+const { startTorrent, getLoadingStatus, streamer } = require('./torrenter');
+const { getSub } = require('./subtitles');
 
-export { checker, startTorrent, getLoadingStatus, streamer, getSub };
+module.exports = { checker, startTorrent, getLoadingStatus, streamer, getSub };

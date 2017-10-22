@@ -1,12 +1,12 @@
-import passport from 'passport';
-import jwt from 'jsonwebtoken';
-import checkReq from './checkReq';
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
+const checkReq = require('./checkReq');
 
 /**
  * POST /signin
  * Sign in using email and password.
  */
-export const local = async (req, res, next) => {
+exports.local = async (req, res, next) => {
   const error = await checkReq(req);
 
   if (error.length) {
@@ -31,7 +31,7 @@ export const local = async (req, res, next) => {
  * GET /api/auth/42/callback
  * Sign in using 42.
  */
-export const fortytwo = async (req, res, next) => {
+exports.fortytwo = async (req, res, next) => {
   passport.authenticate('42', (err, user, info) => {
     if (err) { return next(err); }
     if (!user) {
@@ -50,7 +50,7 @@ export const fortytwo = async (req, res, next) => {
  * GET /api/auth/google/callback
  * Sign in using Google.
  */
-export const google = async (req, res, next) => {
+exports.google = async (req, res, next) => {
   passport.authenticate('google', (err, user, info) => {
     if (err) { return next(err); }
     if (!user) {
@@ -69,7 +69,7 @@ export const google = async (req, res, next) => {
  * GET /api/auth/facebook/callback
  * Sign in using Facebook.
  */
-export const facebook = async (req, res, next) => {
+exports.facebook = async (req, res, next) => {
   passport.authenticate('facebook', (err, user, info) => {
     if (err) { return next(err); }
     if (!user) {
@@ -84,7 +84,7 @@ export const facebook = async (req, res, next) => {
   })(req, res, next);
 };
 
-export const github = (req, res, next) => {
+exports.github = (req, res, next) => {
   passport.authenticate('github', (err, user, info) => {
     if (err) { return next(err); }
     if (!user) {
@@ -99,7 +99,7 @@ export const github = (req, res, next) => {
   })(req, res, next);
 };
 
-export const linkedin = (req, res, next) => {
+exports.linkedin = (req, res, next) => {
   passport.authenticate('linkedin', (err, user, info) => {
     if (err) { return next(err); }
     if (!user) {

@@ -1,19 +1,9 @@
-import torrentStream from 'torrent-stream';
-import Movie from '../../models/Movie';
-import mimeTypes from './mimeTypes';
-import getFileExtension from './getFileExtension';
+const torrentStream = require('torrent-stream');
+const Movie = require('../../models/Movie');
+const mimeTypes = require('./mimeTypes');
+const getFileExtension = require('./getFileExtension');
 
-class Engine {
-  constructor(hash) {
-    this.hash = hash;
-  }
-
-  getMagnet() {
-    return `magnet:?xt=urn:btih:${this.hash}`;
-  }
-}
-
-export default class EngineManager {
+class EngineManager {
   constructor() {
     this.engineHash = {};
   }
@@ -88,3 +78,5 @@ export default class EngineManager {
     });
   }
 }
+
+module.exports = EngineManager;

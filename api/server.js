@@ -1,24 +1,24 @@
-import express from 'express';
-import compression from 'compression';
-import bodyParser from 'body-parser';
-import logger from 'morgan';
-import chalk from 'chalk';
-import errorHandler from 'errorhandler';
-import lusca from 'lusca';
-import path from 'path';
-import mongoose from 'mongoose';
-import passport from 'passport';
-import expressValidator from 'express-validator';
-import expressStatusMonitor from 'express-status-monitor';
-import multer from 'multer';
-import cron from 'cron';
-import dotenv from 'dotenv/config';
-import Movie from './models/Movie';
+const express = require('express');
+const compression = require('compression');
+const bodyParser = require('body-parser');
+const logger = require('morgan');
+const chalk = require('chalk');
+const errorHandler = require('errorhandler');
+const lusca = require('lusca');
+const path = require('path');
+const mongoose = require('mongoose');
+const passport = require('passport');
+const expressValidator = require('express-validator');
+const expressStatusMonitor = require('express-status-monitor');
+const multer = require('multer');
+const cron = require('cron');
+const dotenv = require('dotenv/config');
+const Movie = require('./models/Movie');
 
-import passportConfig from './config/passport';
-import routes from './routes';
+const passportConfig = require('./config/passport');
+const routes = require('./routes');
 
-// import movieScraper from './controllers/scraper/movieScraper';
+// const movieScraper = require('./controllers/scraper/movieScraper');
 //
 // try {
 //   // movieScraper();
@@ -116,4 +116,4 @@ app.listen(app.get('port'), () => {
   console.log('  Press CTRL-C to stop\n');
 });
 
-export default app;
+module.export = app;

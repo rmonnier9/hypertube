@@ -34,4 +34,4 @@ const checkReq = async (req) => {
   return (error.length) ? error : [];
 };
 
-export default checkReq;
+module.exports = checkReq;

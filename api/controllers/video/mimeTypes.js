@@ -22,4 +22,4 @@ const getMimeType = {
   '.ogg': 'video/ogg'
 };
 
-export default getMimeType;
+module.exports = getMimeType;

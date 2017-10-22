@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const genreSchema = new mongoose.Schema({
   count: Number,
@@ -8,4 +8,4 @@ const genreSchema = new mongoose.Schema({
 
 const Genre = mongoose.model('Genre', genreSchema);
 
-export default Genre;
+module.exports = Genre;

@@ -1,5 +1,5 @@
-import Movie from '../../models/Movie';
-import Genre from '../../models/Genre';
+const Movie = require('../../models/Movie');
+const Genre = require('../../models/Genre');
 
 const changes = [
   { en: 'Drama', fr: 'Drame' },
@@ -52,7 +52,7 @@ const sortAndCreateGenreTable = async () => {
   const end = await Genre.insertMany(genres);
 };
 
-export const operateOnGenreTable = async (req, res) => {
+exports.operateOnGenreTable = async (req, res) => {
   // const finish = await Promise.all(changes.map(change => UpdateTradGenre(change)));
   // getGenreTable();
   // sortAndCreateGenreTable();
@@ -61,7 +61,7 @@ export const operateOnGenreTable = async (req, res) => {
   return res.send({ error: '' });
 };
 
-export const getGenreTable = async (req, res) => {
+exports.getGenreTable = async (req, res) => {
   const genres = await Genre.find({});
   return res.send({ error: '', genres });
 };
