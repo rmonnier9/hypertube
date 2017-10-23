@@ -26,4 +26,4 @@ If the server doesn't already have the video, it downloads it via torrent protoc
 
 
 <p align="center"><img src="https://user-images.githubusercontent.com/18701290/31879954-52de522e-b7df-11e7-893d-1bb58467b690.png"></p>
-<img src="https://user-images.githubusercontent.com/18701290/31880033-9a7abcd0-b7df-11e7-9989-0f28508c0ccc.png">
+<p align="center"><img src="https://user-images.githubusercontent.com/18701290/31880033-9a7abcd0-b7df-11e7-9989-0f28508c0ccc.png"></p>
