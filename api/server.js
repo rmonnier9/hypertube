@@ -9,7 +9,6 @@ const path = require('path');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const expressValidator = require('express-validator');
-const expressStatusMonitor = require('express-status-monitor');
 const multer = require('multer');
 const cron = require('cron');
 const dotenv = require('dotenv/config');
@@ -73,7 +72,6 @@ job.start();
  */
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8000);
-app.use(expressStatusMonitor()); // report realtime server metrics for Express-based node servers ?
 app.use(compression()); // reduce page loads time to the order of 15-20%
 app.use(logger('dev')); // morgan
 app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
