@@ -27,6 +27,9 @@ const torrentSchema = new mongoose.Schema({
   }, // movie downloaded
 });
 
+exports.Torrent = mongoose.model('TorrentTest', torrentSchema);
+
+
 const movieSchema = new mongoose.Schema({
   idImdb: { type: String, unique: true },
   torrents: [
@@ -53,6 +56,4 @@ const movieSchema = new mongoose.Schema({
   thumb: String,
 });
 
-const MovieTest = mongoose.model('MovieTest', movieSchema);
-
-module.exports = MovieTest;
+exports.Movie = mongoose.model('MovieTest', movieSchema);

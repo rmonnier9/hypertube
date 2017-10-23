@@ -2,8 +2,6 @@ const ffmpeg = require('fluent-ffmpeg');
 const getFileExtension = require('./getFileExtension');
 const mimeTypes = require('./mimeTypes');
 
-const ffmpegHash = {};
-
 const startConversion = (torrent, fileStream, res) => new Promise((resolve, reject) => {
   const { data } = torrent;
   const fileExtension = getFileExtension(data.name);
@@ -18,7 +16,6 @@ const startConversion = (torrent, fileStream, res) => new Promise((resolve, reje
 
     .on('codecData', (codecData) => {
       // console.log('fluent-ffmpeg Notice: CodecData:', codecData);
-      ffmpegHash[torrent.hash] = codecData;
       resolve();
     })
     .on('start', (cmd) => { console.log('fluent-ffmpeg Notice: Started:', cmd); })

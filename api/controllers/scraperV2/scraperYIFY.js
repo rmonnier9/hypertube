@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { RateLimiter } from 'limiter';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv/config';
-import Movie from '../../models/MovieTest';
-import { fetchMovieInfoYifi, parseTorrentYifi } from './fetchMovieInfos';
+const axios = require('axios');
+const { RateLimiter } = require('limiter');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv/config');
+const { Movie } = require('../../models/MovieTest');
+const { fetchMovieInfosYifi, parseTorrentYifi } = require('./fetchMovieInfos');
 
 const urlYify = 'https://yts.ag/api/v2/list_movies.json?sort=seeds&limit=50';
 
@@ -54,7 +54,7 @@ function addTorrentsToExistingMovie(movie, torrents) {
 }
 
 async function addNewMovie(movie) {
-  const newMovie = await fetchMovieInfoYifi(movie);
+  const newMovie = await fetchMovieInfosYifi(movie);
   if (newMovie) {
     console.log('Add new movie', movie.imdb_code);
     return new Promise((resolve, reject) => {

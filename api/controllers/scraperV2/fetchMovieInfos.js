@@ -1,7 +1,7 @@
-import axios from 'axios';
-import ptn from 'parse-torrent-name';
-import parseGenre from './genre';
-import Movie, { TorrentTest } from '../../models/MovieTest';
+const axios = require('axios');
+const ptn = require('parse-torrent-name');
+const parseGenre = require('./genre');
+const { Movie, Torrent } = require('../../models/MovieTest');
 
 const keyMovieDb = '92d923e066d13a3034abbbfb0d5ea7ab';
 
@@ -21,9 +21,9 @@ const bytesToSize = (bytes) => {
   return `${Math.round(bytes / (1024 ** i), 2)} ${sizes[i]}`;
 };
 
-export const parseTorrentYifi = (torrents, title) => (
+exports.parseTorrentYifi = (torrents, title) => (
   torrents.map(torrent => (
-    new TorrentTest({
+    new Torrent({
       url: torrent.url,
       magnet: '',
       title: {
@@ -69,10 +69,10 @@ const parseMovieYifi = (idImdb, torrents, movieDb, imdbApi) => {
   return newMovie;
 };
 
-export const parseTorrentEztv = torrents => (
+exports.parseTorrentEztv = torrents => (
   torrents.map((torrent) => {
     const info = ptn(torrent.title);
-    return new TorrentTest({
+    return new Torrent({
       hash: torrent.hash,
       url: torrent.torrent_url,
       magnet: torrent.magnet_url,
@@ -138,7 +138,7 @@ const FetchImdbApiInfo = async idImdb => (
     // .catch(err => console.error('FetchImdbApiInfo err', err.message))
 );
 
-export const fetchMovieInfoYifi = async ({ torrents, imdb_code: idImdb }) => (
+exports.fetchMovieInfosYifi = async ({ torrents, imdb_code: idImdb }) => (
   axios.all([
     FetchTheMovieDBInfo(idImdb, 'en'),
     FetchTheMovieDBInfo(idImdb, 'fr'),
@@ -150,7 +150,7 @@ export const fetchMovieInfoYifi = async ({ torrents, imdb_code: idImdb }) => (
     .catch(err => console.error('fetchMovieInfo err', err))
 );
 
-export const fetchMovieInfosEztv = async ({ torrents, imdb_code: idImdb }) => (
+exports.fetchMovieInfosEztv = async ({ torrents, imdb_code: idImdb }) => (
   FetchImdbApiInfo(idImdb)
     .then(imdbApi => (
       parseMovieEztv(idImdb, torrents, imdbApi)

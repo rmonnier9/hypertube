@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { RateLimiter } from 'limiter';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv/config';
-import Movie from '../../models/MovieTest';
-import { fetchMovieInfosEztv, parseTorrentEztv } from './fetchMovieInfos';
+const axios = require('axios');
+const { RateLimiter } = require('limiter');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv/config');
+const { Movie } = require('../../models/MovieTest');
+const { fetchMovieInfosEztv, parseTorrentEztv } = require('./fetchMovieInfos');
 
 const urlEztv = 'https://eztv.ag/api/get-torrents?limit=100';
 

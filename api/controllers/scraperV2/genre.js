@@ -38,4 +38,4 @@ const parseGenres = (idsEn, idsFr) => {
 };
 
 
-export default parseGenres;
+module.exports = parseGenres;
