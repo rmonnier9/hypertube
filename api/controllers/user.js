@@ -5,7 +5,6 @@ const Movie = require('../models/Movie');
 const { ListComment } = require('../models/Comment');
 const mail = require('./mail');
 const checkReq = require('./checkReq');
-
 const crypto = bluebird.promisifyAll(require('crypto'));
 
 /**
