@@ -6,8 +6,7 @@ A streaming website with Mongo DB, Express JS, React JS, Node JS. Project part o
 
 ## Motivation
 
-Learn video streaming, OAuth, Redux
-Improve JS skills
+Learn video streaming, OAuth, Redux and improve general JS skills
 
 ## Which features are done
 
