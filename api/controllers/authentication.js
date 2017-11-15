@@ -84,6 +84,10 @@ exports.facebook = async (req, res, next) => {
   })(req, res, next);
 };
 
+/**
+ * GET /api/auth/github/callback
+ * Sign in using Github.
+ */
 exports.github = (req, res, next) => {
   passport.authenticate('github', (err, user, info) => {
     if (err) { return next(err); }
@@ -99,6 +103,10 @@ exports.github = (req, res, next) => {
   })(req, res, next);
 };
 
+/**
+ * GET /api/auth/linkedin/callback
+ * Sign in using Linkedin.
+ */
 exports.linkedin = (req, res, next) => {
   passport.authenticate('linkedin', (err, user, info) => {
     if (err) { return next(err); }

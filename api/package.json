@@ -7,7 +7,6 @@
     "url": "https://github.com/rmonnier/hypertube"
   },
   "authors": "Céline Begne, Simon Chevallier, Robin Monnier, Etienne Pillot",
-  "license": "MIT",
   "scripts": {
     "start": "nodemon --inspect server.js",
     "test": "mocha --reporter spec",

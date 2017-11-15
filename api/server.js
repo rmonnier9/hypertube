@@ -17,6 +17,9 @@ const Movie = require('./models/Movie');
 const passportConfig = require('./config/passport');
 const routes = require('./routes');
 
+/**
+ * Torrent scraper.
+ */
 // const movieScraper = require('./controllers/scraper/movieScraper');
 //
 // try {
@@ -34,7 +37,6 @@ const storage = multer.diskStorage({
     callback(null, Date.now() + path.extname(file.originalname).toLowerCase());
   },
 });
-
 const upload = multer({
   storage,
   fileFilter: (req, file, callback) => {
@@ -45,6 +47,7 @@ const upload = multer({
     }
   },
 });
+
 /**
  * Create Express server.
  */
@@ -61,6 +64,9 @@ mongoose.connection.on('error', (err) => {
   process.exit();
 });
 
+/**
+ * Cron job to delete movies not seen since 1 month.
+ */
 const CronJob = cron.CronJob;
 const job = new CronJob('0 0 1 1 *', () => {
   Movie.deleteMany({ 'torrents.data.lastSeen': { $lte: new Date(Date.now() - (30 * 24 * 3600 * 1000)) } }, () => { console.log('Unwatched movies deleted.'); });
@@ -72,8 +78,8 @@ job.start();
  */
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8000);
-app.use(compression()); // reduce page loads time to the order of 15-20%
-app.use(logger('dev')); // morgan
+app.use(compression());
+app.use(logger('dev'));
 app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.use(express.static(path.join(__dirname, 'build'), {
   dotfiles: 'ignore',
@@ -81,27 +87,28 @@ app.use(express.static(path.join(__dirname, 'build'), {
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(expressValidator()); // validate form inputs. cf req.assert in controllers files
+app.use(expressValidator());
 // app.use(passport.initialize());
 passportConfig(passport);
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 
-// Load routes
+/**
+ * Load api routes.
+ */
 routes(app, passport, upload);
 
 /**
- * Error Handler. only use in development
+ * Error Handler.
  */
-
-// custom error handling
 app.use((err, req, res, next) => { res.end(); });
 if (process.env.NODE_ENV === 'development') {
-  // only use in development
   app.use(errorHandler());
 }
 
-// if a request doesn't match a route, send the front app
+/**
+ * Send the front app if not an api request.
+ */
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
 });
